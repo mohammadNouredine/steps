@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "dev": "next dev",
+    "client:dev": "next dev --prefix client",
+    "server:dev": "nest start --watch --prefix server",
+    "build": "next build",
+    "start": "next start"
+  }
+}
