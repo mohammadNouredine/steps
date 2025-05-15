@@ -1,0 +1,107 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider  = "postgresql"
+    directUrl = env("DIRECT_URL")
+    url       = env("DATABASE_URL")
+}
+
+model User {
+    id           Int      @id @default(autoincrement())
+    username     String   @unique
+    image        String?
+    passwordHash String   @map("password_hash")
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+}
+
+model Kid {
+    id            Int             @id @default(autoincrement())
+    firstName     String          @map("first_name")
+    lastName      String          @map("last_name")
+    dateOfBirth   DateTime        @map("date_of_birth")
+    phoneNumber   String?         @map("phone_number")
+    notes         String?
+    loanBalance   Float           @default(0) @map("loan_balance")
+    dateJoined    DateTime        @map("date_joined")
+    attendances   Attendance[]
+    purchases     PurchasedItem[]
+    subscriptions Subscription[]
+    payments      Payment[]
+}
+
+model Attendance {
+    id          Int             @id @default(autoincrement())
+    kid         Kid             @relation(fields: [kidId], references: [id])
+    kidId       Int             @map("kid_id")
+    date        DateTime
+    extraCharge Float?          @map("extra_charge")
+    purchases   PurchasedItem[]
+}
+
+model PurchasedItem {
+    id           Int         @id @default(autoincrement())
+    kid          Kid         @relation(fields: [kidId], references: [id])
+    kidId        Int         @map("kid_id")
+    attendance   Attendance? @relation(fields: [attendanceId], references: [id])
+    attendanceId Int?        @map("attendance_id")
+    purchaseDate DateTime    @map("purchase_date")
+    note         String?
+    totalPrice   Float       @map("total_price")
+    isPaid       Boolean     @default(false) @map("is_paid")
+}
+
+model SubscriptionPlan {
+    id            Int            @id @default(autoincrement())
+    name          String
+    price         Float
+    subscriptions Subscription[]
+}
+
+model Subscription {
+    id                 Int                @id @default(autoincrement())
+    kid                Kid                @relation(fields: [kidId], references: [id])
+    kidId              Int                @map("kid_id")
+    plan               SubscriptionPlan   @relation(fields: [planId], references: [id])
+    planId             Int                @map("plan_id")
+    startDate          DateTime           @map("start_date")
+    endDate            DateTime?          @map("end_date")
+    price              Float
+    discountPercentage Float?             @map("discount_percentage")
+    amountPaid         Float              @default(0) @map("amount_paid")
+    status             SubscriptionStatus
+    createdAt          DateTime           @default(now())
+    updatedAt          DateTime           @updatedAt
+}
+
+enum SubscriptionStatus {
+    ACTIVE
+    CANCELLED
+    COMPLETED
+}
+
+model Payment {
+    id          Int      @id @default(autoincrement())
+    kid         Kid      @relation(fields: [kidId], references: [id])
+    kidId       Int      @map("kid_id")
+    amount      Float
+    paymentDate DateTime @map("payment_date")
+    note        String?
+}
+
+model Expense {
+    id          Int      @id @default(autoincrement())
+    title       String
+    description String?
+    amount      Float
+    date        DateTime
+}
+
+model Note {
+    id           Int       @id @default(autoincrement())
+    title        String
+    description  String?
+    reminderDate DateTime? @map("reminder_date")
+}

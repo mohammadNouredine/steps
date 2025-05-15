@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "rsuite/dist/rsuite.min.css";
+
+:root {
+  --background: #ffffff;
+  --foreground: #2a2a2a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;
+    --foreground: #2a2a2a;
+  }
+}
+html {
+  scrollbar-gutter: stable;
+  /* position: static !important;
+  overflow: auto !important;
+  padding: 0 !important; */
+}
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+.auto-complete .rs-picker-popup {
+  @apply !rounded-2xl translate-y-5;
+}
+
+.auto-complete .rs-input-group {
+  @apply text-gray-900 bg-gray-100 !rounded-full py-3 px-3 text-lg;
+}
+.auto-complete .rs-input-group-btn:hover {
+  @apply !bg-transparent;
+}
+.auto-complete .rs-ripple-pond .rs-ripple-rippling {
+  @apply !rounded-full !bg-transparent;
+}
+
+/* rs */
+/* .rs-picker-popup {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 95% !important;
+  border-radius: 10px !important;
+} */
+
+a {
+  text-decoration: none !important;
+}
+
+/*scroll bar*/
+.custom-scrollbar-x-container {
+  overflow-x: overlay;
+}
+
+.custom-scrollbar-x-container::-webkit-scrollbar {
+  height: 8px !important;
+  border-radius: 8px !important;
+  position: absolute !important;
+}
+
+.custom-scrollbar-x-container::-webkit-scrollbar-thumb {
+  border-radius: 8px !important;
+  background-color: rgba(170, 170, 170, 0.4) !important;
+}
+
+
+.custom-scrollbar-container {
+  overflow-y: overlay;
+}
+.custom-scrollbar-container::-webkit-scrollbar {
+  width: 4px !important;
+  border-radius: 8px !important;
+  position: absolute !important;
+}
+.custom-scrollbar-container::-webkit-scrollbar-thumb {
+  border-radius: 8px !important;
+  background-color: rgba(170, 170, 170, 1) !important;
+}
+
+/*line through*/
+.custom-strike{
+  position: relative;
+}
+.custom-strike::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 2px solid black;
+  
+  transform: translateY(-50%) rotate(45deg);
+}
+/*react to print stuff*/
+/*separate each inv on a new page*/
+.invoice-page {
+  page-break-before: always;
+  page-break-inside: avoid;
+}
+
+/* To avoid the first invoice starting on a new page, you can use :first-child to override the break */
+.invoice-page:first-child {
+  page-break-before: auto;
+}
+/* Add this to your CSS file or in a <style> tag within your React component */
+.screen-only-divider {
+  height: 4px;
+  /* or any color you prefer */
+  margin: 20px 0;
+  /* optional spacing */
+}
+
+/* Hide the divider in print */
+@media print {
+  .screen-only-divider {
+    display: none;
+  }
+}
