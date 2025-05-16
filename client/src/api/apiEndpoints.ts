@@ -16,9 +16,9 @@ export const apiEndpoints = {
 
   //-----------------------AUTH
   login: "/auth/login", // POST
-  register: "/auth/signup", // POST
+  register: "/auth/register", // POST
   refreshToken: "/auth/refresh-token", // POST
-  isAuthenticated: "/auth/isAuthenticated", // GET
+  isAuthenticated: "/auth/auto-login", // GET
   getAllUsers: "/auth/users", // GET
 
   //-----------------------CONTENT

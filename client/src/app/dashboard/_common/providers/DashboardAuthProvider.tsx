@@ -7,7 +7,6 @@ import React from "react";
 function DashboardAuthProvider({ children }: { children: React.ReactNode }) {
   const { user, isPending, isAuthenticated } = useIsAuthenticated();
   const router = useRouter();
-
   //loading
   if (isPending) return <LoadingScreen />;
 
@@ -18,8 +17,8 @@ function DashboardAuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   //user but not admin
-  if (user && !(user.role === "ADMIN" || user.role === "SUPERADMIN"))
-    return <div>YOU DONT HAVE PERMISSIONS TO ACCESS THIS PAGE</div>;
+  if (user && !(user.role === "admin" || user.role === "super_admin"))
+    return <div>YOU DONT HAVE PERMISSIONS TO ACCESS THIS PAGE </div>;
 
   //user and admin
   return <>{children}</>;

@@ -1,22 +1,33 @@
 import JWT from "jsonwebtoken";
 
-const JWT_SECRET =
-  "11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000_jwt_secret_75442486-0878-440c-9db1-a7006c25a39f";
+const JWT_SECRET = process.env.JWT_SECRET || "";
 
 interface JwtPayload {
-  userId: string;
+  userId: number;
 }
 
-export function generateJwtToken({ userId }: { userId: string }) {
-  return JWT.sign(
+export function generateJwtToken({ userId }: { userId: number }) {
+  console.log("GENERATING JWT TOKEN");
+  const token = JWT.sign(
     {
       userId,
     },
     JWT_SECRET,
     { expiresIn: "365d" }
   );
+  console.log("GENERATED JWT TOKEN", token);
+  return token;
 }
 
 export function verifyJwtToken(token: string): JwtPayload | null {
-  return JWT.verify(token, JWT_SECRET) as JwtPayload;
+  console.log("VERIFYING JWT TOKEN");
+  console.log("TOKEN TO VERIFY", token);
+  try {
+    const isVerified = JWT.verify(token, JWT_SECRET) as JwtPayload;
+    console.log("IS VERIFIED", isVerified);
+    return isVerified;
+  } catch (error) {
+    console.log("ERROR VERIFYING JWT TOKEN", error);
+    return null;
+  }
 }

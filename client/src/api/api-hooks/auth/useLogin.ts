@@ -7,14 +7,17 @@ const useLogin = ({
 }: {
   callBackOnSuccess?: (data: ResponseData) => void;
 }) => {
+  console.log("TRYING TO LOGIN...");
   return usePostData<LoginUserData, ResponseData>({
     queryKeysToInvalidate: [["auth"]],
 
     endpoint: apiEndpoints.login,
     callBackOnSuccess: (data: ResponseData) => {
       callBackOnSuccess && callBackOnSuccess(data);
-      if (data.accessToken && data.refreshToken) {
+      if (data.accessToken) {
         setAccessToken(data.accessToken);
+      }
+      if (data.refreshToken) {
         setRefreshToken(data.refreshToken);
       }
     },

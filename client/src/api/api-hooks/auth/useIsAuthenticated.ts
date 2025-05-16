@@ -3,7 +3,13 @@ import { apiEndpoints } from "@/api/apiEndpoints";
 
 export default function useIsAuthenticated() {
   const { data, isLoading, isError, isPending, isSuccess, error, status } =
-    useReadData<User>({
+    useReadData<{
+      user: {
+        id: number;
+        role: string;
+        username: string;
+      };
+    }>({
       queryKey: [["auth"]],
       endpoint: apiEndpoints.isAuthenticated,
       keepPreviousData: true,
@@ -11,10 +17,10 @@ export default function useIsAuthenticated() {
       refetchOnMount: false,
       retry: false,
     });
-
+  console.log("DATA: ", data);
   return {
     isAuthenticated: !!data && isSuccess,
-    user: data,
+    user: data?.user,
     isError,
     isPending,
     isLoading,

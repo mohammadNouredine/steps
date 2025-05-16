@@ -45,6 +45,7 @@ axiosClient.interceptors.request.use(
   (config) => {
     // Get the access token if available
     const token = getAccessToken();
+    // console.log("ACCESS TOKEN ON AXIOS CLIENT", token);
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

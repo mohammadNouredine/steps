@@ -1,7 +1,7 @@
 import { isClient } from "@/helpers/isClient";
 
-const AUTH_TOKEN_KEY = "ZAYTOONA_AUTH_TOKEN";
-const REFRESH_TOKEN_KEY = "ZAYTOONA_REFRESH_TOKEN";
+const AUTH_TOKEN_KEY = "STEPS_AUTH_TOKEN";
+const REFRESH_TOKEN_KEY = "STEPS_REFRESH_TOKEN";
 
 export async function setAccessToken(token: string) {
   localStorage.setItem(AUTH_TOKEN_KEY, token);

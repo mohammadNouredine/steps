@@ -20,15 +20,6 @@ export async function autoLogin({ req }: { req: Request }) {
         username: true,
         image: true,
         createdAt: true,
-        userRoles: {
-          select: {
-            role: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
       },
     });
 
@@ -36,7 +27,7 @@ export async function autoLogin({ req }: { req: Request }) {
       return NextResponse.json({ message: "User Not Found!" }, { status: 400 });
     }
     //get the role of the user
-    const roles = await prisma.userRole.findMany({
+    const role = await prisma.userRole.findFirst({
       where: {
         userId: user.id,
       },
@@ -49,16 +40,16 @@ export async function autoLogin({ req }: { req: Request }) {
         },
       },
     });
-    if (!roles) {
+    if (!role) {
       console.log("no roles");
     }
     const userWithRoles = {
       ...user,
-      roles: roles.map((role) => role.role.name),
+      role: role?.role.name,
     };
     return NextResponse.json(
       {
-        data: { user: userWithRoles },
+        user: userWithRoles,
         message: "Welcome",
       },
       { status: 200 }

@@ -1,4 +1,4 @@
-import { login } from "@/common/Backend/Auth/APIs/login";
+import { login } from "@/backend/auth/apis/login";
 
 export async function POST(req: Request) {
   return await login({ req });

@@ -50,7 +50,7 @@ export async function login({ req }: { req: Request }) {
     }
 
     // generate jwt
-    const token = generateJwtToken({ userId: user.id.toString() });
+    const token = generateJwtToken({ userId: user.id });
 
     return NextResponse.json(
       {
