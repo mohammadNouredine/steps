@@ -1,4 +1,4 @@
-import prisma from "@/lib/prismaClient";
+import prisma from "@/lib/db";
 import { getLoggedInUserId } from "../../helpers/getLoggedInUserId";
 import { NextResponse } from "next/server";
 
@@ -13,21 +13,12 @@ export async function autoLogin({ req }: { req: Request }) {
 
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        id: Number(userId),
       },
       select: {
         id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        phoneCode: true,
-        phoneNumber: true,
-        street: true,
-        image: {
-          select: {
-            url: true,
-          },
-        },
+        username: true,
+        image: true,
         createdAt: true,
         userRoles: {
           select: {

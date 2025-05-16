@@ -1,4 +1,4 @@
-import { verifyJwtToken } from "../lib/jwt-token-utils";
+import { verifyJwtToken } from "../auth/lib/jwt-token-utils";
 
 export function getLoggedInUserId({ req }: { req: Request }) {
   try {

@@ -1,45 +1,34 @@
-import prisma from "@/lib/prismaClient";
 import { doesPasswordsMatch, hashPassword } from "../lib/password-utils";
 import { generateJwtToken } from "../lib/jwt-token-utils";
 import { NextResponse } from "next/server";
-import { loginWithPhoneValidation } from "../../validation";
-
-export interface LoginWithPhoneBodyParams {
-  phoneNumber: string;
-  phoneCode: string;
-  password: string;
-}
+import prisma from "@/lib/db";
+import {
+  LoginWithUsernameBodyParams,
+  loginWithUsernameValidation,
+} from "@/common/validations/auth";
 
 export async function login({ req }: { req: Request }) {
   try {
-    const { phoneNumber, phoneCode, password }: LoginWithPhoneBodyParams =
+    const { username, password }: LoginWithUsernameBodyParams =
       await req.json();
 
-    const cleanedPhoneNumber = phoneNumber.replace(/ /g, "");
-
     // validate fields
-    await loginWithPhoneValidation.validate({
-      phoneNumber,
-      phoneCode,
+    await loginWithUsernameValidation.validate({
+      username,
       password,
     });
 
     // check if phone exists
     const user = await prisma.user.findFirst({
       where: {
-        phoneCode: String(phoneCode),
-        phoneNumber: Number(cleanedPhoneNumber),
+        username,
       },
       select: {
         id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        phoneCode: true,
-        phoneNumber: true,
-        street: true,
+        username: true,
+        image: true,
         createdAt: true,
-        password: true,
+        passwordHash: true,
       },
     });
 
@@ -51,7 +40,7 @@ export async function login({ req }: { req: Request }) {
         }
       );
     }
-    if (!doesPasswordsMatch(password, user.password)) {
+    if (!doesPasswordsMatch(password, user.passwordHash)) {
       return NextResponse.json(
         { message: "Password" },
         {
@@ -61,7 +50,7 @@ export async function login({ req }: { req: Request }) {
     }
 
     // generate jwt
-    const token = generateJwtToken({ userId: user.id });
+    const token = generateJwtToken({ userId: user.id.toString() });
 
     return NextResponse.json(
       {
