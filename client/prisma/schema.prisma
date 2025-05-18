@@ -43,13 +43,13 @@ model Kid {
     id            Int             @id @default(autoincrement())
     firstName     String          @map("first_name")
     lastName      String          @map("last_name")
-    dateOfBirth   DateTime        @map("date_of_birth")
+    dateOfBirth   DateTime        @default(now()) @map("date_of_birth")
     phoneNumber   String?         @map("phone_number")
     notes         String?
     image         String?
     gender        Gender?
     loanBalance   Float           @default(0) @map("loan_balance")
-    dateJoined    DateTime        @map("date_joined")
+    dateJoined    DateTime        @default(now()) @map("date_joined")
     attendances   Attendance[]
     purchases     PurchasedItem[]
     subscriptions Subscription[]

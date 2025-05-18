@@ -1,4 +1,3 @@
-import validatePhoneNb from "../lib/validatePhoneNb";
 import { hashPassword } from "../lib/password-utils";
 import { generateJwtToken } from "../lib/jwt-token-utils";
 import { NextResponse } from "next/server";
@@ -79,7 +78,7 @@ export async function register({ req }: { req: Request }) {
       });
     }
     // generate jwt
-    const token = generateJwtToken({ userId: user?.id.toString() });
+    const token = generateJwtToken({ userId: user?.id });
 
     const userWithRoles = {
       ...user,
