@@ -5,6 +5,12 @@ export const DASHBOARD_ENDPOINTS = {
   DELETE_KID: `/kids/`, //DELETE
   UPDATE_KID: (id: number) => `/kids/${id}`, //PUT
 
+  //----------------------------SUBSCRIPTION PLANS
+  GET_ALL_SUBSCRIPTION_PLANS: "/subscription-plans", //GET
+  CREATE_SUBSCRIPTION_PLAN: "/subscription-plans", //POST
+  DELETE_SUBSCRIPTION_PLAN: `/subscription-plans/`, //DELETE
+  UPDATE_SUBSCRIPTION_PLAN: (id: number) => `/subscription-plans/${id}`, //PATCH
+
   //----------------------------PRODUCTS
   CREATE_PRODUCT: "/products", //POST
   DELETE_PRODUCT: `/products/`, //DELETE

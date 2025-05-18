@@ -83,6 +83,8 @@ model SubscriptionPlan {
     id            Int            @id @default(autoincrement())
     name          String
     price         Float
+    duration      Int            @default(1) // in days
+    description   String?
     subscriptions Subscription[]
 }
 

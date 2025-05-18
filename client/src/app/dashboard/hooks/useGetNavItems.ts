@@ -1,8 +1,5 @@
-import { BiBookContent, BiImage, BiSolidCollection } from "react-icons/bi";
-import { FaBook, FaChild, FaStar, FaTag } from "react-icons/fa6";
+import { FaBook, FaChild, FaMoneyCheck } from "react-icons/fa6";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
-import { TbTruckDelivery } from "react-icons/tb";
-import { LuBookCopy } from "react-icons/lu";
 export const useGetNavItems = () => {
   const DASHBOARD_NAV_ITEMS: DashboardLink[] = [
     {
@@ -16,39 +13,9 @@ export const useGetNavItems = () => {
       icon: FaChild,
     },
     {
-      name: "Orders",
-      href: "/dashboard/orders",
-      icon: TbTruckDelivery,
-    },
-    {
-      name: "Collections",
-      href: "/dashboard/collections",
-      icon: BiSolidCollection,
-    },
-    {
-      name: "Tags",
-      href: "/dashboard/tags",
-      icon: FaTag,
-    },
-    {
-      name: "Reviews",
-      href: "/dashboard/reviews",
-      icon: FaStar,
-    },
-    {
-      name: "Variants",
-      href: "/dashboard/variants",
-      icon: LuBookCopy,
-    },
-    {
-      name: "Media",
-      href: "/dashboard/media",
-      icon: BiImage,
-    },
-    {
-      name: "Content",
-      href: "/dashboard/content",
-      icon: BiBookContent,
+      name: "Subscriptions",
+      href: "/dashboard/subscriptions",
+      icon: FaMoneyCheck,
     },
   ];
   return DASHBOARD_NAV_ITEMS;
