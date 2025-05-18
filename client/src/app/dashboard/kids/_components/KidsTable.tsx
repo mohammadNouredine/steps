@@ -1,14 +1,15 @@
 "use client";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 
 import React from "react";
 import { DashboardTable } from "@/app/_components/tables/DashboardTable";
 import { FiEdit2 } from "react-icons/fi";
 import { useGetAllKids } from "../../api-hookts/kids/useGetAllKids";
 import { useDeleteKid } from "../../api-hookts/kids/useDeleteKid";
-import { Kid } from "@prisma/client";
+import { Gender, Kid } from "@prisma/client";
 import AddEditKidModal from "./AddEditKidModal";
 import Image from "next/image";
+import { cn } from "@/utils/cn";
 
 function KidsTable({
   isOpen,
@@ -28,8 +29,23 @@ function KidsTable({
   const kids_columns: ColumnDef<Kid>[] = [
     {
       accessorKey: "id",
+      size: 10,
+      minSize: 10,
+      maxSize: 10,
       header: () => <span>ID</span>,
-      cell: (info) => <div>{info.row.original.id}</div>,
+      cell: (info) => {
+        const isFemale = info.row.original.gender === Gender.FEMALE;
+        return (
+          <div
+            className={cn(
+              isFemale ? "bg-pink" : "bg-blue",
+              "text-white text-center rounded-full py-0.5"
+            )}
+          >
+            {info.row.original.id}
+          </div>
+        );
+      },
     },
     {
       accessorKey: "image",

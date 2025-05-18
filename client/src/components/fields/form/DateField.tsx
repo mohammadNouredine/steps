@@ -17,7 +17,7 @@ export default function DateField({
     [key: string]: any;
   }>();
   return (
-    <div>
+    <div className="w-full">
       {label && (
         <label
           htmlFor={name}
@@ -35,6 +35,7 @@ export default function DateField({
             : "";
           setFieldValue(name, formattedDate);
         }}
+        className="w-full"
         menuClassName="z-[9999]"
         format="yyyy-MM-dd"
         {...datePickerProps}

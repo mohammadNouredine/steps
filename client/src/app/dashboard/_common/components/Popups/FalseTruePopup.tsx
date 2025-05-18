@@ -44,7 +44,7 @@ export default function FalseTruePopup({
       maxWidth="max-w-md"
       titleColor={titleColor}
     >
-      <p className={cn("font-normal", subtitleColor)}>{subtitle}</p>
+      <p className={cn("font-normal text-lg", subtitleColor)}>{subtitle}</p>
       <div className="grid grid-cols-2 gap-x-2 mt-5">
         <button
           className="border border-1 rounded-lg border-red-400 text-red-400 py-3"

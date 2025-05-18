@@ -12,6 +12,7 @@ function Button({
   buttonType,
   text,
   onClick,
+  className,
 }: {
   type?: "button" | "link";
   isLoading?: boolean;
@@ -21,11 +22,13 @@ function Button({
   buttonType?: "submit" | "button";
   text: string;
   onClick?: () => void;
+  className?: string;
 }) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center bg-primary rounded-full !text-white decoration-0 w-full relative",
+        "flex items-center justify-center bg-primary rounded-lg !text-white decoration-0 w-full relative",
+        className,
         disabled || isLoading ? "brightness-50 cursor-not-allowed" : ""
       )}
     >
@@ -34,14 +37,14 @@ function Button({
           disabled={disabled || isLoading}
           onClick={onClick}
           type={buttonType}
-          className="py-4 size-full flex items-center justify-center"
+          className="py-2.5 size-full flex items-center justify-center"
         >
           {isLoading ? loadingText : text}
         </button>
       ) : (
         <Link
           href={link}
-          className="py-4 size-full flex items-center justify-center text-white"
+          className="py-2.5 size-full flex items-center justify-center text-white"
         >
           {isLoading ? loadingText : text}
         </Link>

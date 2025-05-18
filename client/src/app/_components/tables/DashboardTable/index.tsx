@@ -320,6 +320,7 @@ export function DashboardTable({
         isOpenModal={isOpenDeleteModal}
         setIsOpenModal={setIsOpenDeleteModal}
         title={deletingTitle || "Delete"}
+        subtitle="Are you sure you want to delete this Record?"
         onClick={() => {
           if (deleteMutation) {
             deleteMutation({

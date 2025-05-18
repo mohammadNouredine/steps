@@ -14,6 +14,7 @@ export const loginWithUsernameValidation = Yup.object({
   username: Yup.string().required(),
   password: Yup.string().required().min(8),
 });
+
 export type LoginWithUsernameBodyParams = Yup.InferType<
   typeof loginWithUsernameValidation
 >;

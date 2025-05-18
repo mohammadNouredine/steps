@@ -11,8 +11,3 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   return await addKid({ req });
 }
-
-//edit kid
-export async function PUT(req: Request) {
-  return await editKid({ req });
-}

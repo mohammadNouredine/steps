@@ -10,6 +10,7 @@ import SelectField from "@/components/fields/form/SelectField";
 import NumberField from "@/components/fields/form/NumberField";
 import DateField from "@/components/fields/form/DateField";
 import ImageUploader from "@/components/fields/form/ImageUploader";
+import Button from "@/components/common/ui/Button";
 
 function AddEditKidModal({
   isOpen,
@@ -22,12 +23,12 @@ function AddEditKidModal({
   editingKid?: Kid;
   setEditingKid: React.Dispatch<React.SetStateAction<Kid | undefined>>;
 }) {
-  const { mutate: createKid } = useCreateKid({
+  const { mutate: createKid, isPending: isCreatingLoading } = useCreateKid({
     onSuccess: () => {
       setIsOpen(false);
     },
   });
-  const { mutate: editKid } = useEditKid({
+  const { mutate: editKid, isPending: isEditingLoading } = useEditKid({
     onSuccess: () => {
       setIsOpen(false);
     },
@@ -50,6 +51,7 @@ function AddEditKidModal({
           lastName: Yup.string().required("Last name is required"),
           phoneNumber: Yup.string().nullable(),
           dateOfBirth: Yup.date().nullable(),
+          dateJoined: Yup.date().nullable(),
           gender: Yup.mixed<Gender>().oneOf(Object.values(Gender)).nullable(),
           loanBalance: Yup.number().nullable(),
           notes: Yup.string().nullable(),
@@ -59,20 +61,27 @@ function AddEditKidModal({
           lastName: editingKid?.lastName || "",
           phoneNumber: editingKid?.phoneNumber || "",
           dateOfBirth: editingKid?.dateOfBirth || null,
-          gender: editingKid?.gender || null,
+          dateJoined: editingKid?.dateJoined || null,
+          gender: editingKid?.gender || Gender.MALE,
           loanBalance: editingKid?.loanBalance || 0,
           notes: editingKid?.notes || "",
           image: editingKid?.image || "",
         }}
         onSubmit={(values) => {
           const formData = new FormData();
-          formData.append("image", values.image);
+          if (values.image) {
+            formData.append("image", values.image);
+          }
           formData.append("firstName", values.firstName);
           formData.append("lastName", values.lastName);
           formData.append("phoneNumber", values.phoneNumber);
           formData.append(
             "dateOfBirth",
-            values.dateOfBirth ? values.dateOfBirth.toISOString() : ""
+            values.dateOfBirth ? values.dateOfBirth.toString() : ""
+          );
+          formData.append(
+            "dateJoined",
+            values.dateJoined ? values.dateJoined.toString() : ""
           );
           formData.append("gender", values.gender ?? "");
           formData.append(
@@ -95,8 +104,10 @@ function AddEditKidModal({
             </div>
             <InputField name="firstName" label="First Name" />
             <InputField name="lastName" label="Last Name" />
-            <InputField name="phoneNumber" label="Phone Number" />
+
             <DateField name="dateOfBirth" label="Date of Birth" />
+            <DateField name="dateJoined" label="Date Joined" />
+            <InputField name="phoneNumber" label="Phone Number" />
             <SelectField
               name="gender"
               label="Gender"
@@ -105,15 +116,21 @@ function AddEditKidModal({
                 { value: Gender.FEMALE, label: "Female" },
               ]}
             />
-            <NumberField name="loanBalance" label="Loan Balance" />
+            <NumberField
+              name="loanBalance"
+              label="Loan Balance"
+              disabled={isEditing}
+            />
             <InputField name="notes" label="Notes" colSpan={2} />
           </div>
-          <button
-            type="submit"
-            className="mt-4 bg-primary text-white px-4 py-2 rounded-md w-full"
-          >
-            {isEditing ? "Update" : "Create"}
-          </button>
+          <Button
+            type="button"
+            buttonType="submit"
+            text={isEditing ? "Update" : "Create"}
+            className="mt-4"
+            loadingText="Saving..."
+            isLoading={isEditingLoading || isCreatingLoading}
+          />
         </Form>
       </Formik>
     </CenteredModal>

@@ -86,7 +86,7 @@ function CenteredModal({
                 )}
                 <motion.div
                   layout="position"
-                  className="flex-grow flex flex-col justify-between p-6"
+                  className="flex-grow flex flex-col justify-between pb-6 px-6 pt-3"
                 >
                   {children}
                 </motion.div>
