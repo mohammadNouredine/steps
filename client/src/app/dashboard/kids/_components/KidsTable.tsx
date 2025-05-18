@@ -3,13 +3,14 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import React from "react";
 import { DashboardTable } from "@/app/_components/tables/DashboardTable";
-import { FiEdit2 } from "react-icons/fi";
+import { FiEdit2, FiEye } from "react-icons/fi";
 import { useGetAllKids } from "../../api-hookts/kids/useGetAllKids";
 import { useDeleteKid } from "../../api-hookts/kids/useDeleteKid";
 import { Gender, Kid } from "@prisma/client";
 import AddEditKidModal from "./AddEditKidModal";
 import Image from "next/image";
 import { cn } from "@/utils/cn";
+import ViewKidModal from "./ViewKidModal";
 
 function KidsTable({
   isOpen,
@@ -21,6 +22,8 @@ function KidsTable({
   //------------------STATES-------------------------
 
   const [editingKid, setEditingKid] = React.useState<Kid | undefined>();
+  const [viewingKid, setViewingKid] = React.useState<Kid | undefined>();
+  const [isOpenViewingKid, setIsOpenViewingKid] = React.useState(false);
   //------------------API CALLS-------------------------
   const { data: kids_data } = useGetAllKids();
   const { mutate: deleteKid } = useDeleteKid();
@@ -92,15 +95,27 @@ function KidsTable({
       accessorKey: "id",
       header: () => <span>Edit</span>,
       cell: (info) => (
-        <button
-          onClick={() => {
-            setEditingKid(info.row.original);
-            setIsOpen(true);
-          }}
-          className="border border-red-500 px-2 py-2 rounded-lg text-red-500"
-        >
-          <FiEdit2 />
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              setEditingKid(info.row.original);
+              setIsOpen(true);
+            }}
+            className="border border-red-500 px-2 py-2 rounded-lg text-red-500"
+          >
+            <FiEdit2 />
+          </button>
+
+          <button
+            onClick={() => {
+              setViewingKid(info.row.original);
+              setIsOpenViewingKid(true);
+            }}
+            className="border border-red-500 px-2 py-2 rounded-lg text-red-500"
+          >
+            <FiEye />
+          </button>
+        </div>
       ),
     },
   ];
@@ -118,6 +133,13 @@ function KidsTable({
         editingKid={editingKid}
         setEditingKid={setEditingKid}
       />
+      {viewingKid && (
+        <ViewKidModal
+          isOpen={isOpenViewingKid}
+          setIsOpen={setIsOpenViewingKid}
+          kid={viewingKid}
+        />
+      )}
     </div>
   );
 }
