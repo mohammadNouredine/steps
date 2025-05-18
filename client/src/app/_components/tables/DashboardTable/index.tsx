@@ -138,19 +138,18 @@ export function DashboardTable({
 
   const loadingTableRows = (
     <tbody className="px-4">
-      {Array(10)
-        .fill(0)
-        .map((row) => (
-          <tr key={row.id + "-row"}>
-            {table.getAllColumns().map((col) => {
-              return (
-                <td key={col.id + "-row"} className="px-2 py-3">
-                  <div className="h-5 w-full bg-gray-200 rounded-full animate-pulse" />
-                </td>
-              );
-            })}
-          </tr>
-        ))}
+      {Array.from({ length: 10 }).map((_, rowIdx) => (
+        <tr key={`loading-row-${rowIdx}`}>
+          {table.getAllColumns().map((_, colIdx) => (
+            <td
+              key={`loading-row-${rowIdx}-cell-${colIdx}`}
+              className="px-2 py-3"
+            >
+              <div className="h-5 w-full bg-gray-200 rounded-full animate-pulse" />
+            </td>
+          ))}
+        </tr>
+      ))}
     </tbody>
   );
 
@@ -158,11 +157,11 @@ export function DashboardTable({
     <div className="w-full custom-scrollbar-x-container ">
       <table className="shadow-[0_0_2px_0_rgba(0,0,0,0.1)] rounded-lg  bg-white w-full ">
         <thead className="">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id + "-headerGroup"}>
-              {headerGroup.headers.map((header) => (
+          {table.getHeaderGroups().map((headerGroup, hgIndex) => (
+            <tr key={`header-group-${hgIndex}`}>
+              {headerGroup.headers.map((header, hIndex) => (
                 <th
-                  key={header.id + "-header"}
+                  key={`header-${hgIndex}-${hIndex}`}
                   className="px-4 py-4 font-normal text-gray-400 text-start"
                 >
                   {header.isPlaceholder
@@ -180,15 +179,14 @@ export function DashboardTable({
           <>{loadingTableRows}</>
         ) : (
           <tbody className="px-4 ">
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id + "-row"}>
-                {row.getVisibleCells().map((cell) => {
+            {table.getRowModel().rows.map((row, rowIdx) => (
+              <tr key={`data-row-${rowIdx}`}>
+                {row.getVisibleCells().map((cell, cellIdx) => {
                   const inverse = cell.column.columnDef.meta?.inverse || false;
-                  const cellKey = `cell-${row.id}-${cell.column.id}`;
 
                   return (
                     <td
-                      key={cellKey}
+                      key={`cell-${rowIdx}-${cellIdx}`}
                       className="px-4 py-4 border-t border-gray-200 "
                     >
                       {flexRender(
@@ -217,15 +215,18 @@ export function DashboardTable({
           </tbody>
         )}
         <tfoot className="text-gray-300 ">
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id} className="px-4 py-4 text-start !font-thin">
-                  {header.isPlaceholder
+          {table.getFooterGroups().map((footerGroup, fgIdx) => (
+            <tr key={`footer-group-${fgIdx}`}>
+              {footerGroup.headers.map((footer, fIdx) => (
+                <th
+                  key={`footer-${fgIdx}-${fIdx}`}
+                  className="px-4 py-4 text-start !font-thin"
+                >
+                  {footer.isPlaceholder
                     ? null
                     : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
+                        footer.column.columnDef.footer,
+                        footer.getContext()
                       )}
                 </th>
               ))}

@@ -1,4 +1,10 @@
 export const DASHBOARD_ENDPOINTS = {
+  //----------------------------KIDS
+  GET_ALL_KIDS: "/kids", //GET
+  CREATE_KID: "/kids", //POST
+  DELETE_KID: `/kids/`, //DELETE
+  UPDATE_KID: (id: number) => `/kids/${id}`, //PUT
+
   //----------------------------PRODUCTS
   CREATE_PRODUCT: "/products", //POST
   DELETE_PRODUCT: `/products/`, //DELETE

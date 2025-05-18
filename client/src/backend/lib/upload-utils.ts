@@ -1,7 +1,12 @@
 import { cloudinary } from "./cloudinary";
 import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
+import { extractPublicId } from "cloudinary-build-url";
 
 type UploadResponse =
+  | { success: true; result?: UploadApiResponse }
+  | { success: false; error: UploadApiErrorResponse };
+
+type DeleteResponse =
   | { success: true; result?: UploadApiResponse }
   | { success: false; error: UploadApiErrorResponse };
 
@@ -19,6 +24,7 @@ const uploadToCloudinary = (
         use_filename: true,
       })
       .then((result) => {
+        console.log("RESULT PUBLIC ID", result.public_id);
         resolve({ success: true, result });
       })
       .catch((error) => {
@@ -27,4 +33,13 @@ const uploadToCloudinary = (
   });
 };
 
-export { uploadToCloudinary };
+const deleteFromCloudinary = async (url: string): Promise<DeleteResponse> => {
+  const publicId = extractPublicId(url);
+  console.log("PUBLIC ID", publicId);
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.destroy(publicId, { invalidate: true });
+    resolve({ success: true });
+  });
+};
+
+export { uploadToCloudinary, deleteFromCloudinary };

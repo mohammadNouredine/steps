@@ -24,7 +24,10 @@ export function useDeleteData({
 
   return useMutation({
     mutationFn: async (data?: DeleteDataParams) => {
-      const fullEndpoint = `${endpoint}${data?.additionalEndpoint || ""}`;
+      console.log("DATA:", data);
+      const additionalEndpoint = data?.additionalEndpoint || "";
+      console.log("ADDITIONAL ENDPOINT:", additionalEndpoint);
+      const fullEndpoint = `${endpoint}${additionalEndpoint}`;
       return await sendToApi(fullEndpoint, data, "DELETE");
     },
     onSuccess: ({ message }) => {

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import * as Yup from "yup";
 
-export async function validateData<T extends Yup.AnyObject>(
-  data: T,
-  schema: Yup.ObjectSchema<T>
-) {
+export async function validateData(
+  data: Record<string, any>,
+  schema: Yup.ObjectSchema<any, any>
+): Promise<NextResponse | void> {
   try {
     await schema.validate(data, { abortEarly: false });
   } catch (err) {

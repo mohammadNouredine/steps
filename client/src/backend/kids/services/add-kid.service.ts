@@ -27,6 +27,19 @@ const kidSchema = Yup.object({
     .default(null)
     .typeError("Loan balance must be a number"),
   notes: Yup.string().trim().nullable().default(null),
+  image: Yup.mixed<File>()
+    .nullable()
+    .default(null)
+    .test(
+      "is-file-or-null",
+      "Image must be a File",
+      (v) => v === null || v instanceof File
+    )
+    .test(
+      "file-not-empty",
+      "Image file is empty",
+      (v) => v === null || (v instanceof File && v.size > 0)
+    ),
 });
 
 export async function addKid({ req }: { req: Request }) {
@@ -43,13 +56,17 @@ export async function addKid({ req }: { req: Request }) {
     loanBalance: getNumber(formData, "loanBalance"),
     notes: getText(formData, "notes"),
   };
-
-  const validationResponse = await validateData(data, kidSchema);
+  const file = formData.get("image") as File;
+  const validationResponse = await validateData(
+    {
+      ...data,
+      image: file,
+    },
+    kidSchema
+  );
   if (validationResponse) {
     return validationResponse;
   }
-
-  const file = formData.get("image") as File;
 
   let fileUri = "";
   if (file) {

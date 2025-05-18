@@ -5,5 +5,8 @@
     "server:dev": "nest start --watch --prefix server",
     "build": "next build",
     "start": "next start"
+  },
+  "dependencies": {
+    "cloudinary-build-url": "^0.2.4"
   }
 }

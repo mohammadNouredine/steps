@@ -1,5 +1,5 @@
 import { BiBookContent, BiImage, BiSolidCollection } from "react-icons/bi";
-import { FaBook, FaStar, FaTag } from "react-icons/fa6";
+import { FaBook, FaChild, FaStar, FaTag } from "react-icons/fa6";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { TbTruckDelivery } from "react-icons/tb";
 import { LuBookCopy } from "react-icons/lu";
@@ -11,9 +11,9 @@ export const useGetNavItems = () => {
       icon: RiDashboardHorizontalFill,
     },
     {
-      name: "Products",
-      href: "/dashboard/products",
-      icon: FaBook,
+      name: "Kids",
+      href: "/dashboard/kids",
+      icon: FaChild,
     },
     {
       name: "Orders",
