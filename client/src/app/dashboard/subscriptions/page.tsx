@@ -3,6 +3,7 @@ import React from "react";
 import PageHeader from "../_common/components/PageHeader";
 import KidsTable from "./_components/KidsTable";
 import { SummaryValue } from "../_common/components/PageHeader/Summary";
+import SubscriptionPlans from "./_components/SubscriptionPlans";
 
 function subscriptions() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -31,6 +32,7 @@ function subscriptions() {
         title="Subscription Plans"
         onAddClick={() => setIsOpen(true)}
       />
+      <SubscriptionPlans />
       <KidsTable isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );

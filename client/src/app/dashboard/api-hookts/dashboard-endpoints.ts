@@ -8,7 +8,7 @@ export const DASHBOARD_ENDPOINTS = {
   //----------------------------SUBSCRIPTION PLANS
   GET_ALL_SUBSCRIPTION_PLANS: "/subscription-plans", //GET
   CREATE_SUBSCRIPTION_PLAN: "/subscription-plans", //POST
-  DELETE_SUBSCRIPTION_PLAN: `/subscription-plans/`, //DELETE
+  DELETE_SUBSCRIPTION_PLAN: (id: number) => `/subscription-plans/${id}`, //DELETE
   UPDATE_SUBSCRIPTION_PLAN: (id: number) => `/subscription-plans/${id}`, //PATCH
 
   //----------------------------PRODUCTS

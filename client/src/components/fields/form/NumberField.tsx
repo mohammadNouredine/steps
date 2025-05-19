@@ -83,7 +83,7 @@ export default function NumberField({
 
       <ErrorMessage
         name={name}
-        className="text-brand-500 text-xs"
+        className="text-red-500 text-xs"
         component="p"
       />
     </div>

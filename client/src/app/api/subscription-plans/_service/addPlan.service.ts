@@ -1,7 +1,19 @@
 import prisma from "@/lib/db";
-import { NextResponse } from "next/server";
-export async function addPlan(req: Request) {
-  const { name, description, price, duration } = await req.json();
+import { NextRequest, NextResponse } from "next/server";
+import { AddPlanDto } from "../_dto/add-edit-plan.dto.ts";
+export async function addPlan(req: NextRequest, data: AddPlanDto) {
+  console.log("REQUEST", req);
+  const { name, description, price, duration } = data;
+  const existingPlan = await prisma.subscriptionPlan.findFirst({
+    where: { name },
+  });
+
+  if (existingPlan) {
+    return NextResponse.json(
+      { message: "Plan already exists" },
+      { status: 400 }
+    );
+  }
 
   const plan = await prisma.subscriptionPlan.create({
     data: { name, description, price, duration },

@@ -1,7 +1,8 @@
 import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function deletePlan(req: Request, id: number) {
+export async function deletePlan(id: number) {
+  console.log("THE ID IS", id);
   const plan = await prisma.subscriptionPlan.delete({
     where: { id },
   });
