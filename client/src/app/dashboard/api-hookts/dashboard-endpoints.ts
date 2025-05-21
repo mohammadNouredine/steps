@@ -2,9 +2,9 @@ export const DASHBOARD_ENDPOINTS = {
   //---------------------------ATTENDANCE
   GET_ALL_ATTENDANCE: "/attendance", //GET
   CREATE_ATTENDANCE: "/attendance", //POST
-  DELETE_ATTENDANCE: `/attendance/`, //DELETE
-  UPDATE_ATTENDANCE: (id: number) => `/attendance/${id}`, //PUT
-
+  UPDATE_ATTENDANCE: `/attendance`, //PUT
+  TOGGLE_ATTENDANCE: `/attendance/toggle`, //POST
+  DELETE_ATTENDANCE: `/attendance`, //DELETE
   //----------------------------KIDS
   GET_ALL_KIDS: "/kids", //GET
   CREATE_KID: "/kids", //POST

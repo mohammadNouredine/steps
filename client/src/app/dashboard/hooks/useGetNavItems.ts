@@ -1,5 +1,7 @@
-import { FaBook, FaChild, FaMoneyCheck } from "react-icons/fa6";
+import { FaChild, FaMoneyCheck } from "react-icons/fa6";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
+import { GrFingerPrint } from "react-icons/gr";
+
 export const useGetNavItems = () => {
   const DASHBOARD_NAV_ITEMS: DashboardLink[] = [
     {
@@ -16,6 +18,11 @@ export const useGetNavItems = () => {
       name: "Subscriptions",
       href: "/dashboard/subscriptions",
       icon: FaMoneyCheck,
+    },
+    {
+      name: "Attendance",
+      href: "/dashboard/attendance",
+      icon: GrFingerPrint,
     },
   ];
   return DASHBOARD_NAV_ITEMS;

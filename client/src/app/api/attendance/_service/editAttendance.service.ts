@@ -1,7 +1,7 @@
 import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { EditAttendanceDto } from "../_dto/mutate-attendee.dto.ts.js";
-import { CustomErrorResponse } from "@/backend/helpers/customErrorResponse.js";
+import { EditAttendanceDto } from "../_dto/mutate-attendee.dto.js";
+import { CustomErrorResponse } from "@/backend/helpers/customErrorResponse";
 
 export async function editAttendance(_: NextRequest, data: EditAttendanceDto) {
   const { date, kidId, extraCharge, note } = data;

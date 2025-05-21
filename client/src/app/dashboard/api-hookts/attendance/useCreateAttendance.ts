@@ -1,15 +1,21 @@
 import { usePostData } from "@/api/api-service/usePostData";
+import { DASHBOARD_ENDPOINTS } from "../dashboard-endpoints";
 
-export const useCreateAttendance = () => {
+export const useCreateAttendance = ({
+  callBackOnSuccess,
+}: {
+  callBackOnSuccess?: () => void;
+}) => {
   return usePostData<CreateAttendanceType>({
     queryKeysToInvalidate: [["attendance"], ["kids"]],
-    endpoint: "/api/attendance/toggle",
+    endpoint: DASHBOARD_ENDPOINTS.CREATE_ATTENDANCE,
+    callBackOnSuccess,
   });
 };
 
 export type CreateAttendanceType = {
   kidId: number;
-  date: string; //format: YYYY-MM-DD
-  extraCharge: number;
+  date: string;
+  extraCharge?: number;
   note?: string;
 };

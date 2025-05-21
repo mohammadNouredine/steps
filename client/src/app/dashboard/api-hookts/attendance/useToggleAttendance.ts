@@ -1,9 +1,10 @@
 import { usePostData } from "@/api/api-service/usePostData";
+import { DASHBOARD_ENDPOINTS } from "../dashboard-endpoints";
 
 export const useToggleAttendance = () => {
   return usePostData<ToggleAttendanceType>({
     queryKeysToInvalidate: [["attendance"], ["kids"]],
-    endpoint: "/api/attendance/toggle",
+    endpoint: DASHBOARD_ENDPOINTS.TOGGLE_ATTENDANCE,
   });
 };
 

@@ -8,3 +8,7 @@ export function formatDateString(dateString: string): string {
 
   return `${dayOfWeek}, ${dayOfMonth}, ${year}`;
 }
+
+export const formatDateToDashes = (date: Date): string => {
+  return dayjs(date).format("YYYY-MM-DD");
+};

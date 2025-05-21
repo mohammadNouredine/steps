@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import React from "react";
 import { DashboardTable } from "@/app/_components/tables/DashboardTable";
 import { FiEdit2, FiEye } from "react-icons/fi";
-import { useGetAllKids } from "../../api-hookts/kids/useGetAllKids";
+import { KidType, useGetAllKids } from "../../api-hookts/kids/useGetAllKids";
 import { useDeleteKid } from "../../api-hookts/kids/useDeleteKid";
 import { Gender, Kid } from "@prisma/client";
 import AddEditKidModal from "./AddEditKidModal";
@@ -12,7 +12,10 @@ import Image from "next/image";
 import { cn } from "@/utils/cn";
 import ViewKidModal from "./ViewKidModal";
 import { BsFillPersonPlusFill } from "react-icons/bs";
-import AttendanceModal from "./AttendanceModal";
+import AddEditAttendanceModal from "../../attendance/_components/AttendeesTable/AddEditAttendanceModal";
+import { Checkbox } from "rsuite";
+import { useToggleAttendance } from "../../api-hookts/attendance/useToggleAttendance";
+import { formatDateToDashes } from "@/helpers/formatDate";
 
 function KidsTable({
   isOpen,
@@ -30,9 +33,9 @@ function KidsTable({
   //------------------API CALLS-------------------------
   const { data: kids_data } = useGetAllKids();
   const { mutate: deleteKid } = useDeleteKid();
-
+  const { mutate: toggleAttendance } = useToggleAttendance();
   //------------------COLUMNS-------------------------
-  const kids_columns: ColumnDef<Kid>[] = [
+  const kids_columns: ColumnDef<KidType>[] = [
     {
       accessorKey: "id",
       size: 10,
@@ -95,6 +98,31 @@ function KidsTable({
       },
     },
     {
+      meta: {
+        inverse: false,
+        hideCircle: true,
+      },
+      accessorKey: "hasAttendedToday",
+      header: () => <span>Attended Today</span>,
+      cell: (info) => {
+        const hasAttendedToday = info.row.original.hasAttendedToday;
+        return (
+          <div className="cursor-pointer">
+            <Checkbox
+              checked={hasAttendedToday}
+              onChange={() => {
+                toggleAttendance({
+                  kidId: info.row.original.id,
+                  date: formatDateToDashes(new Date()),
+                });
+              }}
+            />
+          </div>
+        );
+      },
+    },
+
+    {
       accessorKey: "id",
       header: () => <span>Edit</span>,
       cell: (info) => (
@@ -145,7 +173,7 @@ function KidsTable({
         editingKid={editingKid}
         setEditingKid={setEditingKid}
       />
-      <AttendanceModal
+      <AddEditAttendanceModal
         isOpen={isOpenAttendance}
         setIsOpen={setIsOpenAttendance}
         kid={viewingKid}

@@ -1,16 +1,27 @@
 import prisma from "@/lib/db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { GetAttendeesSchemaType } from "../_dto/get-attendees.dto";
-export async function getAttendees(data: GetAttendeesSchemaType) {
+
+export async function getAttendees(
+  _: NextRequest,
+  data: GetAttendeesSchemaType
+) {
+  const { date, kidId } = data;
+
   const attendees = await prisma.attendance.findMany({
     where: {
-      date: data.date,
-      kidId: data.kidId || undefined,
+      date: date || undefined,
+      kidId: kidId || undefined,
     },
     include: {
       kid: true,
     },
   });
 
-  return NextResponse.json(attendees, { status: 200 });
+  return NextResponse.json(
+    {
+      data: attendees,
+    },
+    { status: 200 }
+  );
 }

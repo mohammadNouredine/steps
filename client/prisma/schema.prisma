@@ -62,7 +62,7 @@ model Attendance {
     id          Int             @id @default(autoincrement())
     kid         Kid             @relation(fields: [kidId], references: [id])
     kidId       Int             @map("kid_id")
-    date        DateTime
+    date        String
     note        String?
     extraCharge Float?          @map("extra_charge")
     purchases   PurchasedItem[]

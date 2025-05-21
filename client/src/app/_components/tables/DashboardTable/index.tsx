@@ -20,6 +20,7 @@ import FalseTruePopup from "@/app/dashboard/_common/components/Popups/FalseTrueP
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
     inverse: boolean;
+    hideCircle: boolean;
     // Example usage of TData and TValue:
     customRenderer?: (value: TValue, data: TData) => React.ReactNode;
   }
@@ -183,6 +184,8 @@ export function DashboardTable({
               <tr key={`data-row-${rowIdx}`}>
                 {row.getVisibleCells().map((cell, cellIdx) => {
                   const inverse = cell.column.columnDef.meta?.inverse || false;
+                  const shouldHideCircle =
+                    cell.column.columnDef.meta?.hideCircle;
 
                   return (
                     <td
@@ -194,7 +197,8 @@ export function DashboardTable({
                         cell.getContext()
                       )}
 
-                      {typeof cell.getValue() === "boolean" ? (
+                      {typeof cell.getValue() === "boolean" &&
+                      !shouldHideCircle ? (
                         cell.getValue() ? (
                           inverse ? (
                             <IoIosCloseCircle className="text-red-500 text-xl" />

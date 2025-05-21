@@ -6,10 +6,12 @@ export default function DateField({
   label,
   name,
   datePickerProps,
+  disabled = false,
 }: {
   label?: string;
   name: string;
   datePickerProps?: React.ComponentProps<typeof DatePicker>;
+  disabled?: boolean;
 }) {
   //use formik context
 
@@ -28,6 +30,7 @@ export default function DateField({
       )}
 
       <DatePicker
+        disabled={disabled}
         value={values[name] ? new Date(values[name]) : undefined}
         onChange={(dateValue) => {
           const formattedDate = dateValue

@@ -1,10 +1,10 @@
 import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { ToggleAttendeeDto } from "../_dto/mutate-attendee.dto.ts.js";
+import { ToggleAttendeeDto } from "../_dto/mutate-attendee.dto.js";
 
 export async function toggleAttendee(_: NextRequest, data: ToggleAttendeeDto) {
   const { date, kidId } = data;
-
+  console.log("DATE IS: ", date);
   const kid = await prisma.kid.findUnique({
     where: {
       id: parseInt(kidId),

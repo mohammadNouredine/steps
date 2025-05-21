@@ -9,7 +9,7 @@ export interface DeleteDataParams {
   additionalEndpoint?: string; // Explicitly define the property
 }
 
-export function useDeleteData({
+export function useDeleteData<BodyParams, ResponseData = unknown>({
   queryKeysToInvalidate,
   endpoint,
   showSuccessToast = true,
@@ -23,7 +23,7 @@ export function useDeleteData({
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data?: DeleteDataParams) => {
+    mutationFn: async (data?: BodyParams & DeleteDataParams) => {
       console.log("DATA:", data);
       const additionalEndpoint = data?.additionalEndpoint || "";
       console.log("ADDITIONAL ENDPOINT:", additionalEndpoint);
