@@ -21,17 +21,19 @@ function AddEditSubscriptionPlanModal({
     React.SetStateAction<SubscriptionPlan | null>
   >;
 }) {
-  const { mutate: createSubscriptionPlan } = useCreateSubscriptionPlan({
-    onSuccess: () => {
-      setIsOpen(false);
-    },
-  });
-  const { mutate: editSubscriptionPlan } = useEditSubscriptionPlan({
-    onSuccess: () => {
-      setIsOpen(false);
-    },
-    id: editingSubscriptionPlan?.id || -1,
-  });
+  const { mutate: createSubscriptionPlan, isPending: isCreating } =
+    useCreateSubscriptionPlan({
+      onSuccess: () => {
+        setIsOpen(false);
+      },
+    });
+  const { mutate: editSubscriptionPlan, isPending: isEditing } =
+    useEditSubscriptionPlan({
+      onSuccess: () => {
+        setIsOpen(false);
+      },
+      id: editingSubscriptionPlan?.id || -1,
+    });
   return (
     <CenteredModal
       isOpenModal={isOpen}
@@ -62,13 +64,15 @@ function AddEditSubscriptionPlanModal({
           <Form onSubmit={handleSubmit}>
             <InputField name="name" label="Name" />
             <InputField name="description" label="Description" />
-            <NumberField name="price" label="Price" />
+            <NumberField name="price" label="Price" prefix="$" />
             <NumberField name="duration" label="Duration (days)" />
             <Button
               type="button"
               buttonType="submit"
               className="mt-4"
               text={editingSubscriptionPlan ? "Edit" : "Add"}
+              isLoading={isCreating || isEditing}
+              disabled={isCreating || isEditing}
             />
           </Form>
         )}

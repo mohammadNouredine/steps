@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 
 export const CustomErrorResponse = (message: string, code: HttpStatusCode) =>
-  NextResponse.json(null, { statusText: message, status: code });
+  NextResponse.json(
+    { error: message },
+    { status: code, statusText: getStatusText(code) }
+  );
 
 export type HttpStatusCode =
   | 100 // Continue
@@ -22,4 +25,31 @@ export type HttpStatusCode =
   | 500 // Internal Server Error
   | 501 // Not Implemented
   | 502 // Bad Gateway
-  | 503; // Service Unavailable;
+  | 503; // Service Unavailable
+
+// Helper function to get status text based on code
+const getStatusText = (code: HttpStatusCode): string => {
+  switch (code) {
+    case 200:
+      return "OK";
+    case 201:
+      return "Created";
+    case 400:
+      return "Bad Request";
+    case 401:
+      return "Unauthorized";
+    case 403:
+      return "Forbidden";
+    case 404:
+      return "Not Found";
+    case 500:
+      return "Internal Server Error";
+    case 502:
+      return "Bad Gateway";
+    case 503:
+      return "Service Unavailable";
+    // Add more cases as needed
+    default:
+      return "Unknown Status";
+  }
+};

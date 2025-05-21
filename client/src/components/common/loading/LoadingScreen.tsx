@@ -5,8 +5,8 @@ function LoadingScreen() {
   return (
     <div className="flex items-center justify-center w-screen h-screen">
       <Image
-        src={"/brand/images/logozaytoona.png"}
-        alt="logozaytoona"
+        src={"/brand/images/logo.png"}
+        alt="logo"
         width={600}
         height={600}
       />

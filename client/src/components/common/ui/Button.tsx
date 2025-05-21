@@ -6,7 +6,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 function Button({
   type = "button",
   isLoading = false,
-  loadingText = "جار العمل",
+  loadingText = "Submitting...",
   link = "#",
   disabled,
   buttonType,

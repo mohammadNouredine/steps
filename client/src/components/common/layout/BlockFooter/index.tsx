@@ -28,7 +28,7 @@ function BlockFooter() {
         </div>
         <div>
           <Image
-            src="/brand/images/logozaytoona.png"
+            src="/brand/images/logo.png"
             width={150}
             height={150}
             alt="Zaytoona"

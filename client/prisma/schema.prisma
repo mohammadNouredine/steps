@@ -63,8 +63,11 @@ model Attendance {
     kid         Kid             @relation(fields: [kidId], references: [id])
     kidId       Int             @map("kid_id")
     date        DateTime
+    note        String?
     extraCharge Float?          @map("extra_charge")
     purchases   PurchasedItem[]
+
+    @@unique([kidId, date])
 }
 
 model PurchasedItem {
@@ -76,7 +79,7 @@ model PurchasedItem {
     purchaseDate DateTime    @map("purchase_date")
     note         String?
     totalPrice   Float       @map("total_price")
-    isPaid       Boolean     @default(false) @map("is_paid")
+    paidAmount   Float       @map("paid_amount")
 }
 
 model SubscriptionPlan {

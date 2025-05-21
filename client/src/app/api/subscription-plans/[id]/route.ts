@@ -1,7 +1,7 @@
 import { withErrorHandling } from "@/backend/helpers/withErrorHandling";
 import { withBodyValidation } from "@/backend/helpers/withValidation";
 import { editPlan } from "../_service/editPlan.service";
-import { editPlanSchema } from "../_dto/add-edit-plan.dto.ts";
+import { EditPlanDto, editPlanSchema } from "../_dto/add-edit-plan.dto.ts";
 import { deletePlan } from "../_service/deletePlan.service";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -21,7 +21,7 @@ export async function DELETE(
   return withErrorHandling(async () => deletePlan(parseInt(id)))(req);
 }
 
-//add kid
+//edit plan
 export async function PATCH(
   req: NextRequest,
   { params }: { params: { id?: string } }
@@ -34,5 +34,10 @@ export async function PATCH(
     );
   }
 
-  return withErrorHandling(withBodyValidation(editPlan, editPlanSchema))(req);
+  // Wrap editPlan in a function that receives both validated body and id
+  const handler = async (req: NextRequest, validatedData: EditPlanDto) => {
+    return editPlan(validatedData, parseInt(id));
+  };
+
+  return withErrorHandling(withBodyValidation(handler, editPlanSchema))(req);
 }

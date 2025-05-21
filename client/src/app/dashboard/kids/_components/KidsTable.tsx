@@ -11,6 +11,8 @@ import AddEditKidModal from "./AddEditKidModal";
 import Image from "next/image";
 import { cn } from "@/utils/cn";
 import ViewKidModal from "./ViewKidModal";
+import { BsFillPersonPlusFill } from "react-icons/bs";
+import AttendanceModal from "./AttendanceModal";
 
 function KidsTable({
   isOpen,
@@ -24,6 +26,7 @@ function KidsTable({
   const [editingKid, setEditingKid] = React.useState<Kid | undefined>();
   const [viewingKid, setViewingKid] = React.useState<Kid | undefined>();
   const [isOpenViewingKid, setIsOpenViewingKid] = React.useState(false);
+  const [isOpenAttendance, setIsOpenAttendance] = React.useState(false);
   //------------------API CALLS-------------------------
   const { data: kids_data } = useGetAllKids();
   const { mutate: deleteKid } = useDeleteKid();
@@ -98,10 +101,19 @@ function KidsTable({
         <div className="flex gap-2">
           <button
             onClick={() => {
+              setViewingKid(info.row.original);
+              setIsOpenAttendance(true);
+            }}
+            className="border border-red-500 px-2 py-2 rounded-lg text-red-500"
+          >
+            <BsFillPersonPlusFill />
+          </button>
+          <button
+            onClick={() => {
               setEditingKid(info.row.original);
               setIsOpen(true);
             }}
-            className="border border-red-500 px-2 py-2 rounded-lg text-red-500"
+            className="border border-green px-2 py-2 rounded-lg text-green"
           >
             <FiEdit2 />
           </button>
@@ -111,7 +123,7 @@ function KidsTable({
               setViewingKid(info.row.original);
               setIsOpenViewingKid(true);
             }}
-            className="border border-red-500 px-2 py-2 rounded-lg text-red-500"
+            className="border border-blue px-2 py-2 rounded-lg text-blue"
           >
             <FiEye />
           </button>
@@ -132,6 +144,11 @@ function KidsTable({
         setIsOpen={setIsOpen}
         editingKid={editingKid}
         setEditingKid={setEditingKid}
+      />
+      <AttendanceModal
+        isOpen={isOpenAttendance}
+        setIsOpen={setIsOpenAttendance}
+        kid={viewingKid}
       />
       {viewingKid && (
         <ViewKidModal

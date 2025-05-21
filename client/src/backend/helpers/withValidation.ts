@@ -5,7 +5,7 @@ export function withBodyValidation<T>(handler: any, schema: yup.Schema<T>) {
   return async (req: NextRequest): Promise<NextResponse> => {
     const body = await req.json();
     const validatedData = await schema.validate(body, { abortEarly: false });
-
+    console.log("VALIDATED DATA IS", validatedData);
     return await handler(req, validatedData);
   };
 }

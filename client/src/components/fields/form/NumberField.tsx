@@ -72,7 +72,11 @@ export default function NumberField({
         defaultValue={0}
         value={value ? value : values[name]}
         onChange={(value) => {
-          setFieldValue(name, value);
+          if (values[name] === 0) {
+            setFieldValue(name, value);
+          } else {
+            setFieldValue(name, value);
+          }
         }}
         onBlur={(e) => {
           setFieldValue(name, Number(e.target.value));

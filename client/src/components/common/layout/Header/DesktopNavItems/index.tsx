@@ -7,7 +7,7 @@ function DesktopNavItems() {
     <div className="flex items-center gap-x-8">
       <Link href={"/"}>
         <Image
-          src="/brand/images/logozaytoona.png"
+          src="/brand/images/logo.png"
           alt="Zaytoona Logo"
           width={100}
           height={100}

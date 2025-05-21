@@ -20,6 +20,11 @@ function DashboardTopNavbar() {
         </button>
         <div className=" hidden lg:block"></div>
       </>
+      <img
+        src="/brand/images/logo.png"
+        alt="logo"
+        className="h-9 -translate-y-1"
+      />
       <button
         onClick={() => {
           logout();

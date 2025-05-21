@@ -1,7 +1,8 @@
 import prisma from "@/lib/db";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { EditPlanDto } from "../_dto/add-edit-plan.dto.ts";
 export async function editPlan(data: EditPlanDto, id: number) {
+  console.log("NEW DATA IS", data);
   const { name, description, price, duration } = data;
 
   const plan = await prisma.subscriptionPlan.update({

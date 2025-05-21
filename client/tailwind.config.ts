@@ -13,7 +13,20 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        primary: "#FF3347",
+        primary: "#00A79D",
+
+        brandGreen: "#00A79D",
+        brandYellow: "#FBB040",
+        brandRed: "#FF5B65",
+
+        brandGreenL: "#6BCCC6",
+        brandYellowL: "#FDC87A",
+        brandRedL: "#FF8D94",
+
+        brandGreenN: "#26C2B9",
+        brandYellowN: "#FFA825",
+        brandRedN: "#FF3844",
+        //--------------------------------
         blue: "#0078FA",
         green: "#00BD7D",
         orange: "#FF7C3C",
