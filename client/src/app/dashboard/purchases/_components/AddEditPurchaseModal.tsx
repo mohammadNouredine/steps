@@ -2,126 +2,102 @@ import React from "react";
 import CenteredModal from "../../../_components/popups/CenteredModal";
 import { Form, Formik } from "formik";
 import InputField from "@/components/fields/form/InputField";
-import * as Yup from "yup";
-import { Kid, Gender } from "@prisma/client";
-import { useCreateKid } from "../../api-hookts/kids/useCreateKid";
-import { useEditKid } from "../../api-hookts/kids/useEditKid";
 import SelectField from "@/components/fields/form/SelectField";
 import NumberField from "@/components/fields/form/NumberField";
 import DateField from "@/components/fields/form/DateField";
-import ImageUploader from "@/components/fields/form/ImageUploader";
 import Button from "@/components/common/ui/Button";
+import { DashboardPurchasedItem } from "../../_common/types/PurchasedItem";
+import { addPurchaseSchema } from "@/app/api/purchase/_dto/mutatePurchase.dto";
+import { useCreatePurchase } from "../../api-hookts/purchases/useCreatePurchase";
+import { useEditPurchase } from "../../api-hookts/purchases/useEditPurchase";
+import { formatDateToDashes } from "@/helpers/formatDate";
+import { useGetAllKids } from "../../api-hookts/kids/useGetAllKids";
+import { useGetAttendance } from "../../api-hookts/attendance/useGetAttendance";
 
-function AddEditKidModal({
+function AddEditPurchaseModal({
   isOpen,
   setIsOpen,
-  editingKid,
-  setEditingKid,
+  editingPurchase,
+  setEditingPurchase,
 }: {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  editingKid?: Kid;
-  setEditingKid: React.Dispatch<React.SetStateAction<Kid | undefined>>;
+  editingPurchase?: DashboardPurchasedItem;
+  setEditingPurchase: React.Dispatch<
+    React.SetStateAction<DashboardPurchasedItem | undefined>
+  >;
 }) {
-  const { mutate: createKid, isPending: isCreatingLoading } = useCreateKid({
-    onSuccess: () => {
-      setIsOpen(false);
-    },
-  });
-  const { mutate: editKid, isPending: isEditingLoading } = useEditKid({
-    onSuccess: () => {
-      setIsOpen(false);
-    },
-    id: editingKid?.id || -1,
-  });
-  const isEditing = !!editingKid?.id;
+  const { data: kidsData } = useGetAllKids();
+  const kids = kidsData?.data;
+  const kidsOptions = kids?.map((kid) => ({
+    value: kid.id,
+    label: kid.firstName + " " + kid.lastName,
+  }));
+
+  const { data: attendanceData } = useGetAttendance({});
+  const attendance = attendanceData?.data;
+  const attendanceOptions = attendance?.map((attendance) => ({
+    value: attendance.id,
+    label: attendance.date,
+  }));
+
+  const { mutate: createPurchase, isPending: isCreatingLoading } =
+    useCreatePurchase({
+      onSuccess: () => {
+        setIsOpen(false);
+      },
+    });
+  const { mutate: editPurchase, isPending: isEditingLoading } = useEditPurchase(
+    {
+      onSuccess: () => {
+        setIsOpen(false);
+      },
+      id: editingPurchase?.id || -1,
+    }
+  );
+  const isEditing = !!editingPurchase?.id;
 
   return (
     <CenteredModal
       onClose={() => {
-        setEditingKid(undefined);
+        setEditingPurchase(undefined);
       }}
-      title={isEditing ? "Edit Kid" : "Add Kid"}
+      title={isEditing ? "Edit Purchase" : "Add Purchase"}
       isOpenModal={isOpen}
       setIsOpenModal={setIsOpen}
     >
       <Formik
-        validationSchema={Yup.object({
-          firstName: Yup.string().required("First name is required"),
-          lastName: Yup.string().required("Last name is required"),
-          phoneNumber: Yup.string().nullable(),
-          dateOfBirth: Yup.date().nullable(),
-          dateJoined: Yup.date().nullable(),
-          gender: Yup.mixed<Gender>().oneOf(Object.values(Gender)).nullable(),
-          loanBalance: Yup.number().nullable(),
-          notes: Yup.string().nullable(),
-        })}
+        validationSchema={addPurchaseSchema}
         initialValues={{
-          firstName: editingKid?.firstName || "",
-          lastName: editingKid?.lastName || "",
-          phoneNumber: editingKid?.phoneNumber || "",
-          dateOfBirth: editingKid?.dateOfBirth || null,
-          dateJoined: editingKid?.dateJoined || null,
-          gender: editingKid?.gender || Gender.MALE,
-          loanBalance: editingKid?.loanBalance || 0,
-          notes: editingKid?.notes || "",
-          image: editingKid?.image || "",
+          kidId: editingPurchase?.kidId || 0,
+          purchaseDate: editingPurchase?.purchaseDate
+            ? formatDateToDashes(editingPurchase?.purchaseDate)
+            : formatDateToDashes(new Date()),
+          note: editingPurchase?.note || "",
+          totalPrice: editingPurchase?.totalPrice || 0,
+          paidAmount: editingPurchase?.paidAmount || 0,
         }}
         onSubmit={(values) => {
-          const formData = new FormData();
-          if (values.image) {
-            formData.append("image", values.image);
-          }
-          formData.append("firstName", values.firstName);
-          formData.append("lastName", values.lastName);
-          formData.append("phoneNumber", values.phoneNumber);
-          formData.append(
-            "dateOfBirth",
-            values.dateOfBirth ? values.dateOfBirth.toString() : ""
-          );
-          formData.append(
-            "dateJoined",
-            values.dateJoined ? values.dateJoined.toString() : ""
-          );
-          formData.append("gender", values.gender ?? "");
-          formData.append(
-            "loanBalance",
-            values.loanBalance != null ? values.loanBalance.toString() : ""
-          );
-          formData.append("notes", values.notes);
-
           if (isEditing) {
-            editKid(formData);
+            editPurchase(values);
           } else {
-            createKid(formData);
+            createPurchase(values);
           }
         }}
       >
         <Form>
           <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2">
-              <ImageUploader name="image" />
-            </div>
-            <InputField name="firstName" label="First Name" />
-            <InputField name="lastName" label="Last Name" />
-
-            <DateField name="dateOfBirth" label="Date of Birth" />
-            <DateField name="dateJoined" label="Date Joined" />
-            <InputField name="phoneNumber" label="Phone Number" />
             <SelectField
-              name="gender"
-              label="Gender"
-              data={[
-                { value: Gender.MALE, label: "Male" },
-                { value: Gender.FEMALE, label: "Female" },
-              ]}
+              name="kidId"
+              label="Kid"
+              data={kidsOptions || []}
+              colSpan={2}
             />
-            <NumberField
-              name="loanBalance"
-              label="Loan Balance"
-              disabled={isEditing}
-            />
-            <InputField name="notes" label="Notes" colSpan={2} />
+
+            <DateField name="purchaseDate" label="Purchase Date" />
+            <InputField name="note" label="Note" />
+            <NumberField name="totalPrice" label="Total Price" />
+            <NumberField name="paidAmount" label="Paid Amount" />
           </div>
           <Button
             type="button"
@@ -137,4 +113,4 @@ function AddEditKidModal({
   );
 }
 
-export default AddEditKidModal;
+export default AddEditPurchaseModal;

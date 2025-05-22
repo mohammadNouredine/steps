@@ -41,6 +41,9 @@ export async function getPurchases(
     skip: pageIndex * pageSize,
     take: pageSize,
     where: filters,
+    include: {
+      kid: true,
+    },
   });
 
   return NextResponse.json({
