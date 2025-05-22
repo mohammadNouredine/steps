@@ -1,4 +1,4 @@
-import { FaChild, FaMoneyCheck } from "react-icons/fa6";
+import { FaChild, FaMoneyCheck, FaStore } from "react-icons/fa6";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { GrFingerPrint } from "react-icons/gr";
 
@@ -23,6 +23,11 @@ export const useGetNavItems = () => {
       name: "Attendance",
       href: "/dashboard/attendance",
       icon: GrFingerPrint,
+    },
+    {
+      name: "Purchases",
+      href: "/dashboard/purchases",
+      icon: FaStore,
     },
   ];
   return DASHBOARD_NAV_ITEMS;
