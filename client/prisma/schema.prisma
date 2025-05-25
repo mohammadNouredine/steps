@@ -127,6 +127,8 @@ model Expense {
     title       String
     description String?
     amount      Float
+    paidAmount  Float
+    amountDue   Float
     date        DateTime
 }
 
