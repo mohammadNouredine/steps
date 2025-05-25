@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["www.zaytoonakids.com"], // Add your domain here
+    domains: ["www.steps.com"], // Add your domain here
     path: "/_next/image", // Default image path (optional)
     remotePatterns: [
       {

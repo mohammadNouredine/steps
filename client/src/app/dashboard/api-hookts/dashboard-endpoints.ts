@@ -1,4 +1,9 @@
 export const DASHBOARD_ENDPOINTS = {
+  //---------------------------NOTES
+  GET_ALL_NOTES: "/note", //GET
+  CREATE_NOTE: "/note", //POST
+  UPDATE_NOTE: `/note`, //PUT
+  DELETE_NOTE: `/note`, //DELETE
   //---------------------------PURCHASES
   GET_ALL_PURCHASES: "/purchase", //GET
   CREATE_PURCHASE: "/purchase", //POST

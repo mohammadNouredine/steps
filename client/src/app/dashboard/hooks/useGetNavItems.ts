@@ -1,6 +1,7 @@
 import { FaChild, FaMoneyCheck, FaStore } from "react-icons/fa6";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { GrFingerPrint } from "react-icons/gr";
+import { CgNotes } from "react-icons/cg";
 
 export const useGetNavItems = () => {
   const DASHBOARD_NAV_ITEMS: DashboardLink[] = [
@@ -28,6 +29,11 @@ export const useGetNavItems = () => {
       name: "Purchases",
       href: "/dashboard/purchases",
       icon: FaStore,
+    },
+    {
+      name: "Notes",
+      href: "/dashboard/notes",
+      icon: CgNotes,
     },
   ];
   return DASHBOARD_NAV_ITEMS;
