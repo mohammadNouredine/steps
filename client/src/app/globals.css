@@ -33,7 +33,7 @@ body {
   }
 }
 .auto-complete .rs-picker-popup {
-  @apply !rounded-2xl translate-y-5;
+  @apply !rounded-2xl translate-y-5 ;
 }
 
 .auto-complete .rs-input-group {

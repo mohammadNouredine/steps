@@ -25,7 +25,7 @@ function CheckboxField({
       <Checkbox
         disabled={disabled}
         checked={checked}
-        onChange={(value, checked) => {
+        onChange={(_, checked) => {
           setFieldValue(name, checked);
         }}
         color="red"

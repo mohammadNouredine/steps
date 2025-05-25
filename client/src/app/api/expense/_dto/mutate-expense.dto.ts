@@ -1,12 +1,11 @@
 import * as yup from "yup";
-import { validateDateAndTransformToDate } from "../../_common/validation/date-validations";
 
 export const addExpenseSchema = yup.object().shape({
   title: yup.string().required(),
   description: yup.string().optional(),
   amount: yup.number().required(),
   paidAmount: yup.number().required(),
-  date: validateDateAndTransformToDate.required("Date is required"),
+  date: yup.date().required(),
 });
 
 export type AddExpenseSchemaType = yup.InferType<typeof addExpenseSchema>;

@@ -46,8 +46,10 @@ export default function DateField({
             : dayjs(dateValue).format("YYYY-MM-DD");
           setFieldValue(name, formattedDate);
         }}
-        className="w-full"
-        menuClassName="z-[9999]"
+        className="w-full z-[9999]"
+        //change popup class name
+
+        menuClassName="!z-[9999]"
         format={format}
         ranges={[]} // disables presets (optional)
         showMeridian={false}
