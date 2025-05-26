@@ -1,5 +1,11 @@
 import { autoLogin } from "@/backend/auth/apis/auto-login";
 
+export const runtime = "nodejs";
 export async function GET(req: Request) {
-  return await autoLogin({ req });
+  try {
+    return await autoLogin({ req });
+  } catch (error) {
+    console.error("Auto-login error:", error);
+    return new Response("Auto-login failed", { status: 500 });
+  }
 }
