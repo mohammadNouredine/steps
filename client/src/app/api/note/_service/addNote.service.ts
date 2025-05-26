@@ -9,7 +9,7 @@ export async function addNote(_: NextRequest, dto: AddNoteSchemaType) {
     data: {
       title,
       description,
-      reminderDate: reminder_date ? new Date(reminder_date) : undefined,
+      reminderDate: reminder_date,
       isArchived,
     },
   });
