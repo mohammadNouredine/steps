@@ -1,6 +1,5 @@
 import { autoLogin } from "@/backend/auth/apis/auto-login";
 
-export const runtime = "nodejs";
 export async function GET(req: Request) {
   try {
     return await autoLogin({ req });
