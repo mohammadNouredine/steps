@@ -12,12 +12,12 @@ function NotesTable({
 }) {
   const {
     notes,
-    totalNotes,
-    loadMore,
-    hasNextPage,
-    isFetchingNextPage,
-    isFetching,
-    isPending,
+    // totalNotes,
+    // loadMore,
+    // hasNextPage,
+    // isFetchingNextPage,
+    // isFetching,
+    // isPending,
   } = useGetNotesInfinite({
     params: {},
   });

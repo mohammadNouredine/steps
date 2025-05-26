@@ -5,7 +5,7 @@ import KidsTable from "./_components/SubscriptionsTable";
 import { SummaryValue } from "../_common/components/PageHeader/Summary";
 import SubscriptionPlans from "./_components/SubscriptionPlans";
 
-function subscriptions() {
+function Subscriptions() {
   const [isOpen, setIsOpen] = React.useState(false);
   const orderSummaryValues: SummaryValue[] = [
     {
@@ -38,4 +38,4 @@ function subscriptions() {
   );
 }
 
-export default subscriptions;
+export default Subscriptions;

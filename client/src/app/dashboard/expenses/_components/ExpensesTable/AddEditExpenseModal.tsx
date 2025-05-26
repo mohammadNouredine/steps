@@ -1,17 +1,10 @@
 import React from "react";
 import CenteredModal from "../../../../_components/popups/CenteredModal";
-import { Kid } from "@prisma/client";
-import { AttendanceType } from "../../../api-hookts/attendance/useGetAttendance";
 import { Form, Formik } from "formik";
 import DateField from "@/components/fields/form/DateField";
-import SelectField from "@/components/fields/form/SelectField";
-import { useGetAllKids } from "@/app/dashboard/api-hookts/kids/useGetAllKids";
 import NumberField from "@/components/fields/form/NumberField";
 import InputField from "@/components/fields/form/InputField";
 import Button from "@/components/common/ui/Button";
-import * as Yup from "yup";
-import { useCreateAttendance } from "@/app/dashboard/api-hookts/attendance/useCreateAttendance";
-import { useEditAttendance } from "@/app/dashboard/api-hookts/attendance/useEditAttendance";
 import { DashboardExpenseType } from "@/app/dashboard/_common/types/expenses";
 import { useAddExpense } from "@/app/dashboard/api-hookts/expenses/useAddExpense";
 import { useEditExpense } from "@/app/dashboard/api-hookts/expenses/useEditExpense";
@@ -34,13 +27,6 @@ export default function AddEditExpenseModal({
   editingExpense,
   setEditingExpense,
 }: ExpenseModalProps) {
-  const { data: kids } = useGetAllKids();
-  const kids_options = kids?.data.map((kid) => ({
-    label: `${kid.firstName} ${kid.lastName}`,
-    value: kid.id,
-    ...kid,
-  }));
-
   const { mutate: addExpense, isPending: isAdding } = useAddExpense({
     callBackOnSuccess: () => {
       setIsOpen(false);

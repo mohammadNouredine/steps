@@ -1,6 +1,5 @@
 import { DASHBOARD_ENDPOINTS } from "../dashboard-endpoints";
 import { useUpdateData } from "@/api/api-service/useUpdateData";
-import { GetPurchasesSchemaType } from "@/app/api/purchase/_dto/getsPurchase.dto";
 import { EditPurchaseDto } from "@/app/api/purchase/_dto/mutatePurchase.dto";
 
 export function useEditPurchase({

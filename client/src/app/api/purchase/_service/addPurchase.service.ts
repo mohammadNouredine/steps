@@ -15,7 +15,7 @@ export async function addPurchase(_: NextRequest, data: AddPurchaseDto) {
     return NextResponse.json({ message: "Kid not found" }, { status: 404 });
   }
 
-  const pruchase = await prisma.purchasedItem.create({
+  await prisma.purchasedItem.create({
     data: {
       kidId: kidId,
       attendanceId: attendanceId,

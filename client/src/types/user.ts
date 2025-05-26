@@ -1,5 +1,3 @@
-import { Localization } from "./localization";
-
 export interface User {
   id: number;
   documentId: string;
@@ -19,7 +17,6 @@ export interface User {
   createdBy: User;
   updatedBy: User;
   locale: string;
-  localizations: Localization[];
 }
 
 // Role assigned to a user
@@ -37,7 +34,6 @@ export interface Role {
   createdBy: User;
   updatedBy: User;
   locale: string;
-  localizations: Localization[];
 }
 
 // Permission linked to roles
@@ -56,7 +52,6 @@ export interface Permission {
   createdBy: User;
   updatedBy: User;
   locale: string;
-  localizations: Localization[];
 }
 
 // Summary for roles and permissions

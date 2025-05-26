@@ -1,6 +1,5 @@
 import LayoutWrapper from "@/components/common/layout/LayoutWrapper";
 import React from "react";
-import Reviews from "./Reviews";
 
 function AboutUsPageComponent() {
   return (
@@ -22,7 +21,7 @@ function AboutUsPageComponent() {
           </p>
         </div>
 
-        <Reviews />
+        {/* <Reviews /> */}
       </div>
     </LayoutWrapper>
   );

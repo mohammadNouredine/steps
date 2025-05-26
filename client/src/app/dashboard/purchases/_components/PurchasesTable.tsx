@@ -4,7 +4,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import React from "react";
 import { DashboardTable } from "@/app/_components/tables/DashboardTable";
 import { FiEdit2 } from "react-icons/fi";
-import { useDeleteKid } from "../../api-hookts/kids/useDeleteKid";
 import AddEditPurchaseModal from "./AddEditPurchaseModal";
 import { cn } from "@/utils/cn";
 import { DashboardPurchasedItem } from "../../_common/types/PurchasedItem";

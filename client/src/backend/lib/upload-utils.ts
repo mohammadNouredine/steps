@@ -39,6 +39,7 @@ const deleteFromCloudinary = async (url: string): Promise<DeleteResponse> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.destroy(publicId, { invalidate: true });
     resolve({ success: true });
+    reject({ success: false });
   });
 };
 

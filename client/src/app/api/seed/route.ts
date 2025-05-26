@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import bcrypt from "bcryptjs";
 
-export async function GET(req: Request) {
+export async function GET() {
   // Check if superAdmin already exists
   let superAdmin = await prisma.user.findUnique({
     where: {
@@ -79,12 +79,23 @@ export async function GET(req: Request) {
   );
 
   if (superAdminRoleToAssign) {
-    await prisma.userRole.create({
-      data: {
-        userId: superAdmin.id,
-        roleId: superAdminRoleToAssign.id,
+    const existingUserRole = await prisma.userRole.findUnique({
+      where: {
+        userId_roleId: {
+          userId: superAdmin.id,
+          roleId: superAdminRoleToAssign.id,
+        },
       },
     });
+
+    if (!existingUserRole) {
+      await prisma.userRole.create({
+        data: {
+          userId: superAdmin.id,
+          roleId: superAdminRoleToAssign.id,
+        },
+      });
+    }
   }
 
   // Return a response indicating that the seeding has been done

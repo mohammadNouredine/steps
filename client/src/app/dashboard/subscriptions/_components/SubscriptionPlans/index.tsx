@@ -1,15 +1,12 @@
 import { useGetAllSubscriptionPlans } from "@/app/dashboard/api-hookts/subscriptions/subscription-plans/useGetAllSubscriptionPlans";
 import React from "react";
 import AddEditSubscriptionPlanModal from "./AddEditSubscriptionPlanModal";
-import { SubscriptionPlan } from "@prisma/client";
 import { FaPlus } from "react-icons/fa";
 import SinglePlanCard from "./SinglePlanCard";
 function SubscriptionPlans() {
   const { data: subscriptionPlans } = useGetAllSubscriptionPlans();
   console.log(subscriptionPlans);
   const [isOpen, setIsOpen] = React.useState(false);
-  const [editingSubscriptionPlan, setEditingSubscriptionPlan] =
-    React.useState<SubscriptionPlan | null>(null);
 
   return (
     <div>
@@ -26,12 +23,7 @@ function SubscriptionPlans() {
         </button>
       </div>
 
-      <AddEditSubscriptionPlanModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        editingSubscriptionPlan={editingSubscriptionPlan}
-        setEditingSubscriptionPlan={setEditingSubscriptionPlan}
-      />
+      <AddEditSubscriptionPlanModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { SubscriptionStatus, BillingMode } from "@prisma/client";
+import { BillingMode } from "@prisma/client";
 
 export async function deleteSubscription({ id }: { id: number }) {
   // 1️⃣ fetch subscription and plan
@@ -39,14 +39,14 @@ export async function deleteSubscription({ id }: { id: number }) {
   }
 
   // 3️⃣ transaction: update loan and delete subscription
-  const [_, deleted] = await prisma.$transaction([
+  const [data, deleted] = await Promise.all([
     prisma.kid.update({
       where: { id: sub.kidId },
       data: { loanBalance: { increment: loanAdjust } },
     }),
     prisma.subscription.delete({ where: { id } }),
   ]);
-
+  console.log("DATA:", data);
   return NextResponse.json(
     {
       message: "Subscription deleted successfully",

@@ -1,8 +1,14 @@
 "use client";
-import { CustomerMedia } from "@/types/media";
+
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, A11y, Autoplay } from "swiper/modules";
+
+export type CustomerMedia = {
+  id: number;
+  name: string;
+  url: string;
+};
 
 // Import Swiper styles
 import "swiper/css";

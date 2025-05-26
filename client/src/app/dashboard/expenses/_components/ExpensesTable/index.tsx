@@ -31,7 +31,10 @@ function ExpensesTable({
     React.useState<DateRange | null>();
   const [searchQuery, setSearchQuery] = React.useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
-  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [isPaymentPending, setIsPaymentPending] = React.useState(false);
 
   //------------------API CALLS-------------------------
@@ -113,10 +116,8 @@ function ExpensesTable({
         <DashboardTable
           data={expensesData?.data}
           columns={kids_columns}
-          pagination={{
-            pageIndex: pageIndex,
-            pageSize: 10,
-          }}
+          pagination={pagination}
+          setPagination={setPagination}
           deleteMutation={deleteExpense}
         />
       </div>

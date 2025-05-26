@@ -12,8 +12,7 @@ function SinglePlanCard({ plan }: { plan: SubscriptionPlan }) {
   });
   const [isOpen, setIsOpen] = React.useState(false);
   const [isOpenEdit, setIsOpenEdit] = React.useState(false);
-  const [editingSubscriptionPlan, setEditingSubscriptionPlan] =
-    React.useState<SubscriptionPlan | null>(null);
+
   return (
     <div
       key={plan.id}
@@ -56,7 +55,6 @@ function SinglePlanCard({ plan }: { plan: SubscriptionPlan }) {
         isOpen={isOpenEdit}
         setIsOpen={setIsOpenEdit}
         editingSubscriptionPlan={plan}
-        setEditingSubscriptionPlan={setEditingSubscriptionPlan}
       />
     </div>
   );

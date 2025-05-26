@@ -1,4 +1,4 @@
-import { doesPasswordsMatch, hashPassword } from "../lib/password-utils";
+import { doesPasswordsMatch } from "../lib/password-utils";
 import { generateJwtToken } from "../lib/jwt-token-utils";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";

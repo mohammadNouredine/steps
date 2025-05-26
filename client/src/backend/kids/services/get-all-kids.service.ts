@@ -2,7 +2,7 @@ import { formatDateToDashes } from "@/helpers/formatDate";
 import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function getAllKids({ req }: { req: Request }) {
+export async function getAllKids() {
   const today = formatDateToDashes(new Date());
 
   const kids = await prisma.kid.findMany({

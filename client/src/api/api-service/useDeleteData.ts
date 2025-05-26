@@ -27,6 +27,7 @@ export function useDeleteData<BodyParams, ResponseData = unknown>({
       console.log("DATA:", data);
       const additionalEndpoint = data?.additionalEndpoint || "";
       console.log("ADDITIONAL ENDPOINT:", additionalEndpoint);
+      void (0 as unknown as ResponseData);
       const fullEndpoint = `${endpoint}${additionalEndpoint}`;
       return await sendToApi(fullEndpoint, data, "DELETE");
     },

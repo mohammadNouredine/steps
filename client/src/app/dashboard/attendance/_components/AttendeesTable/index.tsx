@@ -7,12 +7,10 @@ import { FiEdit2 } from "react-icons/fi";
 import { Gender } from "@prisma/client";
 import Image from "next/image";
 import { cn } from "@/utils/cn";
-import { BsFillPersonPlusFill } from "react-icons/bs";
 import {
   AttendanceType,
   useGetAttendance,
 } from "@/app/dashboard/api-hookts/attendance/useGetAttendance";
-import { useToggleAttendance } from "@/app/dashboard/api-hookts/attendance/useToggleAttendance";
 import AddEditAttendanceModal from "./AddEditAttendanceModal";
 import CardContainer from "@/app/dashboard/_common/components/CardContainer";
 import { DatePicker, InputPicker } from "rsuite";
@@ -34,7 +32,6 @@ function AttendeesTable({
   const [editingAttendance, setEditingAttendance] = React.useState<
     AttendanceType | undefined
   >();
-  const [isOpenAttendance, setIsOpenAttendance] = React.useState(false);
   const [selectedKidId, setSelectedKidId] = React.useState<
     number | undefined
   >();

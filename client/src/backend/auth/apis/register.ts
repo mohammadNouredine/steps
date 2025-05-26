@@ -68,9 +68,8 @@ export async function register({ req }: { req: Request }) {
         name: "user",
       },
     });
-    let userRole = null;
     if (role) {
-      userRole = await prisma.userRole.create({
+      await prisma.userRole.create({
         data: {
           userId: user.id,
           roleId: role.id,

@@ -12,7 +12,6 @@ import { useCreatePurchase } from "../../api-hookts/purchases/useCreatePurchase"
 import { useEditPurchase } from "../../api-hookts/purchases/useEditPurchase";
 import { formatDateToDashes } from "@/helpers/formatDate";
 import { useGetAllKids } from "../../api-hookts/kids/useGetAllKids";
-import { useGetAttendance } from "../../api-hookts/attendance/useGetAttendance";
 
 function AddEditPurchaseModal({
   isOpen,
@@ -32,13 +31,6 @@ function AddEditPurchaseModal({
   const kidsOptions = kids?.map((kid) => ({
     value: kid.id,
     label: kid.firstName + " " + kid.lastName,
-  }));
-
-  const { data: attendanceData } = useGetAttendance({});
-  const attendance = attendanceData?.data;
-  const attendanceOptions = attendance?.map((attendance) => ({
-    value: attendance.id,
-    label: attendance.date,
   }));
 
   const { mutate: createPurchase, isPending: isCreatingLoading } =
