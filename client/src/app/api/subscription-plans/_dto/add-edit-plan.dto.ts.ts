@@ -1,3 +1,4 @@
+import { BillingMode } from "@prisma/client";
 import * as yup from "yup";
 
 export const addPlanSchema = yup.object().shape({
@@ -11,6 +12,10 @@ export const addPlanSchema = yup.object().shape({
     .number()
     .required("Duration is required")
     .min(1, "Duration must be at least 1"),
+  billingMode: yup
+    .mixed<BillingMode>()
+    .oneOf(Object.values(BillingMode))
+    .required(),
 });
 export type AddPlanDto = yup.InferType<typeof addPlanSchema>;
 

@@ -18,7 +18,7 @@ export async function getSubscriptions(
   const pageSize = 20;
   const subscriptions = await prisma.subscription.findMany({
     where,
-    include: { plan: true },
+    include: { plan: true, kid: true },
     orderBy: [{ id: "desc" }],
     take: pageSize,
   });

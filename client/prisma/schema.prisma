@@ -82,12 +82,18 @@ model PurchasedItem {
     paidAmount   Float       @map("paid_amount")
 }
 
+enum BillingMode {
+    PREPAID // charge all up front
+    USAGE // charge per attendance
+}
+
 model SubscriptionPlan {
     id            Int            @id @default(autoincrement())
     name          String
     price         Float
     duration      Int            @default(1) // in days
     description   String?
+    billingMode   BillingMode    @default(PREPAID)
     subscriptions Subscription[]
 }
 

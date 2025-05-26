@@ -1,8 +1,8 @@
-// app/api/subscriptions/_service/addSubscription.service.ts
 import { NextRequest, NextResponse } from "next/server";
-import { AddSubscriptionSchemaType } from "../_dto/mutate-subscription.dto";
 import prisma from "@/lib/db";
+import { AddSubscriptionSchemaType } from "../_dto/mutate-subscription.dto";
 import { SubscriptionStatus } from "@prisma/client";
+import getDayRange from "@/backend/helpers/getDayRange";
 
 export async function addSubscription(
   _: NextRequest,
@@ -14,111 +14,71 @@ export async function addSubscription(
     startDate: rawStart,
     amountPaid = 0,
     discountPercentage,
+    endDate: sendedEndDate,
   } = dto;
   const startDate = rawStart ? new Date(rawStart) : new Date();
 
-  //check if the kid is in the database
-  const kid = await prisma.kid.findUnique({
-    where: { id: kidId },
-  });
+  // 1️⃣ validate kid & plan
+  const kid = await prisma.kid.findUnique({ where: { id: kidId } });
   if (!kid) {
-    return NextResponse.json(
-      { message: "Kid not found", status: 404 },
-      { status: 404 }
-    );
+    return NextResponse.json({ message: "Kid not found" }, { status: 404 });
   }
-  //check if the plan is in the database
   const plan = await prisma.subscriptionPlan.findUnique({
     where: { id: planId },
   });
   if (!plan) {
-    return NextResponse.json(
-      { message: "Plan not found", status: 404 },
-      { status: 404 }
-    );
+    return NextResponse.json({ message: "Plan not found" }, { status: 404 });
   }
-  //check if the kid is already having a subscription
+
+  // 2️⃣ prevent multiple active
   const existing = await prisma.subscription.findFirst({
     where: { kidId, status: SubscriptionStatus.ACTIVE },
-    include: { plan: true },
   });
   if (existing) {
     return NextResponse.json(
-      { message: "Kid already has an active subscription", status: 400 },
+      { message: "Kid already has an active subscription" },
       { status: 400 }
     );
   }
 
-  // wrap in a transaction since we update multiple records
-  const newSub = await prisma.$transaction(async (tx) => {
-    // 1️⃣ If there's an ACTIVE subscription, cancel it and refund unused days
-    const existing = await tx.subscription.findFirst({
-      where: { kidId, status: SubscriptionStatus.ACTIVE },
-      include: { plan: true },
-    });
-    if (existing) {
-      const now = new Date();
-      // count attendances between existing.startDate and today
-      const attendCount = await tx.attendance.count({
-        where: {
-          kidId,
-          date: {
-            gte: existing.startDate.toISOString().slice(0, 10),
-            lte: now.toISOString().slice(0, 10),
-          },
-        },
-      });
-      const usedAmount =
-        (existing.plan.price / existing.plan.duration) * attendCount;
-      const refund = existing.plan.price - usedAmount;
+  const endDate = sendedEndDate
+    ? sendedEndDate
+    : plan.duration > 1
+    ? new Date(startDate.getTime() + (plan.duration - 1) * 86400000)
+    : startDate;
 
-      // cancel old subscription
-      await tx.subscription.update({
-        where: { id: existing.id },
-        data: { status: SubscriptionStatus.CANCELLED, endDate: now },
-      });
-      // deduct refund from loanBalance
-      await tx.kid.update({
-        where: { id: kidId },
-        data: { loanBalance: { decrement: refund } },
-      });
-    }
+  const { startOfDay: startOfStartDate } = getDayRange(startDate.toISOString());
+  const { startOfNextDay: endOfEndDate } = getDayRange(
+    sendedEndDate?.toISOString() || endDate.toISOString()
+  );
 
-    // 2️⃣ Create the new subscription
-    const plan = await tx.subscriptionPlan.findUnique({
-      where: { id: planId },
-    });
-    if (!plan) throw new Error("Subscription plan not found");
+  // 3️⃣ create subscription (no loan change yet)
 
-    // compute endDate = start + (duration-1) days
-    const endDate = new Date(
-      startDate.valueOf() + (plan.duration - 1) * 24 * 60 * 60 * 1000
-    );
+  const subscription = await prisma.subscription.create({
+    data: {
+      kid: { connect: { id: kidId } },
+      plan: { connect: { id: planId } },
+      startDate: startOfStartDate,
+      endDate: endOfEndDate,
+      price: plan.price,
+      discountPercentage,
+      amountPaid,
+      status: SubscriptionStatus.ACTIVE,
+    },
+  });
 
-    const subscription = await tx.subscription.create({
-      data: {
-        kid: { connect: { id: kidId } },
-        plan: { connect: { id: planId } },
-        startDate,
-        endDate,
-        price: plan.price,
-        discountPercentage,
-        amountPaid,
-        status: SubscriptionStatus.ACTIVE,
-      },
-    });
-
-    // 3️⃣ Add the net amount to the kid’s loanBalance
-    await tx.kid.update({
+  // 4️⃣ billing logic
+  if (plan.billingMode === "PREPAID") {
+    // charge full plan price now
+    await prisma.kid.update({
       where: { id: kidId },
       data: { loanBalance: { increment: plan.price - amountPaid } },
     });
-
-    return subscription;
-  });
+  }
+  // else USAGE: we'll bill on attendance
 
   return NextResponse.json({
-    data: newSub,
+    data: subscription,
     message: "Subscription created successfully",
   });
 }

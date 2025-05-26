@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { AddPlanDto } from "../_dto/add-edit-plan.dto.ts";
 export async function addPlan(req: NextRequest, data: AddPlanDto) {
   console.log("REQUEST", req);
-  const { name, description, price, duration } = data;
+  const { name, description, price, duration, billingMode } = data;
   const existingPlan = await prisma.subscriptionPlan.findFirst({
     where: { name },
   });
@@ -16,7 +16,7 @@ export async function addPlan(req: NextRequest, data: AddPlanDto) {
   }
 
   const plan = await prisma.subscriptionPlan.create({
-    data: { name, description, price, duration },
+    data: { name, description, price, duration, billingMode },
   });
 
   if (!plan)
