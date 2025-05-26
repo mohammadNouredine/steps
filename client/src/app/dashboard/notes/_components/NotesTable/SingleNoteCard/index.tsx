@@ -1,13 +1,17 @@
 import CardContainer from "@/app/dashboard/_common/components/CardContainer";
 import { DashboardNote } from "@/app/dashboard/_common/types/Notes";
 import IconButton from "@/components/common/ui/IconButton";
-import dayjs from "dayjs";
 import React from "react";
 import { FaArchive, FaEdit } from "react-icons/fa";
 import AddEditNoteModal from "../../AddEditNoteModal";
 import { useEditNote } from "@/app/dashboard/api-hookts/notes/useEditNote";
 import PulsingCircle from "@/components/common/ui/animation/PulsingCircle";
 import { cn } from "@/utils/cn";
+
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 function SingleNoteCard({
   note,
@@ -54,11 +58,9 @@ function SingleNoteCard({
         </div>
         <p className="text-sm text-gray-500">{note.description}</p>
         <p className="text-sm">
-          {/* {note.reminderDate
-            ? dayjs(note.reminderDate).format("DD/MM/YYYY HH:mm:ss")
-            : ""} */}
-          {note.reminderDate ? note.reminderDate.toString() : ""}
-          {note.reminderDate ? note.reminderDate.toISOString() : ""}
+          {dayjs(note.reminderDate).utc().format("DD/MM/YYYY HH:mm:ss")}
+          {note.reminderDate?.toString()}
+          {note.reminderDate?.toISOString()}
         </p>
         <AddEditNoteModal isOpen={isOpen} setIsOpen={setIsOpen} note={note} />
       </div>
