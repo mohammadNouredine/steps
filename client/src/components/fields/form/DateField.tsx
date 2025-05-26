@@ -42,7 +42,7 @@ export default function DateField({
           }
           // Format with or without time depending on showTime
           const formattedDate = showTime
-            ? dayjs(dateValue).format("YYYY-MM-DDTHH:mm:ss")
+            ? dayjs(dateValue).format("YYYY-MM-DDTHH:mm:ss[Z]")
             : dayjs(dateValue).format("YYYY-MM-DD");
           setFieldValue(name, formattedDate);
         }}
