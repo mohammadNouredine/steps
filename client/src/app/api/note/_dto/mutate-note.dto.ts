@@ -1,10 +1,9 @@
 import * as yup from "yup";
-import { validateDateAndTransformToUTC } from "../../_common/validation/date-validations";
 
 export const addNoteSchema = yup.object().shape({
   title: yup.string().required(),
   description: yup.string().optional(),
-  reminder_date: validateDateAndTransformToUTC.optional(),
+  reminder_date: yup.date().optional(),
   isArchived: yup.boolean().optional(),
 });
 
