@@ -54,9 +54,11 @@ function SingleNoteCard({
         </div>
         <p className="text-sm text-gray-500">{note.description}</p>
         <p className="text-sm">
-          {note.reminderDate
+          {/* {note.reminderDate
             ? dayjs(note.reminderDate).format("DD/MM/YYYY HH:mm:ss")
-            : ""}
+            : ""} */}
+          {note.reminderDate ? note.reminderDate.toString() : ""}
+          {note.reminderDate ? note.reminderDate.toISOString() : ""}
         </p>
         <AddEditNoteModal isOpen={isOpen} setIsOpen={setIsOpen} note={note} />
       </div>
