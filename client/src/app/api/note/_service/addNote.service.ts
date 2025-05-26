@@ -4,7 +4,7 @@ import prisma from "@/lib/db";
 
 export async function addNote(_: NextRequest, dto: AddNoteSchemaType) {
   const { title, description, reminder_date, isArchived } = dto;
-
+  console.log("REMINDER DATE IS: ", reminder_date);
   const note = await prisma.note.create({
     data: {
       title,
