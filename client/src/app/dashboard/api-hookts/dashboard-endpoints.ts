@@ -1,4 +1,9 @@
 export const DASHBOARD_ENDPOINTS = {
+  //---------------------------SUBSCRIPTIONS
+  GET_ALL_SUBSCRIPTIONS: "/subscription", //GET
+  CREATE_SUBSCRIPTION: "/subscription", //POST
+  UPDATE_SUBSCRIPTION: `/subscription`, //PUT
+  DELETE_SUBSCRIPTION: `/subscription/`, //DELETE
   //---------------------------EXPENSES
   GET_ALL_EXPENSES: "/expense", //GET
   CREATE_EXPENSE: "/expense", //POST

@@ -17,6 +17,38 @@ export async function addSubscription(
   } = dto;
   const startDate = rawStart ? new Date(rawStart) : new Date();
 
+  //check if the kid is in the database
+  const kid = await prisma.kid.findUnique({
+    where: { id: kidId },
+  });
+  if (!kid) {
+    return NextResponse.json(
+      { message: "Kid not found", status: 404 },
+      { status: 404 }
+    );
+  }
+  //check if the plan is in the database
+  const plan = await prisma.subscriptionPlan.findUnique({
+    where: { id: planId },
+  });
+  if (!plan) {
+    return NextResponse.json(
+      { message: "Plan not found", status: 404 },
+      { status: 404 }
+    );
+  }
+  //check if the kid is already having a subscription
+  const existing = await prisma.subscription.findFirst({
+    where: { kidId, status: SubscriptionStatus.ACTIVE },
+    include: { plan: true },
+  });
+  if (existing) {
+    return NextResponse.json(
+      { message: "Kid already has an active subscription", status: 400 },
+      { status: 400 }
+    );
+  }
+
   // wrap in a transaction since we update multiple records
   const newSub = await prisma.$transaction(async (tx) => {
     // 1️⃣ If there's an ACTIVE subscription, cancel it and refund unused days
@@ -85,5 +117,8 @@ export async function addSubscription(
     return subscription;
   });
 
-  return NextResponse.json({ data: newSub });
+  return NextResponse.json({
+    data: newSub,
+    message: "Subscription created successfully",
+  });
 }

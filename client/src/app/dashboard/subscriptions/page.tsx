@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import PageHeader from "../_common/components/PageHeader";
-import KidsTable from "./_components/KidsTable";
+import KidsTable from "./_components/SubscriptionsTable";
 import { SummaryValue } from "../_common/components/PageHeader/Summary";
 import SubscriptionPlans from "./_components/SubscriptionPlans";
 

@@ -3,7 +3,6 @@ import React from "react";
 import AddEditSubscriptionPlanModal from "./AddEditSubscriptionPlanModal";
 import { SubscriptionPlan } from "@prisma/client";
 import { FaPlus } from "react-icons/fa";
-import { useDeleteSubscriptionPlan } from "@/app/dashboard/api-hookts/subscriptions/subscription-plans/useSubscriptionPlan";
 import SinglePlanCard from "./SinglePlanCard";
 function SubscriptionPlans() {
   const { data: subscriptionPlans } = useGetAllSubscriptionPlans();

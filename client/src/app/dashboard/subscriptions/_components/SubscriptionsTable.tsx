@@ -7,12 +7,11 @@ import { FiEdit2, FiEye } from "react-icons/fi";
 import { useGetAllKids } from "../../api-hookts/kids/useGetAllKids";
 import { useDeleteKid } from "../../api-hookts/kids/useDeleteKid";
 import { Gender, Kid } from "@prisma/client";
-import AddEditKidModal from "./AddEditKidModal";
+import AddEditKidModal from "./AddEditSubscriptionModal";
 import Image from "next/image";
 import { cn } from "@/utils/cn";
-import ViewKidModal from "./ViewKidModal";
 
-function KidsTable({
+function SubscriptionsTable({
   isOpen,
   setIsOpen,
 }: {
@@ -133,15 +132,8 @@ function KidsTable({
         editingKid={editingKid}
         setEditingKid={setEditingKid}
       />
-      {viewingKid && (
-        <ViewKidModal
-          isOpen={isOpenViewingKid}
-          setIsOpen={setIsOpenViewingKid}
-          kid={viewingKid}
-        />
-      )}
     </div>
   );
 }
 
-export default KidsTable;
+export default SubscriptionsTable;
