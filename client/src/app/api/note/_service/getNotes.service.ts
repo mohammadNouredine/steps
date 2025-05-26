@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { GetNoteSchemaType } from "../_dto/gets-note.dto";
 import { Prisma } from "@prisma/client";
 import prisma from "@/lib/db";
-import getDayRange from "@/backend/helpers/getDayRange";
+import getDayRange, {
+  TIMEZONE,
+  transformDateFromUTCToTimezone,
+} from "@/backend/helpers/getDayRange";
 
 export async function getNotes(_: NextRequest, dto: GetNoteSchemaType) {
   const { search, reminder_date, isArchived, lastId, isToday, hideArchived } =
@@ -59,7 +62,18 @@ export async function getNotes(_: NextRequest, dto: GetNoteSchemaType) {
     take: pageSize,
   });
 
+  const transformedNotes = notes.map((note) => ({
+    ...note,
+    reminderDate: note.reminderDate
+      ? transformDateFromUTCToTimezone(note.reminderDate, TIMEZONE)
+      : null,
+  }));
+
   const nextLastId = notes.length > 0 ? notes[notes.length - 1].id : null;
   const total = await prisma.note.count({ where: filters });
-  return NextResponse.json({ data: notes, lastId: nextLastId, total });
+  return NextResponse.json({
+    data: transformedNotes,
+    lastId: nextLastId,
+    total,
+  });
 }
