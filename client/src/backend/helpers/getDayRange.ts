@@ -25,6 +25,9 @@ function getDayRange(dateString: string) {
 
 export default getDayRange;
 
-export function transformDateFromUTCToTimezone(date: Date, timezone: string) {
-  return dayjs(date).tz(timezone).format("YYYY-MM-DD HH:mm:ss");
+export function transformDateFromUTCToTimezone(
+  date: Date,
+  timezone: string
+): Date {
+  return dayjs(date).tz(timezone).toDate();
 }
