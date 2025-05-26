@@ -3,13 +3,12 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import React from "react";
 import { DashboardTable } from "@/app/_components/tables/DashboardTable";
-import { FiEdit2, FiEye } from "react-icons/fi";
-import { useGetAllKids } from "../../api-hookts/kids/useGetAllKids";
-import { useDeleteKid } from "../../api-hookts/kids/useDeleteKid";
-import { Gender, Kid } from "@prisma/client";
-import AddEditKidModal from "./AddEditSubscriptionModal";
+import { FiEdit2 } from "react-icons/fi";
 import Image from "next/image";
-import { cn } from "@/utils/cn";
+import { useGetSubscriptions } from "../../api-hookts/subscriptions/useGetSubscriptions";
+import { useDeleteSubscription } from "../../api-hookts/subscriptions/useDeleteSubscription";
+import { DashboardSubscriptionType } from "../../_common/types/subscriptions";
+import AddEditSubscriptionModal from "./AddEditSubscriptionModal";
 
 function SubscriptionsTable({
   isOpen,
@@ -20,44 +19,26 @@ function SubscriptionsTable({
 }) {
   //------------------STATES-------------------------
 
-  const [editingKid, setEditingKid] = React.useState<Kid | undefined>();
-  const [viewingKid, setViewingKid] = React.useState<Kid | undefined>();
-  const [isOpenViewingKid, setIsOpenViewingKid] = React.useState(false);
+  const [editingSubscription, setEditingSubscription] = React.useState<
+    DashboardSubscriptionType | undefined
+  >();
   //------------------API CALLS-------------------------
-  const { data: kids_data } = useGetAllKids();
-  const { mutate: deleteKid } = useDeleteKid();
+  const { data: subscriptions_data } = useGetSubscriptions({
+    params: {},
+  });
+  const { mutate: deleteSubscription } = useDeleteSubscription();
 
   //------------------COLUMNS-------------------------
-  const kids_columns: ColumnDef<Kid>[] = [
-    {
-      accessorKey: "id",
-      size: 10,
-      minSize: 10,
-      maxSize: 10,
-      header: () => <span>ID</span>,
-      cell: (info) => {
-        const isFemale = info.row.original.gender === Gender.FEMALE;
-        return (
-          <div
-            className={cn(
-              isFemale ? "bg-pink" : "bg-blue",
-              "text-white text-center rounded-full py-0.5"
-            )}
-          >
-            {info.row.original.id}
-          </div>
-        );
-      },
-    },
+  const kids_columns: ColumnDef<DashboardSubscriptionType>[] = [
     {
       accessorKey: "image",
       header: () => <span>Image</span>,
       cell: (info) => (
         <div>
-          {info.row.original.image ? (
+          {info.row.original.kid.image ? (
             <Image
-              src={info.row.original.image}
-              alt={info.row.original.firstName}
+              src={info.row.original.kid.image}
+              alt={info.row.original.kid.firstName}
               width={50}
               height={50}
             />
@@ -70,26 +51,31 @@ function SubscriptionsTable({
     {
       accessorKey: "firstName",
       header: () => <span>First Name</span>,
-      cell: (info) => <div>{info.row.original.firstName}</div>,
+      cell: (info) => <div>{info.row.original.kid.firstName}</div>,
     },
     {
       accessorKey: "lastName",
       header: () => <span>Last Name</span>,
-      cell: (info) => <div>{info.row.original.lastName}</div>,
+      cell: (info) => <div>{info.row.original.kid.lastName}</div>,
     },
     {
-      accessorKey: "dateOfBirth",
-      header: () => <span>Age</span>,
-      cell: (info) => {
-        const dob = info.row.original.dateOfBirth;
-        if (!dob) return <div>-</div>;
-        const age = Math.floor(
-          (new Date().getTime() - new Date(dob).getTime()) /
-            (1000 * 60 * 60 * 24 * 365.25)
-        );
-        return <div>{age}</div>;
-      },
+      accessorKey: "price",
+      header: () => <span>Price</span>,
     },
+
+    {
+      accessorKey: "amountPaid",
+      header: () => <span>Amount Paid</span>,
+    },
+    {
+      accessorKey: "status",
+      header: () => <span>Status</span>,
+    },
+    {
+      accessorKey: "startDate",
+      header: () => <span>Start Date</span>,
+    },
+
     {
       accessorKey: "id",
       header: () => <span>Edit</span>,
@@ -97,22 +83,12 @@ function SubscriptionsTable({
         <div className="flex gap-2">
           <button
             onClick={() => {
-              setEditingKid(info.row.original);
+              setEditingSubscription(info.row.original);
               setIsOpen(true);
             }}
             className="border border-red-500 px-2 py-2 rounded-lg text-red-500"
           >
             <FiEdit2 />
-          </button>
-
-          <button
-            onClick={() => {
-              setViewingKid(info.row.original);
-              setIsOpenViewingKid(true);
-            }}
-            className="border border-red-500 px-2 py-2 rounded-lg text-red-500"
-          >
-            <FiEye />
           </button>
         </div>
       ),
@@ -122,15 +98,15 @@ function SubscriptionsTable({
   return (
     <div>
       <DashboardTable
-        data={kids_data?.data}
+        data={subscriptions_data?.data}
         columns={kids_columns}
-        deleteMutation={deleteKid}
+        deleteMutation={deleteSubscription}
       />
-      <AddEditKidModal
+      <AddEditSubscriptionModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        editingKid={editingKid}
-        setEditingKid={setEditingKid}
+        editingSubscription={editingSubscription}
+        setEditingSubscription={setEditingSubscription}
       />
     </div>
   );

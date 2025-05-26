@@ -1,3 +1,5 @@
-import { Subscription } from "@prisma/client";
+import { Kid, Subscription } from "@prisma/client";
 
-export type DashboardSubscriptionType = Subscription;
+export type DashboardSubscriptionType = Subscription & {
+  kid: Kid;
+};

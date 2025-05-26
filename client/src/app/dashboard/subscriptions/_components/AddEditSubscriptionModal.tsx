@@ -1,127 +1,106 @@
 import React from "react";
 import CenteredModal from "../../../_components/popups/CenteredModal";
 import { Form, Formik } from "formik";
-import InputField from "@/components/fields/form/InputField";
-import * as Yup from "yup";
-import { Kid, Gender } from "@prisma/client";
-import { useCreateKid } from "../../api-hookts/kids/useCreateKid";
-import { useEditKid } from "../../api-hookts/kids/useEditKid";
 import SelectField from "@/components/fields/form/SelectField";
 import NumberField from "@/components/fields/form/NumberField";
 import DateField from "@/components/fields/form/DateField";
-import ImageUploader from "@/components/fields/form/ImageUploader";
 import Button from "@/components/common/ui/Button";
+import { DashboardSubscriptionType } from "../../_common/types/subscriptions";
+import { useAddSubscription } from "../../api-hookts/subscriptions/useAddSubscription";
+import { useEditSubscription } from "../../api-hookts/subscriptions/useEditSubscription";
+import { addSubscriptionSchema } from "@/app/api/subscription/_dto/mutate-subscription.dto";
+import { useGetAllKids } from "../../api-hookts/kids/useGetAllKids";
+import { useGetAllSubscriptionPlans } from "../../api-hookts/subscriptions/subscription-plans/useGetAllSubscriptionPlans";
+import { SubscriptionStatus } from "@prisma/client";
 
 function AddEditKidModal({
   isOpen,
   setIsOpen,
-  editingKid,
-  setEditingKid,
+  editingSubscription,
+  setEditingSubscription,
 }: {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  editingKid?: Kid;
-  setEditingKid: React.Dispatch<React.SetStateAction<Kid | undefined>>;
+  editingSubscription?: DashboardSubscriptionType;
+  setEditingSubscription: React.Dispatch<
+    React.SetStateAction<DashboardSubscriptionType | undefined>
+  >;
 }) {
-  const { mutate: createKid, isPending: isCreatingLoading } = useCreateKid({
-    onSuccess: () => {
-      setIsOpen(false);
-    },
+  const { data: kids_data } = useGetAllKids();
+  const kidsOptions = kids_data?.data.map((kid) => {
+    return { value: kid.id, label: kid.firstName };
   });
-  const { mutate: editKid, isPending: isEditingLoading } = useEditKid({
-    onSuccess: () => {
-      setIsOpen(false);
-    },
-    id: editingKid?.id || -1,
+  const { data: subscription_plans_data } = useGetAllSubscriptionPlans();
+  const subscriptionPlansOptions = subscription_plans_data?.map((plan) => {
+    return { value: plan.id, label: plan.name };
   });
-  const isEditing = !!editingKid?.id;
+
+  const { mutate: createSubscription, isPending: isCreatingLoading } =
+    useAddSubscription({
+      callBackOnSuccess: () => {
+        setIsOpen(false);
+      },
+    });
+  const { mutate: editSubscription, isPending: isEditingLoading } =
+    useEditSubscription({
+      callBackOnSuccess: () => {
+        setIsOpen(false);
+      },
+    });
+  const isEditing = !!editingSubscription?.id;
 
   return (
     <CenteredModal
       onClose={() => {
-        setEditingKid(undefined);
+        setEditingSubscription(undefined);
       }}
       title={isEditing ? "Edit Kid" : "Add Kid"}
       isOpenModal={isOpen}
       setIsOpenModal={setIsOpen}
     >
       <Formik
-        validationSchema={Yup.object({
-          firstName: Yup.string().required("First name is required"),
-          lastName: Yup.string().required("Last name is required"),
-          phoneNumber: Yup.string().nullable(),
-          dateOfBirth: Yup.date().nullable(),
-          dateJoined: Yup.date().nullable(),
-          gender: Yup.mixed<Gender>().oneOf(Object.values(Gender)).nullable(),
-          loanBalance: Yup.number().nullable(),
-          notes: Yup.string().nullable(),
-        })}
+        validationSchema={addSubscriptionSchema}
         initialValues={{
-          firstName: editingKid?.firstName || "",
-          lastName: editingKid?.lastName || "",
-          phoneNumber: editingKid?.phoneNumber || "",
-          dateOfBirth: editingKid?.dateOfBirth || null,
-          dateJoined: editingKid?.dateJoined || null,
-          gender: editingKid?.gender || Gender.MALE,
-          loanBalance: editingKid?.loanBalance || 0,
-          notes: editingKid?.notes || "",
-          image: editingKid?.image || "",
+          kidId: editingSubscription?.kidId || -1,
+          planId: editingSubscription?.planId || -1,
+          startDate: editingSubscription?.startDate || undefined,
+          endDate: editingSubscription?.endDate || undefined,
+          amountPaid: editingSubscription?.amountPaid || 0,
+          discountPercentage: editingSubscription?.discountPercentage || 0,
+          status: editingSubscription?.status || undefined,
         }}
         onSubmit={(values) => {
-          const formData = new FormData();
-          if (values.image) {
-            formData.append("image", values.image);
-          }
-          formData.append("firstName", values.firstName);
-          formData.append("lastName", values.lastName);
-          formData.append("phoneNumber", values.phoneNumber);
-          formData.append(
-            "dateOfBirth",
-            values.dateOfBirth ? values.dateOfBirth.toString() : ""
-          );
-          formData.append(
-            "dateJoined",
-            values.dateJoined ? values.dateJoined.toString() : ""
-          );
-          formData.append("gender", values.gender ?? "");
-          formData.append(
-            "loanBalance",
-            values.loanBalance != null ? values.loanBalance.toString() : ""
-          );
-          formData.append("notes", values.notes);
-
           if (isEditing) {
-            editKid(formData);
+            editSubscription({
+              ...values,
+              id: editingSubscription?.id || -1,
+            });
           } else {
-            createKid(formData);
+            createSubscription(values);
           }
         }}
       >
         <Form>
           <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2">
-              <ImageUploader name="image" />
-            </div>
-            <InputField name="firstName" label="First Name" />
-            <InputField name="lastName" label="Last Name" />
-
-            <DateField name="dateOfBirth" label="Date of Birth" />
-            <DateField name="dateJoined" label="Date Joined" />
-            <InputField name="phoneNumber" label="Phone Number" />
+            <SelectField name="kidId" label="Kid" data={kidsOptions || []} />
             <SelectField
-              name="gender"
-              label="Gender"
-              data={[
-                { value: Gender.MALE, label: "Male" },
-                { value: Gender.FEMALE, label: "Female" },
-              ]}
+              name="planId"
+              label="Plan"
+              data={subscriptionPlansOptions || []}
             />
-            <NumberField
-              name="loanBalance"
-              label="Loan Balance"
-              disabled={isEditing}
-            />
-            <InputField name="notes" label="Notes" colSpan={2} />
+            <DateField name="startDate" label="Start Date" />
+            <DateField name="endDate" label="End Date" />
+            <NumberField name="amountPaid" label="Amount Paid" />
+            <NumberField name="discountPercentage" label="Discount %" />
+            {isEditing && (
+              <SelectField
+                name="status"
+                label="Status"
+                data={Object.values(SubscriptionStatus).map((v) => {
+                  return { value: v, label: v };
+                })}
+              />
+            )}
           </div>
           <Button
             type="button"

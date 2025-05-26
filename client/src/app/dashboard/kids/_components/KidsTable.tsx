@@ -85,6 +85,11 @@ function KidsTable({
       cell: (info) => <div>{info.row.original.lastName}</div>,
     },
     {
+      accessorKey: "loanBalance",
+      header: () => <span>Loan</span>,
+    },
+
+    {
       accessorKey: "dateOfBirth",
       header: () => <span>Age</span>,
       cell: (info) => {
