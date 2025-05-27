@@ -8,11 +8,7 @@ import { useEditNote } from "@/app/dashboard/api-hookts/notes/useEditNote";
 import PulsingCircle from "@/components/common/ui/animation/PulsingCircle";
 import { cn } from "@/utils/cn";
 
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import { formatDateTime } from "@/helpers/formatDate";
-
-dayjs.extend(utc);
 
 function SingleNoteCard({
   note,
