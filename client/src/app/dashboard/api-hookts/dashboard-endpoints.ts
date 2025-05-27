@@ -1,4 +1,9 @@
 export const DASHBOARD_ENDPOINTS = {
+  //---------------------------PAYMENTS
+  GET_ALL_PAYMENTS: "/payment", //GET
+  CREATE_PAYMENT: "/payment", //POST
+  UPDATE_PAYMENT: `/payment`, //PUT
+  DELETE_PAYMENT: `/payment/`, //DELETE
   //---------------------------SUBSCRIPTIONS
   GET_ALL_SUBSCRIPTIONS: "/subscription", //GET
   CREATE_SUBSCRIPTION: "/subscription", //POST
