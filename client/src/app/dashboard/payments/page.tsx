@@ -1,12 +1,12 @@
 import React from "react";
-import ExpensesPageComponent from "./_components/ExpensesPageComponent";
+import PaymentsPageComponent from "./_components/PaymentsPageComponent";
 
-function ExpensesPage() {
+function PaymentsPage() {
   return (
     <div>
-      <ExpensesPageComponent />
+      <PaymentsPageComponent />
     </div>
   );
 }
 
-export default ExpensesPage;
+export default PaymentsPage;

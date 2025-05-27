@@ -1,21 +1,21 @@
 "use client";
 import React from "react";
-import ExpensesTable from "../ExpensesTable";
+import PaymentsTable from "../PaymentsTable";
 import PageHeader from "@/app/dashboard/_common/components/PageHeader";
 
-function ExpensesPageComponent() {
+function PaymentsPageComponent() {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <div>
       <PageHeader
-        title="Expenses"
+        title="Payments"
         onAddClick={() => {
           setIsOpen(true);
         }}
       />
-      <ExpensesTable isOpen={isOpen} setIsOpen={setIsOpen} />
+      <PaymentsTable isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 }
 
-export default ExpensesPageComponent;
+export default PaymentsPageComponent;

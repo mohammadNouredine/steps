@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { AddPaymentSchemaType } from "../_dto/mutate-payment.dto";
+import { CustomErrorResponse } from "@/backend/helpers/customErrorResponse";
 
 export async function addPayment(_: NextRequest, dto: AddPaymentSchemaType) {
   const { kidId, amount, paymentDate, note } = dto;
@@ -15,7 +16,7 @@ export async function addPayment(_: NextRequest, dto: AddPaymentSchemaType) {
     },
   });
 
-  if (!payment) return NextResponse.json({ message: "Payment not created" });
+  if (!payment) return CustomErrorResponse("Payment not created", 400);
 
   // Update the kid's loan balance
   const kid = await prisma.kid.update({

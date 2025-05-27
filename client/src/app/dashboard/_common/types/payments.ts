@@ -1,3 +1,3 @@
-import { Payment } from "@prisma/client";
+import { Kid, Payment } from "@prisma/client";
 
-export type DashboardPaymentType = Payment;
+export type DashboardPaymentType = Payment & Kid;

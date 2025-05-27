@@ -5,8 +5,8 @@ import { DashboardPaymentType } from "../../_common/types/payments";
 
 export function useGetPayments({ params }: { params: GetPaymentSchemaType }) {
   return useReadData<GetPaymentsResponse>({
-    queryKey: ["expenses", JSON.stringify(params)],
-    endpoint: DASHBOARD_ENDPOINTS.GET_ALL_EXPENSES,
+    queryKey: ["payments", JSON.stringify(params)],
+    endpoint: DASHBOARD_ENDPOINTS.GET_ALL_PAYMENTS,
     params,
   });
 }

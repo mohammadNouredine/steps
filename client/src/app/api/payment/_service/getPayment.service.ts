@@ -27,6 +27,27 @@ export async function getPayments(_: NextRequest, dto: GetPaymentSchemaType) {
           mode: "insensitive",
         },
       },
+      {
+        //firstname and lastname
+        OR: [
+          {
+            kid: {
+              firstName: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+          },
+          {
+            kid: {
+              lastName: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+          },
+        ],
+      },
     ];
   }
 
@@ -35,6 +56,7 @@ export async function getPayments(_: NextRequest, dto: GetPaymentSchemaType) {
     take: pageSize,
     where: filters,
     orderBy: [{ paymentDate: "desc" }, { id: "desc" }],
+    include: { kid: true },
   });
 
   const totalPaymentsLength = await prisma.payment.count({ where: filters });

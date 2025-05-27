@@ -5,17 +5,17 @@ import React from "react";
 import { DashboardTable } from "@/app/_components/tables/DashboardTable";
 import { FiEdit2 } from "react-icons/fi";
 import CardContainer from "@/app/dashboard/_common/components/CardContainer";
-import { Checkbox, DateRangePicker } from "rsuite";
-import { formatDateToDashes } from "@/helpers/formatDate";
+import { DateRangePicker } from "rsuite";
+import { formatDate, formatDateToDashes } from "@/helpers/formatDate";
 import SearchInput from "@/components/fields/form/SearchInput";
 import { DateRange } from "rsuite/esm/DateRangePicker";
 import useDebounce from "@/hooks/useDebounce";
-import { useGetExpenses } from "@/app/dashboard/api-hookts/expenses/useGetExpenses";
-import { DashboardExpenseType } from "@/app/dashboard/_common/types/expenses";
-import { useDeleteExpense } from "@/app/dashboard/api-hookts/expenses/useDeleteExpense";
-import AddEditExpenseModal from "./AddEditExpenseModal";
+import AddEditPaymentModal from "./AddEditPaymentModal";
+import { DashboardPaymentType } from "@/app/dashboard/_common/types/payments";
+import { useGetPayments } from "@/app/dashboard/api-hookts/payments/useGetPayments";
+import { useDeletePayment } from "@/app/dashboard/api-hookts/payments/useDeletePayment";
 
-function ExpensesTable({
+function PaymentsTable({
   isOpen,
   setIsOpen,
 }: {
@@ -24,22 +24,22 @@ function ExpensesTable({
 }) {
   //------------------STATES-------------------------
 
-  const [editingExpense, setEditingExpense] = React.useState<
-    DashboardExpenseType | undefined
+  const [editingPayment, setEditingPayment] = React.useState<
+    DashboardPaymentType | undefined
   >();
   const [selectedDateRange, setSelectedDateRange] =
     React.useState<DateRange | null>();
+
   const [searchQuery, setSearchQuery] = React.useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
     pageSize: 10,
   });
-  const [isPaymentPending, setIsPaymentPending] = React.useState(false);
 
   //------------------API CALLS-------------------------
 
-  const { data: expensesData } = useGetExpenses({
+  const { data: paymentsData } = useGetPayments({
     params: {
       pageIndex: 0,
       pageSize: 10,
@@ -50,22 +50,35 @@ function ExpensesTable({
       endDate: selectedDateRange?.[1]
         ? formatDateToDashes(selectedDateRange?.[1])
         : undefined,
-      isPaymentPending,
     },
   });
 
-  const { mutate: deleteExpense } = useDeleteExpense();
+  const { mutate: deletePayment } = useDeletePayment();
   //------------------COLUMNS-------------------------
-  const kids_columns: ColumnDef<DashboardExpenseType>[] = [
+  const payments_columns: ColumnDef<DashboardPaymentType>[] = [
     {
-      accessorKey: "title",
-      header: () => <span>Title</span>,
+      accessorKey: "kid",
+      header: () => <span>Kid</span>,
+      cell: (info: any) => (
+        <div>
+          {info.row.original.kid.firstName} {info.row.original.kid.lastName}
+        </div>
+      ),
     },
-    { accessorKey: "description", header: () => <span>Description</span> },
     { accessorKey: "amount", header: () => <span>Amount</span> },
-    { accessorKey: "date", header: () => <span>Date</span> },
-    { accessorKey: "amountDue", header: () => <span>Amount Due</span> },
-    { accessorKey: "paidAmount", header: () => <span>Paid Amount</span> },
+
+    {
+      accessorKey: "paymentDate",
+      header: () => <span>Date</span>,
+      cell: (info: any) => (
+        <div>
+          {info.row.original.paymentDate
+            ? formatDate(info.row.original.paymentDate)
+            : "N/A"}
+        </div>
+      ),
+    },
+    { accessorKey: "note", header: () => <span>Note</span> },
 
     {
       accessorKey: "id",
@@ -75,7 +88,7 @@ function ExpensesTable({
           <button
             onClick={() => {
               setIsOpen(true);
-              setEditingExpense(info.row.original);
+              setEditingPayment(info.row.original);
             }}
             className="border border-green px-2 py-2 rounded-lg text-green"
           >
@@ -100,37 +113,24 @@ function ExpensesTable({
               setSelectedDateRange(value);
             }}
           />
-
-          <Checkbox
-            checked={isPaymentPending}
-            onChange={(_, checked) => {
-              setIsPaymentPending(checked);
-            }}
-            title="Show only payment pending"
-          >
-            <p className="text-gray-900 font-medium">
-              {"Show only payment pending"}
-            </p>
-          </Checkbox>
         </CardContainer>
         <DashboardTable
-          data={expensesData?.data}
-          columns={kids_columns}
+          data={paymentsData?.data}
+          columns={payments_columns}
           pagination={pagination}
           setPagination={setPagination}
-          deleteMutation={deleteExpense}
+          deleteMutation={deletePayment}
         />
       </div>
 
-      <AddEditExpenseModal
-        key={"add-edit-attendance-modal"}
+      <AddEditPaymentModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        editingExpense={editingExpense}
-        setEditingExpense={setEditingExpense}
+        editingPayment={editingPayment}
+        setEditingPayment={setEditingPayment}
       />
     </div>
   );
 }
 
-export default ExpensesTable;
+export default PaymentsTable;
