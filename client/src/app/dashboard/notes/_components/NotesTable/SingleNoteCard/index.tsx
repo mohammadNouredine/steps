@@ -10,6 +10,7 @@ import { cn } from "@/utils/cn";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { formatDateTime } from "@/helpers/formatDate";
 
 dayjs.extend(utc);
 
@@ -57,9 +58,9 @@ function SingleNoteCard({
           </div>
         </div>
         <p className="text-sm text-gray-500">{note.description}</p>
-        <p className="text-sm">
-          {dayjs(note.reminderDate).utc().format("DD/MM/YYYY HH:mm:ss")}
-        </p>
+        {note.reminderDate && (
+          <p className="text-sm">{formatDateTime(note.reminderDate)}</p>
+        )}
         <AddEditNoteModal isOpen={isOpen} setIsOpen={setIsOpen} note={note} />
       </div>
     </CardContainer>

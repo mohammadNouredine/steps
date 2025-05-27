@@ -1,7 +1,7 @@
 import { ErrorMessage, useFormikContext } from "formik";
 import React from "react";
 import { DatePicker } from "rsuite";
-import dayjs from "dayjs";
+import { formatDate, formatDateTime } from "@/helpers/formatDate";
 
 export default function DateField({
   label,
@@ -50,14 +50,15 @@ export default function DateField({
         disabled={disabled}
         value={values[name] ? new Date(values[name]) : undefined}
         onChange={(dateValue) => {
+          console.log("DATE CHANGED IS ", dateValue);
           if (!dateValue) {
             setFieldValue(name, "");
             return;
           }
           // Format with or without time depending on showTime
           const formattedDate = showTime
-            ? dayjs(dateValue).format("YYYY-MM-DDTHH:mm:ss[Z]")
-            : dayjs(dateValue).format("YYYY-MM-DD");
+            ? formatDateTime(dateValue)
+            : formatDate(dateValue);
           setFieldValue(name, formattedDate);
         }}
         className="w-full z-[9999]"
