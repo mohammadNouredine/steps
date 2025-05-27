@@ -57,7 +57,7 @@ function AddEditKidModal({
       onClose={() => {
         setEditingSubscription(undefined);
       }}
-      title={isEditing ? "Edit Kid" : "Add Kid"}
+      title={isEditing ? "Edit Subscription" : "Add Subscription"}
       isOpenModal={isOpen}
       setIsOpenModal={setIsOpen}
     >
@@ -84,7 +84,7 @@ function AddEditKidModal({
         }}
       >
         <Form>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="md:grid md:grid-cols-2 gap-4">
             <SelectField name="kidId" label="Kid" data={kidsOptions || []} />
             <SelectField
               name="planId"

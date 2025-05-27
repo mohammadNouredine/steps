@@ -68,7 +68,7 @@ export default function AddEditExpenseModal({
         }}
       >
         <Form>
-          <div className="grid grid-cols-2 gap-x-2">
+          <div className="md:grid md:grid-cols-2 gap-x-2">
             <DateField name="date" label="Date" />
             <InputField name="title" label="Title" />
             <InputField name="description" label="Description" />

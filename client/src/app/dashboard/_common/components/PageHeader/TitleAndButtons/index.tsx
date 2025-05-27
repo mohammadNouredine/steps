@@ -10,7 +10,7 @@ function TitleAndButtons({
   hasAddButton?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between flex-wrap">
       <h2 className="text-3xl font-semibold text-gray-800">{title}</h2>
       {hasAddButton && (
         <div className="flex gap-x-2">

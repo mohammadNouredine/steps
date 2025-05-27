@@ -89,7 +89,7 @@ function ExpensesTable({
   return (
     <div>
       <div className="space-y-4">
-        <CardContainer className="flex items-center gap-x-4">
+        <CardContainer className="flex items-center gap-x-4 flex-wrap space-y-2">
           <div className="w-[20rem]">
             <SearchInput value={searchQuery} setValue={setSearchQuery} />
           </div>

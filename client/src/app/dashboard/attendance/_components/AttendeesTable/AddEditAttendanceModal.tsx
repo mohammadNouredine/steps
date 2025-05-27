@@ -80,7 +80,7 @@ export default function AddEditAttendanceModal({
         }}
       >
         <Form>
-          <div className="grid grid-cols-2 gap-x-2">
+          <div className="md:grid md:grid-cols-2 gap-x-2">
             <DateField disabled={!!attendanceRecord} name="date" label="Date" />
             <SelectField
               disabled={!!attendanceRecord}

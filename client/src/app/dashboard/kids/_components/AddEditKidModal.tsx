@@ -98,7 +98,7 @@ function AddEditKidModal({
         }}
       >
         <Form>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="md:grid md:grid-cols-2 gap-4">
             <div className="col-span-2">
               <ImageUploader name="image" />
             </div>

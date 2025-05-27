@@ -26,6 +26,7 @@ declare module "@tanstack/react-table" {
   }
 }
 export function DashboardTable({
+  showDelete = true,
   hasRefresh,
   data,
   total = 0,
@@ -40,6 +41,7 @@ export function DashboardTable({
   setSelectedRows,
   hasSelection = false,
 }: {
+  showDelete?: boolean;
   hasRefresh?: boolean;
 
   data: any;
@@ -63,7 +65,7 @@ export function DashboardTable({
   // Extend columns with delete functionality if deleteFn is provided
   const enhancedColumns = React.useMemo(() => {
     const baseColumns = [...columns];
-    if (deleteMutation) {
+    if (deleteMutation && showDelete) {
       baseColumns.push({
         id: "delete",
         header: () => <span>Delete</span>,
@@ -272,14 +274,14 @@ export function DashboardTable({
             >
               {">>"}
             </button>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1 text-nowrap">
               <div>Page</div>
               <strong>
                 {table.getState().pagination.pageIndex + 1} of{" "}
                 {table.getPageCount().toLocaleString()}
               </strong>
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1 text-nowrap">
               | Go to page:
               <input
                 type="number"
