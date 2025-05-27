@@ -57,13 +57,15 @@ export async function getExpenses(_: NextRequest, dto: GetExpenseSchemaType) {
     orderBy: [{ date: "desc" }, { id: "desc" }],
   });
 
+  const totalExpensesLength = await prisma.expense.count({ where: filters });
+
   return NextResponse.json({
     data: expenses,
     pagination: {
       pageIndex,
       pageSize,
-      total: expenses.length,
-      totalPages: Math.ceil(expenses.length / pageSize),
+      total: totalExpensesLength,
+      totalPages: Math.ceil(totalExpensesLength / pageSize),
     },
   });
 }
