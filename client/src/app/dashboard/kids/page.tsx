@@ -3,6 +3,7 @@ import React from "react";
 import PageHeader from "../_common/components/PageHeader";
 import KidsTable from "./_components/KidsTable";
 import { SummaryValue } from "../_common/components/PageHeader/Summary";
+import { FaChild } from "react-icons/fa6";
 
 function KidsPage() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -10,6 +11,7 @@ function KidsPage() {
     {
       title: "Total Number of Orders",
       value: 0,
+      icon: <FaChild />,
     },
     {
       title: "Total Income",

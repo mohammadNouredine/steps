@@ -2,8 +2,11 @@ import * as yup from "yup";
 import { SubscriptionStatus } from "@prisma/client";
 
 export const addSubscriptionSchema = yup.object({
-  kidId: yup.number().required(),
-  planId: yup.number().required(),
+  kidId: yup.number().positive("Kid is required").required("Kid is required"),
+  planId: yup
+    .number()
+    .positive("Plan is required")
+    .required("Plan is required"),
   startDate: yup.date().optional(),
   amountPaid: yup.number().min(0).optional(),
   discountPercentage: yup.number().min(0).max(100).optional(),

@@ -11,14 +11,14 @@ export type SummaryValue = {
 function Summary({ values }: { values: SummaryValue[] }) {
   return (
     <div className="w-full rounded-xl bg-white flex items-center justify-between p-4 mt-8 shadow-[0_0_8px_0_rgba(0,0,0,0.1)]">
-      <div className="flex gap-x-8 ">
+      <div className="lg:flex-row flex-col flex gap-x-8 w-full ">
         {values.map((item, _index) => (
           <>
-            <div className="flex items-start gap-x-2">
+            <div className="flex items-start gap-x-2 w-full text-nowrap ">
               {item?.icon && (
                 <div className="text-2xl text-gray-400">{item.icon}</div>
               )}
-              <div>
+              <div className="flex flex-grow items-center justify-between lg:flex-col lg:justify-start lg:items-start">
                 <p className="text-gray-400 text-sm font-medium">
                   {item.title}
                 </p>
@@ -28,7 +28,7 @@ function Summary({ values }: { values: SummaryValue[] }) {
               </div>
             </div>
             {_index !== data.length && (
-              <div className="h-14 w-0.5 bg-gray-300 " />
+              <div className="h-14 w-0.5 bg-gray-300 hidden lg:block " />
             )}
           </>
         ))}

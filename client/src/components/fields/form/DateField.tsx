@@ -10,6 +10,7 @@ export default function DateField({
   disabled = false,
   showTime = false,
   placement = "auto",
+  useDate = true,
 }: {
   label?: string;
   name: string;
@@ -28,6 +29,7 @@ export default function DateField({
     | "autoHorizontal"
     | "autoHorizontalStart"
     | "autoHorizontalEnd";
+  useDate?: boolean;
 }) {
   const { values, setFieldValue } = useFormikContext<{ [key: string]: any }>();
 
@@ -59,7 +61,9 @@ export default function DateField({
           if (showTime) {
             setFieldValue(name, dateValue);
           } else {
-            setFieldValue(name, formattedDate);
+            useDate
+              ? setFieldValue(name, dateValue)
+              : setFieldValue(name, formattedDate);
           }
         }}
         className="w-full z-[9999]"
@@ -77,7 +81,7 @@ export default function DateField({
 
       <ErrorMessage
         name={name}
-        className="text-brand-500 text-xs"
+        className="text-red-500 text-xs"
         component="p"
       />
     </div>

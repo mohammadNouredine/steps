@@ -8,7 +8,10 @@ import Button from "@/components/common/ui/Button";
 import { DashboardSubscriptionType } from "../../_common/types/subscriptions";
 import { useAddSubscription } from "../../api-hookts/subscriptions/useAddSubscription";
 import { useEditSubscription } from "../../api-hookts/subscriptions/useEditSubscription";
-import { addSubscriptionSchema } from "@/app/api/subscription/_dto/mutate-subscription.dto";
+import {
+  addSubscriptionSchema,
+  AddSubscriptionSchemaType,
+} from "@/app/api/subscription/_dto/mutate-subscription.dto";
 import { useGetAllKids } from "../../api-hookts/kids/useGetAllKids";
 import { useGetAllSubscriptionPlans } from "../../api-hookts/subscriptions/subscription-plans/useGetAllSubscriptionPlans";
 import { SubscriptionStatus } from "@prisma/client";
@@ -58,7 +61,7 @@ function AddEditKidModal({
       isOpenModal={isOpen}
       setIsOpenModal={setIsOpen}
     >
-      <Formik
+      <Formik<AddSubscriptionSchemaType>
         validationSchema={addSubscriptionSchema}
         initialValues={{
           kidId: editingSubscription?.kidId || -1,
@@ -67,7 +70,7 @@ function AddEditKidModal({
           endDate: editingSubscription?.endDate || undefined,
           amountPaid: editingSubscription?.amountPaid || 0,
           discountPercentage: editingSubscription?.discountPercentage || 0,
-          status: editingSubscription?.status || undefined,
+          // status: editingSubscription?.status || undefined,
         }}
         onSubmit={(values) => {
           if (isEditing) {
