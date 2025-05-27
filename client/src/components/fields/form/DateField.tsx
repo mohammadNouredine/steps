@@ -9,12 +9,25 @@ export default function DateField({
   datePickerProps,
   disabled = false,
   showTime = false,
+  placement = "auto",
 }: {
   label?: string;
   name: string;
   datePickerProps?: React.ComponentProps<typeof DatePicker>;
   disabled?: boolean;
   showTime?: boolean;
+  placement?:
+    | "auto"
+    | "top"
+    | "bottom"
+    | "left"
+    | "right"
+    | "autoVertical"
+    | "autoVerticalStart"
+    | "autoVerticalEnd"
+    | "autoHorizontal"
+    | "autoHorizontalStart"
+    | "autoHorizontalEnd";
 }) {
   const { values, setFieldValue } = useFormikContext<{ [key: string]: any }>();
 
@@ -33,6 +46,7 @@ export default function DateField({
       )}
 
       <DatePicker
+        placement={placement}
         disabled={disabled}
         value={values[name] ? new Date(values[name]) : undefined}
         onChange={(dateValue) => {
