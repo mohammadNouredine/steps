@@ -10,6 +10,9 @@ export const getFromApi = async (
       withoutPrefix ? endpoint : `${endpoint}`,
       { params }
     );
+    if (result?.data?.error) {
+      throw new Error(result.data.error);
+    }
     return result.data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message);

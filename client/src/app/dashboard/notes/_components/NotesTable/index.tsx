@@ -31,10 +31,10 @@ function NotesTable({
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {todayNotes.map((note) => (
+      {todayNotes?.map((note) => (
         <SingleNoteCard note={note} key={note.id} isToday={true} />
       ))}
-      {notes.map((note) => (
+      {notes?.map((note) => (
         <SingleNoteCard note={note} key={note.id} />
       ))}
 
