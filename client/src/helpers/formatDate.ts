@@ -13,7 +13,7 @@ export const formatDateToDashes = (date: Date): string => {
   return dayjs(date).format("YYYY-MM-DD");
 };
 
-export function formatDateTime(date: Date) {
+export function formatDateTime(date: Date): string | null {
   if (!date) return null;
   const d = new Date(date);
   const year = d.getFullYear();

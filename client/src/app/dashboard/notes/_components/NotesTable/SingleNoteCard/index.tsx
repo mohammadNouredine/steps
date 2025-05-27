@@ -57,6 +57,14 @@ function SingleNoteCard({
         {note.reminderDate && (
           <p className="text-sm">{formatDateTime(note.reminderDate)}</p>
         )}
+        {note.reminderDate && (
+          <p className="text-sm">
+            {new Date(note.reminderDate).toLocaleTimeString()}
+            <br></br>
+            {String(note.reminderDate)}
+          </p>
+        )}
+
         <AddEditNoteModal isOpen={isOpen} setIsOpen={setIsOpen} note={note} />
       </div>
     </CardContainer>

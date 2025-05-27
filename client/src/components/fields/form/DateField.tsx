@@ -50,16 +50,17 @@ export default function DateField({
         disabled={disabled}
         value={values[name] ? new Date(values[name]) : undefined}
         onChange={(dateValue) => {
-          console.log("DATE CHANGED IS ", dateValue);
           if (!dateValue) {
             setFieldValue(name, "");
             return;
           }
           // Format with or without time depending on showTime
-          const formattedDate = showTime
-            ? formatDateTime(dateValue)
-            : formatDate(dateValue);
-          setFieldValue(name, formattedDate);
+          const formattedDate = formatDate(dateValue);
+          if (showTime) {
+            setFieldValue(name, dateValue);
+          } else {
+            setFieldValue(name, formattedDate);
+          }
         }}
         className="w-full z-[9999]"
         //change popup class name
