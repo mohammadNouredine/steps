@@ -1,7 +1,7 @@
 import { ErrorMessage, useFormikContext } from "formik";
 import React from "react";
 import { DatePicker } from "rsuite";
-import { formatDate, formatDateTime } from "@/helpers/formatDate";
+import { formatDate } from "@/helpers/formatDate";
 
 export default function DateField({
   label,
