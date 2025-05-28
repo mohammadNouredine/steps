@@ -8,15 +8,16 @@ import { getNoteSchema } from "./_dto/gets-note.dto";
 import { addNote } from "./_service/addNote.service";
 import { addNoteSchema, editNoteSchema } from "./_dto/mutate-note.dto";
 import { editNote } from "./_service/editNote.service";
+import { withAuth } from "@/backend/helpers/withAuth";
 
 export const GET = withErrorHandling(
-  withQueryValidation(getNotes, getNoteSchema)
+  withAuth(withQueryValidation(getNotes, getNoteSchema))
 );
 
 export const POST = withErrorHandling(
-  withBodyValidation(addNote, addNoteSchema)
+  withAuth(withBodyValidation(addNote, addNoteSchema))
 );
 
 export const PATCH = withErrorHandling(
-  withBodyValidation(editNote, editNoteSchema)
+  withAuth(withBodyValidation(editNote, editNoteSchema))
 );

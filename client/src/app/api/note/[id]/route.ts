@@ -1,8 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { deleteNote } from "../_service/deleteNote.service";
+import { withErrorHandling } from "@/backend/helpers/withErrorHandling";
+import { withAuth } from "@/backend/helpers/withAuth";
 
 export async function DELETE(
-  _: Request,
+  req: NextRequest,
   { params }: { params: { id?: string } }
 ) {
   const id = params.id;
@@ -12,5 +14,7 @@ export async function DELETE(
       { status: 400 }
     );
   }
-  return deleteNote({ id: parseInt(id) });
+  // const handler = withAuth(deleteNote({ id: parseInt(id) }));
+  // return handler;
+  return withErrorHandling(withAuth(deleteNote({ id: parseInt(id) })))(req);
 }
