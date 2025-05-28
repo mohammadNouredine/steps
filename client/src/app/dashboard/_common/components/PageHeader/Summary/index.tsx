@@ -7,6 +7,7 @@ export type SummaryValue = {
   title: string;
   value: string | number;
   icon?: React.ReactNode;
+  shouldNotFormat?: boolean;
 };
 function Summary({ values }: { values: SummaryValue[] }) {
   return (
@@ -23,7 +24,11 @@ function Summary({ values }: { values: SummaryValue[] }) {
                   {item.title}
                 </p>
                 <p className="text-gray-700  font-bold text-2xl ">
-                  {item.value}
+                  {item.shouldNotFormat
+                    ? item.value
+                    : typeof item.value === "number"
+                    ? item.value.toFixed(2)
+                    : item.value}
                 </p>
               </div>
             </div>

@@ -55,7 +55,13 @@ function AddEditNoteModal({
           <Form>
             <div className="flex flex-col gap-4">
               <InputField label="Title" name="title" />
-              <InputField label="Description" name="description" />
+              <InputField
+                manageDirection
+                type="textarea"
+                as={"textarea"}
+                label="Description"
+                name="description"
+              />
               <DateField showTime label="Reminder Date" name="reminder_date" />
             </div>
 

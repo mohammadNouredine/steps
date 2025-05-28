@@ -36,7 +36,7 @@ export default function Modal({
             as="div"
             className="relative z-10 focus:outline-none "
             onClose={close}
-            dir="rtl"
+            // dir="rtl"
           >
             <div className="fixed h-screen inset-0 z-10 w-screen overflow-y-auto backdrop-blur-sm bg-black/10">
               <motion.div

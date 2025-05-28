@@ -13,12 +13,12 @@ export const DASHBOARD_ENDPOINTS = {
   GET_ALL_EXPENSES: "/expense", //GET
   CREATE_EXPENSE: "/expense", //POST
   UPDATE_EXPENSE: `/expense`, //PUT
-  DELETE_EXPENSE: `/expense`, //DELETE
+  DELETE_EXPENSE: `/expense/`, //DELETE
   //---------------------------NOTES
   GET_ALL_NOTES: "/note", //GET
   CREATE_NOTE: "/note", //POST
   UPDATE_NOTE: `/note`, //PUT
-  DELETE_NOTE: `/note`, //DELETE
+  DELETE_NOTE: (id: number) => `/note/${id}`, //DELETE
   //---------------------------PURCHASES
   GET_ALL_PURCHASES: "/purchase", //GET
   CREATE_PURCHASE: "/purchase", //POST

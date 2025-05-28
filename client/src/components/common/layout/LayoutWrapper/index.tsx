@@ -23,7 +23,7 @@ function LayoutWrapper({
   console.log("isProdEnv", isProdEnv);
   console.log("isBetaEnv", isBetaEnv);
   return (
-    <div dir="rtl" className={cn(hasFooter && !hasBlockFooter && "pb-20")}>
+    <div className={cn(hasFooter && !hasBlockFooter && "pb-20")}>
       {hasHeader && !isProdEnv && <Header />}
       <div
         className="py-4 "

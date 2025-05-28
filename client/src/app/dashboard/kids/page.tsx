@@ -38,6 +38,7 @@ function KidsPage() {
       title: "Total Number of Kids",
       value: kidsLength,
       icon: <FaChild />,
+      shouldNotFormat: true,
     },
     {
       title: "Total Loans ($)",

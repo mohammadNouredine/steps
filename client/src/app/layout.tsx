@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ClientProvider } from "@/providers/ClientProvider";
 import { Toaster } from "react-hot-toast";
-import { Zain } from "next/font/google";
+import { Inter } from "next/font/google";
 
-const zain = Zain({
-  subsets: ["arabic", "latin"],
-  weight: ["200", "300", "400", "700", "800", "900"],
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   display: "swap",
 });
 
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <ClientProvider>
       <html lang="en">
-        <body className={`${zain.className} antialiased`}>
+        <body className={`${inter.className} antialiased`}>
           <Toaster />
           {children}
         </body>
