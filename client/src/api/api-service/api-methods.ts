@@ -46,6 +46,11 @@ export const sendToApi = async (
       );
     return result?.data;
   } catch (error: any) {
-    throw new Error(error.response?.data?.message || "Cannot send request");
+    console.log("ERROR", error);
+    throw new Error(
+      error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Cannot send request"
+    );
   }
 };

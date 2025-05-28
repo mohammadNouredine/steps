@@ -1,12 +1,14 @@
 //delete kid
 
+import { withAuth } from "@/backend/helpers/withAuth";
+import { withErrorHandling } from "@/backend/helpers/withErrorHandling";
 import { deleteKid } from "@/backend/kids/services/delete-kid.service";
 import { editKid } from "@/backend/kids/services/edit-kid.service";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 //here  i want to make the delete take query param of id and then delete the kid with that id
 export async function DELETE(
-  _: Request,
+  req: NextRequest,
   { params }: { params: { id?: string } }
 ) {
   const id = params.id;
@@ -16,12 +18,15 @@ export async function DELETE(
       { status: 400 }
     );
   }
-  return deleteKid({ id: parseInt(id) });
+  // return deleteKid({ id: parseInt(id) });
+  return withErrorHandling(
+    withAuth(async () => deleteKid({ id: parseInt(id) }))
+  )(req);
 }
 
 //edit kid
 export async function PATCH(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id?: string } }
 ) {
   const id = params.id;
@@ -31,5 +36,8 @@ export async function PATCH(
       { status: 400 }
     );
   }
-  return editKid({ req, id: parseInt(id) });
+  // return editKid({ req, id: parseInt(id) });
+  return withErrorHandling(
+    withAuth(async () => editKid({ req, id: parseInt(id) }))
+  )(req);
 }

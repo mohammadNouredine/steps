@@ -1,15 +1,22 @@
+import getDayRange from "@/backend/helpers/getDayRange";
 import { formatDateToDashes } from "@/helpers/formatDate";
 import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function getAllKids() {
-  const today = formatDateToDashes(new Date());
+  const startOfToday = new Date(new Date().setHours(0, 0, 0, 0));
+  const startOfTomorrow = new Date(
+    new Date().setDate(new Date().getDate() + 1)
+  );
 
   const kids = await prisma.kid.findMany({
     include: {
       attendances: {
         where: {
-          date: today,
+          date: {
+            gte: startOfToday,
+            lte: startOfTomorrow,
+          },
         },
       },
     },
@@ -21,7 +28,8 @@ export async function getAllKids() {
   const formattedKids = kids.map((kid) => ({
     ...kid,
     hasAttendedToday: kid.attendances.some(
-      (attendance) => attendance.date === today
+      (attendance) =>
+        attendance.date < startOfTomorrow && attendance.date > startOfToday
     ),
   }));
   return NextResponse.json({

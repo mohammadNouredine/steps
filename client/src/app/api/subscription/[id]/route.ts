@@ -1,9 +1,11 @@
 // app/api/subscriptions/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { deleteSubscription } from "../_service/deleteSubscription.service";
+import { withErrorHandling } from "@/backend/helpers/withErrorHandling";
+import { withAuth } from "@/backend/helpers/withAuth";
 
 export async function DELETE(
-  _: NextRequest,
+  req: NextRequest,
   { params }: { params: { id?: string } }
 ) {
   const id = params.id;
@@ -14,5 +16,7 @@ export async function DELETE(
     );
   }
   // hand off to our service
-  return deleteSubscription({ id: parseInt(id, 10) });
+  return withErrorHandling(
+    withAuth(deleteSubscription({ id: parseInt(id, 10) }))
+  )(req);
 }

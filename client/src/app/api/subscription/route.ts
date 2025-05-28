@@ -12,15 +12,16 @@ import {
 } from "./_dto/mutate-subscription.dto";
 import { editSubscription } from "./_service/editSubscription.service";
 import { getSubscriptionsSchema } from "./_dto/get-subscriptions.dto";
+import { withAuth } from "@/backend/helpers/withAuth";
 
 export const GET = withErrorHandling(
-  withQueryValidation(getSubscriptions, getSubscriptionsSchema)
+  withAuth(withQueryValidation(getSubscriptions, getSubscriptionsSchema))
 );
 
 export const POST = withErrorHandling(
-  withBodyValidation(addSubscription, addSubscriptionSchema)
+  withAuth(withBodyValidation(addSubscription, addSubscriptionSchema))
 );
 
 export const PATCH = withErrorHandling(
-  withBodyValidation(editSubscription, editSubscriptionSchema)
+  withAuth(withBodyValidation(editSubscription, editSubscriptionSchema))
 );

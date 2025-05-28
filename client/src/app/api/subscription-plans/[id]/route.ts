@@ -4,6 +4,7 @@ import { editPlan } from "../_service/editPlan.service";
 import { EditPlanDto, editPlanSchema } from "../_dto/add-edit-plan.dto.ts";
 import { deletePlan } from "../_service/deletePlan.service";
 import { NextRequest, NextResponse } from "next/server";
+import { withAuth } from "@/backend/helpers/withAuth";
 
 //get all users
 
@@ -18,7 +19,7 @@ export async function DELETE(
       { status: 400 }
     );
   }
-  return withErrorHandling(async () => deletePlan(parseInt(id)))(req);
+  return withErrorHandling(withAuth(async () => deletePlan(parseInt(id))))(req);
 }
 
 //edit plan
@@ -39,5 +40,7 @@ export async function PATCH(
     return editPlan(validatedData, parseInt(id));
   };
 
-  return withErrorHandling(withBodyValidation(handler, editPlanSchema))(req);
+  return withErrorHandling(
+    withAuth(withBodyValidation(handler, editPlanSchema))
+  )(req);
 }

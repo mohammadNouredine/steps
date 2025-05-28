@@ -1,6 +1,7 @@
 import { withErrorHandling } from "@/backend/helpers/withErrorHandling";
 import { NextRequest, NextResponse } from "next/server";
 import { deleteExpense } from "../_service/deleteExpense.service";
+import { withAuth } from "@/backend/helpers/withAuth";
 
 export async function DELETE(
   req: NextRequest,
@@ -13,5 +14,7 @@ export async function DELETE(
       { status: 400 }
     );
   }
-  return withErrorHandling(async () => deleteExpense(parseInt(id)))(req);
+  return withErrorHandling(withAuth(async () => deleteExpense(parseInt(id))))(
+    req
+  );
 }

@@ -9,14 +9,15 @@ import { getExpenseSchema } from "./_dto/gets-expense.dto";
 import { getExpenses } from "./_service/getExpenses.service";
 import { addExpense } from "./_service/addExpense.service";
 import { editExpense } from "./_service/editExpense.service";
+import { withAuth } from "@/backend/helpers/withAuth";
 export const GET = withErrorHandling(
-  withQueryValidation(getExpenses, getExpenseSchema)
+  withAuth(withQueryValidation(getExpenses, getExpenseSchema))
 );
 
 export const POST = withErrorHandling(
-  withBodyValidation(addExpense, addExpenseSchema)
+  withAuth(withBodyValidation(addExpense, addExpenseSchema))
 );
 
 export const PATCH = withErrorHandling(
-  withBodyValidation(editExpense, editExpenseSchema)
+  withAuth(withBodyValidation(editExpense, editExpenseSchema))
 );

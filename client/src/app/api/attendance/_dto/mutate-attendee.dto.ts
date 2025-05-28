@@ -3,14 +3,14 @@ import { dateValidation } from "@/app/api/_common/validation/date-validations";
 
 //------TOGGLE
 export const toggleAttendeeSchema = yup.object().shape({
-  date: dateValidation.required("Date is required"),
+  date: yup.date().required("Date is required"),
   kidId: yup.string().required("Kid ID is required"),
 });
 export type ToggleAttendeeDto = yup.InferType<typeof toggleAttendeeSchema>;
 
 //------CREATE
 export const createAttendanceSchema = yup.object().shape({
-  date: dateValidation.required("Date is required"),
+  date: yup.date().required("Date is required"),
   kidId: yup.string().required("Kid ID is required"),
   extraCharge: yup.number().optional(),
   note: yup.string().optional(),

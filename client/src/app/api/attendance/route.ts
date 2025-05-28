@@ -13,19 +13,20 @@ import { createAttendance } from "./_service/addAttendance.service";
 import { editAttendance } from "./_service/editAttendance.service";
 import { deleteAttendanceSchema } from "./_dto/delete-attendee.dto";
 import { deleteAttendance } from "./_service/deleteAttendance.service";
+import { withAuth } from "@/backend/helpers/withAuth";
 
 export const GET = withErrorHandling(
-  withQueryValidation(getAttendees, getAttendeesSchema)
+  withAuth(withQueryValidation(getAttendees, getAttendeesSchema))
 );
 
 export const POST = withErrorHandling(
-  withBodyValidation(createAttendance, createAttendanceSchema)
+  withAuth(withBodyValidation(createAttendance, createAttendanceSchema))
 );
 
 export const PATCH = withErrorHandling(
-  withBodyValidation(editAttendance, editAttendanceSchema)
+  withAuth(withBodyValidation(editAttendance, editAttendanceSchema))
 );
 
 export const DELETE = withErrorHandling(
-  withQueryValidation(deleteAttendance, deleteAttendanceSchema)
+  withAuth(withQueryValidation(deleteAttendance, deleteAttendanceSchema))
 );

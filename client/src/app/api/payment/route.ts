@@ -9,15 +9,16 @@ import { getPaymentSchema } from "./_dto/gets-payment.dto";
 import { addPayment } from "./_service/addPayment.service";
 import { addPaymentSchema, editPaymentSchema } from "./_dto/mutate-payment.dto";
 import { editPayment } from "./_service/editPayment.service";
+import { withAuth } from "@/backend/helpers/withAuth";
 
 export const GET = withErrorHandling(
-  withQueryValidation(getPayments, getPaymentSchema)
+  withAuth(withQueryValidation(getPayments, getPaymentSchema))
 );
 
 export const POST = withErrorHandling(
-  withBodyValidation(addPayment, addPaymentSchema)
+  withAuth(withBodyValidation(addPayment, addPaymentSchema))
 );
 
 export const PATCH = withErrorHandling(
-  withBodyValidation(editPayment, editPaymentSchema)
+  withAuth(withBodyValidation(editPayment, editPaymentSchema))
 );
