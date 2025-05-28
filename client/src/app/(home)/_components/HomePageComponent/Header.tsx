@@ -13,8 +13,12 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <img src="/brand/logo.png" alt="logo" className="w-10 h-10 " />
-            <div>
+            <img
+              src="/brand/images/logo.png"
+              alt="logo"
+              className=" h-8 mb-3 "
+            />
+            <div className="hidden lg:block">
               <h1 className="text-xl font-bold text-gray-900">Leading Steps</h1>
               <p className="text-sm text-brand-green">Summer Camp</p>
             </div>
