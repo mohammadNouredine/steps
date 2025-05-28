@@ -13,9 +13,7 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-brand-green to-brand-green-neutral rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">LS</span>
-            </div>
+            <img src="/brand/logo.png" alt="logo" className="w-10 h-10 " />
             <div>
               <h1 className="text-xl font-bold text-gray-900">Leading Steps</h1>
               <p className="text-sm text-brand-green">Summer Camp</p>

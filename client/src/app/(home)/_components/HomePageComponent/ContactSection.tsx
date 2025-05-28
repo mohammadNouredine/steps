@@ -2,7 +2,7 @@ import Button from "@/components/common/ui/Button";
 import { Input, Textarea } from "@headlessui/react";
 import { MapPin, Phone, Clock, Star } from "lucide-react";
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -49,7 +49,7 @@ const ContactSection = () => {
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Contact us today to enroll your child in Leading Steps Summer Camp.
-            We're here to answer all your questions and help you choose the
+            We{"'"}re here to answer all your questions and help you choose the
             perfect program.
           </p>
         </div>
@@ -109,7 +109,7 @@ const ContactSection = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Child's Age
+                    Child{"'"}s Age
                   </label>
                   <Input
                     name="childAge"
@@ -126,7 +126,7 @@ const ContactSection = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Child's Name
+                  Child{"'"}s Name
                 </label>
                 <Input
                   name="childName"
@@ -261,7 +261,7 @@ const ContactSection = () => {
                   Leading Steps Summer Camp
                 </p>
                 <p className="text-sm text-gray-500 mt-2">
-                  Located in the heart of Arabsalim's natural beauty
+                  Located in the heart of Arabsalim{"'"}s natural beauty
                 </p>
                 <div className="mt-4 text-xs text-gray-500">
                   Exact address shared upon enrollment confirmation
@@ -278,10 +278,10 @@ const ContactSection = () => {
               🚀 Ready for an Amazing Summer Adventure?
             </h3>
             <p className="text-gray-600 leading-relaxed mb-6">
-              Don't wait – spots fill up quickly! Contact us today to secure
-              your child's place in the most exciting summer camp experience in
-              Arabsalim. Let's help your child take their leading steps toward
-              an unforgettable summer!
+              Don{"'"}t wait – spots fill up quickly! Contact us today to secure
+              your child{"'"}s place in the most exciting summer camp experience
+              in Arabsalim. Let{"'"}s help your child take their leading steps
+              toward an unforgettable summer!
             </p>
             <Button
               //   size="lg"

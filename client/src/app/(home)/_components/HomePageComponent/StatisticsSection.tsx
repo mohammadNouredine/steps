@@ -40,7 +40,7 @@ const StatisticsSection = () => {
             Our <span className="text-brand-green">Impact</span> in Numbers
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            See how Leading Steps has been making a difference in children's
+            See how Leading Steps has been making a difference in children{"'"}s
             lives over the years
           </p>
         </div>

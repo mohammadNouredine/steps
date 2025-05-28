@@ -60,7 +60,7 @@ const SubscriptionsSection = () => {
             Choose Your <span className="text-brand-green">Adventure</span> Plan
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Whether you're looking for a flexible daily experience or the
+            Whether you{"'"}re looking for a flexible daily experience or the
             complete summer camp journey, we have the perfect plan for your
             child.
           </p>
@@ -136,8 +136,8 @@ const SubscriptionsSection = () => {
               Flexible Scheduling
             </h4>
             <p className="text-sm text-gray-600">
-              Choose daily or monthly options based on your family's needs and
-              schedule.
+              Choose daily or monthly options based on your family{"'"}s needs
+              and schedule.
             </p>
           </div>
 

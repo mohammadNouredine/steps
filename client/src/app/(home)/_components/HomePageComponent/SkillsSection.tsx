@@ -97,14 +97,14 @@ const SkillsSection = () => {
         <div className="mt-12">
           <div className="bg-gradient-to-r from-brand-green/10 via-brand-yellow/10 to-brand-red/10 rounded-2xl p-8 text-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Building Tomorrow's Leaders Today
+              Building Tomorrow{"'"}s Leaders Today
             </h3>
             <p className="text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Every activity at Leading Steps is designed with purpose. We don't
-              just keep children busy – we actively work to develop skills that
-              will serve them throughout their educational journey and into
-              adulthood. From the confidence gained through swimming to the
-              creativity fostered in arts and crafts, every moment is a step
+              Every activity at Leading Steps is designed with purpose. We don
+              {"'"}t just keep children busy – we actively work to develop
+              skills that will serve them throughout their educational journey
+              and into adulthood. From the confidence gained through swimming to
+              the creativity fostered in arts and crafts, every moment is a step
               toward their bright future.
             </p>
           </div>

@@ -156,11 +156,11 @@ const TripsSection = () => {
         <div className="text-center">
           <div className="bg-gradient-to-r from-brand-green/10 to-brand-yellow/10 rounded-2xl p-8 max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              "Adventure is the best way to learn"
+              {`"`}Adventure is the best way to learn{`"`}
             </h3>
             <p className="text-gray-600 leading-relaxed">
-              Our carefully planned trips are more than just fun outings –
-              they're educational experiences that teach children about their
+              Our carefully planned trips are more than just fun outings – they
+              {"'"}re educational experiences that teach children about their
               environment, culture, and community while building confidence and
               independence.
             </p>

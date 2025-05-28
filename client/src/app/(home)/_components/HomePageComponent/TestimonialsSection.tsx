@@ -60,8 +60,9 @@ const TestimonialsSection = () => {
             What <span className="text-brand-green">Families</span> Say About Us
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Don't just take our word for it – hear from the parents and children
-            who have experienced the Leading Steps difference firsthand.
+            Don{"'"}t just take our word for it – hear from the parents and
+            children who have experienced the Leading Steps difference
+            firsthand.
           </p>
         </div>
 
@@ -84,7 +85,9 @@ const TestimonialsSection = () => {
               </div>
 
               <blockquote className="text-gray-700 leading-relaxed mb-4 italic">
-                "{testimonial.quote}"
+                {`"`}
+                {testimonial.quote}
+                {`"`}
               </blockquote>
 
               <div className="border-t border-gray-200 pt-4">
@@ -126,8 +129,8 @@ const TestimonialsSection = () => {
             </h3>
             <p className="text-gray-600 leading-relaxed">
               Every testimonial represents a child who took their leading steps
-              toward growth, confidence, and joy. We're honored to be part of
-              their journey and excited to welcome your child to our camp
+              toward growth, confidence, and joy. We{"'"}re honored to be part
+              of their journey and excited to welcome your child to our camp
               family.
             </p>
           </div>

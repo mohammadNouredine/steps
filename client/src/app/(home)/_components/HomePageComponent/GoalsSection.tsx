@@ -83,12 +83,13 @@ const GoalsSection = () => {
         <div className="mt-12 text-center">
           <div className="bg-gradient-to-r from-brand-green/10 via-brand-yellow/10 to-brand-red/10 rounded-2xl p-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              "Every child takes their own leading steps towards greatness"
+              {`"`}Every child takes their own leading steps towards greatness
+              {`"`}
             </h3>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Our mission is to provide a safe, nurturing environment where
               children can explore, learn, and grow into confident, capable
-              individuals ready to take on life's challenges.
+              individuals ready to take on life{"'"}s challenges.
             </p>
           </div>
         </div>
