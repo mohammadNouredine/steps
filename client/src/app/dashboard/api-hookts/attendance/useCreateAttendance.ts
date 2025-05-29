@@ -15,7 +15,7 @@ export const useCreateAttendance = ({
 
 export type CreateAttendanceType = {
   kidId: number;
-  date: string;
+  date: Date;
   extraCharge?: number;
   note?: string;
 };

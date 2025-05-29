@@ -1,5 +1,4 @@
 import * as yup from "yup";
-import { dateValidation } from "@/app/api/_common/validation/date-validations";
 
 //------TOGGLE
 export const toggleAttendeeSchema = yup.object().shape({

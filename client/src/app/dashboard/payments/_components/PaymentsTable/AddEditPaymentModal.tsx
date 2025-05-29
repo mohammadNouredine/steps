@@ -15,7 +15,6 @@ import { useAddPayment } from "@/app/dashboard/api-hookts/payments/useAddPayment
 import { useEditPayment } from "@/app/dashboard/api-hookts/payments/useEditPayment";
 import { useGetAllKids } from "@/app/dashboard/api-hookts/kids/useGetAllKids";
 import SelectField from "@/components/fields/form/SelectField";
-import { Kid } from "@prisma/client";
 interface PaymentModalProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;

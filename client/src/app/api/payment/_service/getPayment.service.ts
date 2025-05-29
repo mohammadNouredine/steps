@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import prisma from "@/lib/db";
 import getDayRange from "@/backend/helpers/getDayRange";
-import { GetPaymentSchemaType } from "../_dto/gets-payment.dto";
+import {
+  GetPaymentSchemaType,
+  ReturnedPaymentResponse,
+} from "../_dto/gets-payment.dto";
 
 export async function getPayments(_: NextRequest, dto: GetPaymentSchemaType) {
   const { search, startDate, endDate, pageIndex = 0, pageSize = 10 } = dto;
@@ -61,13 +64,25 @@ export async function getPayments(_: NextRequest, dto: GetPaymentSchemaType) {
 
   const totalPaymentsLength = await prisma.payment.count({ where: filters });
 
-  return NextResponse.json({
+  const sum = await prisma.payment.aggregate({
+    _sum: {
+      amount: true,
+    },
+    where: filters,
+  });
+
+  const res: ReturnedPaymentResponse = {
     data: payments,
+    summary: {
+      totalPayments: sum._sum.amount ?? 0,
+    },
     pagination: {
       pageIndex,
       pageSize,
-      total: totalPaymentsLength,
+      totalCount: totalPaymentsLength,
+      pageCount: payments.length,
       totalPages: Math.ceil(totalPaymentsLength / pageSize),
     },
-  });
+  };
+  return NextResponse.json(res);
 }

@@ -14,6 +14,10 @@ import AddEditPaymentModal from "./AddEditPaymentModal";
 import { DashboardPaymentType } from "@/app/dashboard/_common/types/payments";
 import { useGetPayments } from "@/app/dashboard/api-hookts/payments/useGetPayments";
 import { useDeletePayment } from "@/app/dashboard/api-hookts/payments/useDeletePayment";
+import Summary, {
+  SummaryValue,
+} from "@/app/dashboard/_common/components/PageHeader/Summary";
+import { FaMoneyBill } from "react-icons/fa6";
 
 function PaymentsTable({
   isOpen,
@@ -52,7 +56,7 @@ function PaymentsTable({
         : undefined,
     },
   });
-
+  const summary = paymentsData?.summary;
   const { mutate: deletePayment } = useDeletePayment();
   //------------------COLUMNS-------------------------
   const payments_columns: ColumnDef<DashboardPaymentType>[] = [
@@ -98,10 +102,20 @@ function PaymentsTable({
       ),
     },
   ];
+  const summary_values: SummaryValue[] = [
+    {
+      title: "Total Payments",
+      value: summary?.totalPayments ? `$${summary?.totalPayments}` : "---",
+      icon: <FaMoneyBill />,
+      textColor: "success",
+    },
+  ];
+
   //---------------------------RENDER-----------------
   return (
     <div>
-      <div className="space-y-4">
+      <Summary values={summary_values} />
+      <div className="space-y-4 mt-4">
         <CardContainer className="flex items-center gap-x-4 flex-wrap space-y-2">
           <div className="w-[20rem]">
             <SearchInput value={searchQuery} setValue={setSearchQuery} />

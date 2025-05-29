@@ -1,3 +1,4 @@
+import { cn } from "@/utils/cn";
 import React from "react";
 import { FaBorderAll } from "react-icons/fa6";
 import { IoPerson } from "react-icons/io5";
@@ -8,8 +9,18 @@ export type SummaryValue = {
   value: string | number;
   icon?: React.ReactNode;
   shouldNotFormat?: boolean;
+  textColor?: "red" | "green" | "yellow" | "orange" | "success";
 };
 function Summary({ values }: { values: SummaryValue[] }) {
+  const colorClassName = {
+    red: "text-brand-red-neutral",
+    green: "text-brandGreen",
+    success: "text-green",
+    yellow: "text-brandYellow",
+    orange: "text-orange",
+    normal: "text-gray-700",
+  };
+
   return (
     <div className="w-full rounded-xl bg-white flex items-center justify-between p-4 mt-8 shadow-[0_0_8px_0_rgba(0,0,0,0.1)]">
       <div className="lg:flex-row flex-col flex gap-x-8 w-full ">
@@ -23,7 +34,12 @@ function Summary({ values }: { values: SummaryValue[] }) {
                 <p className="text-gray-400 text-sm font-medium">
                   {item.title}
                 </p>
-                <p className="text-gray-700  font-bold text-2xl ">
+                <p
+                  className={cn(
+                    "font-bold text-2xl ",
+                    colorClassName[item.textColor || "normal"]
+                  )}
+                >
                   {item.shouldNotFormat
                     ? item.value
                     : typeof item.value === "number"

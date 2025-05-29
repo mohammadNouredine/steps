@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GetExpenseSchemaType } from "../_dto/gets-expense.dto";
+import {
+  GetExpenseSchemaType,
+  ReturnedExpenseResponse,
+} from "../_dto/gets-expense.dto";
 import { Prisma } from "@prisma/client";
 import prisma from "@/lib/db";
 import getDayRange from "@/backend/helpers/getDayRange";
@@ -59,13 +62,32 @@ export async function getExpenses(_: NextRequest, dto: GetExpenseSchemaType) {
 
   const totalExpensesLength = await prisma.expense.count({ where: filters });
 
-  return NextResponse.json({
+  //calculate summary of all expenses for those filters  without pagination
+  //1 - total amount
+  //2 - total amount due
+  //3 - total amount paid
+  const summary = await prisma.expense.aggregate({
+    _sum: {
+      amount: true,
+      paidAmount: true,
+      amountDue: true,
+    },
+    where: filters, // same filters, no pagination
+  });
+  const res: ReturnedExpenseResponse = {
     data: expenses,
+    summary: {
+      totalAmount: summary._sum.amount ?? 0,
+      totalPaid: summary._sum.paidAmount ?? 0,
+      totalDue: summary._sum.amountDue ?? 0,
+    },
     pagination: {
       pageIndex,
       pageSize,
-      total: totalExpensesLength,
+      totalCount: totalExpensesLength,
+      pageCount: expenses.length,
       totalPages: Math.ceil(totalExpensesLength / pageSize),
     },
-  });
+  };
+  return NextResponse.json(res);
 }

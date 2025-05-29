@@ -22,7 +22,7 @@ interface AttendanceModalProps {
   >;
 }
 const CreateAttendanceSchema = Yup.object().shape({
-  date: Yup.string().required("Date is required"),
+  date: Yup.date().required("Date is required"),
   kidId: Yup.number().required("Kid ID is required"),
   extraCharge: Yup.number().optional(),
   note: Yup.string().optional(),
@@ -66,7 +66,7 @@ export default function AddEditAttendanceModal({
       <Formik
         validationSchema={CreateAttendanceSchema}
         initialValues={{
-          date: attendanceRecord?.date || "",
+          date: attendanceRecord?.date || new Date(),
           kidId: attendanceRecord?.kidId || kid?.id || 0,
           extraCharge: attendanceRecord?.extraCharge || 0,
           note: attendanceRecord?.note || "",

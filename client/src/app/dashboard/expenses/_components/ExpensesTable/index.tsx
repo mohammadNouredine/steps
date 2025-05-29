@@ -14,7 +14,11 @@ import { useGetExpenses } from "@/app/dashboard/api-hookts/expenses/useGetExpens
 import { DashboardExpenseType } from "@/app/dashboard/_common/types/expenses";
 import { useDeleteExpense } from "@/app/dashboard/api-hookts/expenses/useDeleteExpense";
 import AddEditExpenseModal from "./AddEditExpenseModal";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaMoneyBill } from "react-icons/fa";
+import Summary, {
+  SummaryValue,
+} from "@/app/dashboard/_common/components/PageHeader/Summary";
+import { MdOutlineAttachMoney } from "react-icons/md";
 
 function ExpensesTable({
   isOpen,
@@ -54,7 +58,7 @@ function ExpensesTable({
       isPaymentPending,
     },
   });
-
+  const summary = expensesData?.summary;
   const { mutate: deleteExpense } = useDeleteExpense();
   //------------------COLUMNS-------------------------
   const kids_columns: ColumnDef<DashboardExpenseType>[] = [
@@ -111,9 +115,31 @@ function ExpensesTable({
       ),
     },
   ];
+
+  const summaryValues: SummaryValue[] = [
+    {
+      title: "Total Amount",
+      value: `$${summary?.totalAmount}`,
+      icon: <FaMoneyBill className="text-brandYellow" />,
+    },
+    {
+      title: "Total Paid",
+      value: `$${summary?.totalPaid}`,
+      icon: <FaCheckCircle className="text-green" />,
+      textColor: "success",
+    },
+    {
+      title: "Total Due",
+      value: `$${summary?.totalDue}`,
+      icon: <MdOutlineAttachMoney className="text-brand-red-neutral" />,
+      textColor: "red",
+    },
+  ];
   //---------------------------RENDER-----------------
   return (
     <div>
+      <Summary values={summaryValues} />
+
       <div className="space-y-4">
         <CardContainer className="flex items-center gap-x-4 flex-wrap space-y-2">
           <div className="w-[20rem]">
