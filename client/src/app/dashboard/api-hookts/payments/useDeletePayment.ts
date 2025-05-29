@@ -3,7 +3,7 @@ import { DASHBOARD_ENDPOINTS } from "../dashboard-endpoints";
 
 export const useDeletePayment = () => {
   return useDeleteData({
-    queryKeysToInvalidate: [["payments"]],
+    queryKeysToInvalidate: [["payments"], ["kids"]],
     endpoint: DASHBOARD_ENDPOINTS.DELETE_PAYMENT,
   });
 };

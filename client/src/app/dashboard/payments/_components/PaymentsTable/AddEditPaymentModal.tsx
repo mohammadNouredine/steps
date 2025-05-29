@@ -15,6 +15,7 @@ import { useAddPayment } from "@/app/dashboard/api-hookts/payments/useAddPayment
 import { useEditPayment } from "@/app/dashboard/api-hookts/payments/useEditPayment";
 import { useGetAllKids } from "@/app/dashboard/api-hookts/kids/useGetAllKids";
 import SelectField from "@/components/fields/form/SelectField";
+import { Kid } from "@prisma/client";
 interface PaymentModalProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,7 +43,11 @@ export default function AddEditPaymentModal({
   });
   const { data: kids_data } = useGetAllKids();
   const kidsOptions = kids_data?.data.map((kid) => {
-    return { value: kid.id, label: kid.firstName };
+    return {
+      value: kid.id,
+      label: kid.firstName,
+      loanBalance: kid.loanBalance,
+    };
   });
 
   return (
@@ -76,23 +81,40 @@ export default function AddEditPaymentModal({
           }
         }}
       >
-        <Form>
-          <div className="md:grid md:grid-cols-2 gap-x-2">
-            <SelectField name="kidId" label="Kid" data={kidsOptions || []} />
-            <NumberField name="amount" label="Amount" />
-            <DateField name="paymentDate" label="Date" />
-            <InputField name="note" label="Note" />
-          </div>
+        {({ values }) => {
+          const selectedKid = kidsOptions?.find(
+            (kid) => kid.value === values.kidId
+          );
+          return (
+            <Form>
+              <div className="md:grid md:grid-cols-2 gap-x-2">
+                <SelectField
+                  extraLabel={
+                    selectedKid
+                      ? "( Loans: " + selectedKid?.loanBalance + "$ )"
+                      : undefined
+                  }
+                  extraLabelClassName="text-green text-xs mx-1"
+                  name="kidId"
+                  label="Kid"
+                  data={kidsOptions || []}
+                />
+                <NumberField name="amount" label="Amount" />
+                <DateField name="paymentDate" label="Date" />
+                <InputField name="note" label="Note" />
+              </div>
 
-          <Button
-            className="mt-4"
-            buttonType="submit"
-            type="button"
-            text="Submit"
-            isLoading={isAdding || isEditing}
-            loadingText="Submitting..."
-          />
-        </Form>
+              <Button
+                className="mt-4"
+                buttonType="submit"
+                type="button"
+                text="Submit"
+                isLoading={isAdding || isEditing}
+                loadingText="Submitting..."
+              />
+            </Form>
+          );
+        }}
       </Formik>
     </CenteredModal>
   );

@@ -8,7 +8,7 @@ export function useEditPayment({
   callBackOnSuccess?: () => void;
 }) {
   return useUpdateData<EditPaymentSchemaType>({
-    queryKeysToInvalidate: [["payments"]],
+    queryKeysToInvalidate: [["payments"], ["kids"]],
     endpoint: DASHBOARD_ENDPOINTS.UPDATE_PAYMENT,
     callBackOnSuccess,
   });

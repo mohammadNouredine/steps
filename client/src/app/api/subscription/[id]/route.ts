@@ -17,6 +17,6 @@ export async function DELETE(
   }
   // hand off to our service
   return withErrorHandling(
-    withAuth(deleteSubscription({ id: parseInt(id, 10) }))
+    withAuth(async () => deleteSubscription({ id: parseInt(id) }))
   )(req);
 }

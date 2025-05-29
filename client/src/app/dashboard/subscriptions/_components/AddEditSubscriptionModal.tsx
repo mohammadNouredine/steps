@@ -93,7 +93,9 @@ function AddEditKidModal({
             />
             <DateField name="startDate" label="Start Date" />
             <DateField name="endDate" label="End Date" />
-            <NumberField name="amountPaid" label="Amount Paid" />
+            {!editingSubscription && (
+              <NumberField name="amountPaid" label="Amount Paid" />
+            )}
             <NumberField name="discountPercentage" label="Discount %" />
             {isEditing && (
               <SelectField

@@ -9,6 +9,7 @@ import { useGetSubscriptions } from "../../api-hookts/subscriptions/useGetSubscr
 import { useDeleteSubscription } from "../../api-hookts/subscriptions/useDeleteSubscription";
 import { DashboardSubscriptionType } from "../../_common/types/subscriptions";
 import AddEditSubscriptionModal from "./AddEditSubscriptionModal";
+import { formatDate } from "@/helpers/formatDate";
 
 function SubscriptionsTable({
   isOpen,
@@ -64,16 +65,13 @@ function SubscriptionsTable({
     },
 
     {
-      accessorKey: "amountPaid",
-      header: () => <span>Amount Paid</span>,
-    },
-    {
       accessorKey: "status",
       header: () => <span>Status</span>,
     },
     {
       accessorKey: "startDate",
       header: () => <span>Start Date</span>,
+      cell: (info) => <div>{formatDate(info.row.original.startDate)}</div>,
     },
 
     {

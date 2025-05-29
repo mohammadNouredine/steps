@@ -7,6 +7,8 @@ import { InputItemDataType } from "rsuite/esm/InputPicker";
 
 export default function SelectField({
   label,
+  extraLabel,
+  extraLabelClassName,
   name,
   data,
   searchable = false,
@@ -23,6 +25,8 @@ export default function SelectField({
   colSpan = 1,
 }: {
   label?: string;
+  extraLabel?: string;
+  extraLabelClassName?: string;
   data: InputItemDataType<string | number>[];
   name: string;
   searchable?: boolean;
@@ -55,16 +59,22 @@ export default function SelectField({
   };
   return (
     <div className={cn("relative", colSpans[colSpan])}>
-      {label && (
-        <label
-          htmlFor={name}
-          className={cn(
-            "mb-1 block text-sm font-medium leading-6 text-black",
-            labelVisibleOn && `${labelVisibleOn}:hidden`
-          )}
-        >
-          {label}
-        </label>
+      {(label || extraLabel) && (
+        <div>
+          <label
+            htmlFor={name}
+            className={cn(
+              "mb-1 block text-sm font-medium leading-6 text-black",
+              labelVisibleOn && `${labelVisibleOn}:hidden`
+            )}
+          >
+            {label}
+
+            {extraLabel && (
+              <span className={extraLabelClassName}>{extraLabel}</span>
+            )}
+          </label>
+        </div>
       )}
       <div className="">
         {isLoading ? (

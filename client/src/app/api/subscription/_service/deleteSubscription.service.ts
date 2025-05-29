@@ -25,8 +25,8 @@ export async function deleteSubscription({ id }: { id: number }) {
       where: {
         kidId: sub.kidId,
         date: {
-          gte: sub.startDate.toISOString().slice(0, 10),
-          lte: now.toISOString().slice(0, 10),
+          gte: sub.startDate,
+          lte: now,
         },
       },
     });

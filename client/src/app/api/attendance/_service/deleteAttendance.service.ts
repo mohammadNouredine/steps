@@ -22,7 +22,7 @@ export async function deleteAttendance(
   }
 
   // 2️⃣ reverse billing for USAGE plans
-  const attendanceDate = new Date(attendance.date);
+  const attendanceDate = attendance.date;
   const sub = await prisma.subscription.findFirst({
     where: {
       kidId: attendance.kidId,

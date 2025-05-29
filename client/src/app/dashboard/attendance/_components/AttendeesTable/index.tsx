@@ -15,7 +15,7 @@ import AddEditAttendanceModal from "./AddEditAttendanceModal";
 import CardContainer from "@/app/dashboard/_common/components/CardContainer";
 import { DatePicker, InputPicker } from "rsuite";
 import { useGetAllKids } from "@/app/dashboard/api-hookts/kids/useGetAllKids";
-import { formatDateToDashes } from "@/helpers/formatDate";
+import { formatDate, formatDateToDashes } from "@/helpers/formatDate";
 import { FaTrash } from "react-icons/fa6";
 import FalseTruePopup from "@/app/dashboard/_common/components/Popups/FalseTruePopup";
 import { useDeleteAttendance } from "@/app/dashboard/api-hookts/attendance/useDeleteAttendance";
@@ -126,7 +126,7 @@ function AttendeesTable({
       accessorKey: "date",
       header: () => <span>Date</span>,
       cell: (info) => {
-        return <div>{info.row.original.date}</div>;
+        return <div>{formatDate(info.row.original.date)}</div>;
       },
     },
     {

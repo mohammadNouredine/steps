@@ -62,17 +62,31 @@ export async function addSubscription(
       endDate: endOfEndDate,
       price: plan.price,
       discountPercentage,
-      amountPaid,
       status: SubscriptionStatus.ACTIVE,
     },
   });
 
-  // 4️⃣ billing logic
+  // 4️⃣ create payment instead of adding paid for subscription
+  if (amountPaid > 0) {
+    await prisma.payment.create({
+      data: {
+        amount: amountPaid,
+        paymentDate: new Date(),
+        kid: { connect: { id: kidId } },
+        note: "Subscription payment",
+      },
+    });
+  }
+
+  // 5️⃣ billing logic
+  const disc = discountPercentage || 0;
+  const discountedPlanPrice = plan.price * (1 - disc / 100);
+
   if (plan.billingMode === "PREPAID") {
     // charge full plan price now
     await prisma.kid.update({
       where: { id: kidId },
-      data: { loanBalance: { increment: plan.price - amountPaid } },
+      data: { loanBalance: { increment: discountedPlanPrice - amountPaid } },
     });
   }
   // else USAGE: we'll bill on attendance

@@ -6,7 +6,7 @@ import { DashboardTable } from "@/app/_components/tables/DashboardTable";
 import { FiEdit2 } from "react-icons/fi";
 import CardContainer from "@/app/dashboard/_common/components/CardContainer";
 import { Checkbox, DateRangePicker } from "rsuite";
-import { formatDateToDashes } from "@/helpers/formatDate";
+import { formatDate, formatDateToDashes } from "@/helpers/formatDate";
 import SearchInput from "@/components/fields/form/SearchInput";
 import { DateRange } from "rsuite/esm/DateRangePicker";
 import useDebounce from "@/hooks/useDebounce";
@@ -14,6 +14,7 @@ import { useGetExpenses } from "@/app/dashboard/api-hookts/expenses/useGetExpens
 import { DashboardExpenseType } from "@/app/dashboard/_common/types/expenses";
 import { useDeleteExpense } from "@/app/dashboard/api-hookts/expenses/useDeleteExpense";
 import AddEditExpenseModal from "./AddEditExpenseModal";
+import { FaCheckCircle } from "react-icons/fa";
 
 function ExpensesTable({
   isOpen,
@@ -62,10 +63,35 @@ function ExpensesTable({
       header: () => <span>Title</span>,
     },
     { accessorKey: "description", header: () => <span>Description</span> },
+
+    {
+      accessorKey: "date",
+      header: () => <span>Date</span>,
+      cell: (info) => (
+        <div className="flex gap-2">
+          <span>{formatDate(info.row.original.date)}</span>
+        </div>
+      ),
+    },
     { accessorKey: "amount", header: () => <span>Amount</span> },
-    { accessorKey: "date", header: () => <span>Date</span> },
-    { accessorKey: "amountDue", header: () => <span>Amount Due</span> },
     { accessorKey: "paidAmount", header: () => <span>Paid Amount</span> },
+    {
+      accessorKey: "amountDue",
+      header: () => <span>Amount Due</span>,
+      cell: (info) => {
+        const amountDue = info.getValue() as number;
+        const isFullyPaid = amountDue <= 0;
+        return (
+          <div className="flex gap-2">
+            {isFullyPaid ? (
+              <FaCheckCircle className="text-green" />
+            ) : (
+              <span>{amountDue}</span>
+            )}
+          </div>
+        );
+      },
+    },
 
     {
       accessorKey: "id",

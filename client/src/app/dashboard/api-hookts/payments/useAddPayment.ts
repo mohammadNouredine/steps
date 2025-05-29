@@ -8,7 +8,7 @@ export function useAddPayment({
   callBackOnSuccess?: () => void;
 }) {
   return usePostData<AddPaymentSchemaType>({
-    queryKeysToInvalidate: [["payments"]],
+    queryKeysToInvalidate: [["payments"], ["kids"]],
     endpoint: DASHBOARD_ENDPOINTS.CREATE_PAYMENT,
     callBackOnSuccess,
   });
