@@ -23,10 +23,10 @@ function Summary({ values }: { values: SummaryValue[] }) {
 
   return (
     <div className="w-full rounded-xl bg-white flex items-center justify-between p-4 mt-8 shadow-[0_0_8px_0_rgba(0,0,0,0.1)]">
-      <div className="lg:flex-row flex-col flex gap-x-8 w-full ">
+      <div className="lg:flex-row flex-col flex gap-x-8 w-full flex-wrap lg:gap-y-4 ">
         {values.map((item, _index) => (
           <>
-            <div className="flex items-start gap-x-2 w-full text-nowrap ">
+            <div className="flex items-start gap-x-2 w-full lg:w-fit text-nowrap ">
               {item?.icon && (
                 <div className="text-2xl text-gray-400">{item.icon}</div>
               )}
