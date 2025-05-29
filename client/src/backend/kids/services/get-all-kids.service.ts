@@ -1,19 +1,16 @@
+import { getDayRangeFromDate } from "@/backend/helpers/getDayRange";
 import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function getAllKids() {
-  const startOfToday = new Date(new Date().setHours(0, 0, 0, 0));
-  const startOfTomorrow = new Date(
-    new Date().setDate(new Date().getDate() + 1)
-  );
-
+  const { startOfDay, startOfNextDay } = getDayRangeFromDate(new Date());
   const kids = await prisma.kid.findMany({
     include: {
       attendances: {
         where: {
           date: {
-            gte: startOfToday,
-            lte: startOfTomorrow,
+            gte: startOfDay,
+            lte: startOfNextDay,
           },
         },
       },
@@ -22,12 +19,11 @@ export async function getAllKids() {
       updatedAt: "desc",
     },
   });
-
   const formattedKids = kids.map((kid) => ({
     ...kid,
     hasAttendedToday: kid.attendances.some(
       (attendance) =>
-        attendance.date < startOfTomorrow && attendance.date > startOfToday
+        attendance.date > startOfDay && attendance.date < startOfNextDay
     ),
   }));
   return NextResponse.json({

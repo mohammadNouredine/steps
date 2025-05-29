@@ -3,7 +3,7 @@ import * as yup from "yup";
 //------TOGGLE
 export const toggleAttendeeSchema = yup.object().shape({
   date: yup.date().required("Date is required"),
-  kidId: yup.string().required("Kid ID is required"),
+  kidId: yup.number().required("Kid ID is required"),
 });
 export type ToggleAttendeeDto = yup.InferType<typeof toggleAttendeeSchema>;
 

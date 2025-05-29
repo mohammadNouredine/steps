@@ -15,7 +15,6 @@ import { BsFillPersonPlusFill } from "react-icons/bs";
 import AddEditAttendanceModal from "../../attendance/_components/AttendeesTable/AddEditAttendanceModal";
 import { Checkbox } from "rsuite";
 import { useToggleAttendance } from "../../api-hookts/attendance/useToggleAttendance";
-import { formatDateToDashes } from "@/helpers/formatDate";
 import CardContainer from "../../_common/components/CardContainer";
 import SearchInput from "@/components/fields/form/SearchInput";
 
@@ -138,7 +137,7 @@ function KidsTable({
               onChange={() => {
                 toggleAttendance({
                   kidId: info.row.original.id,
-                  date: formatDateToDashes(new Date()),
+                  date: new Date(),
                 });
               }}
             />

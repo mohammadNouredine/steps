@@ -12,4 +12,16 @@ function getDayRange(dateString: string) {
   );
   return { startOfDay, startOfNextDay };
 }
+
+export function getDayRangeFromDate(date: Date) {
+  const startOfDay = new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+  );
+  const startOfNextDay = new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 1)
+  );
+
+  return { startOfDay, startOfNextDay };
+}
+
 export default getDayRange;
