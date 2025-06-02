@@ -5,43 +5,42 @@ const StatisticsSection = () => {
     {
       icon: Calendar,
       number: "4",
-      label: "Years of Operation",
-      description: "Dedicated to children's growth",
+      label: "سنوات من العمل",
+      description: "ملتزمون بنمو الأطفال",
       color: "brand-green",
     },
     {
       icon: Users,
       number: "100+",
-      label: "Kids Attended",
-      description: "Happy campers and counting",
+      label: "طفل شارك",
+      description: "أطفال سعداء وأكثر",
       color: "brand-yellow",
     },
     {
       icon: Star,
       number: "14+",
-      label: "Kids Learned Swimming",
-      description: "Building water confidence",
+      label: "طفل تعلم السباحة",
+      description: "بناء الثقة في الماء",
       color: "brand-red",
     },
     {
       icon: Clock,
       number: "1000+",
-      label: "Hours of Fun",
-      description: "Memorable experiences created",
+      label: "ساعة من المرح",
+      description: "تجارب لا تُنسى",
       color: "brand-green",
     },
   ];
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-gray-50" dir="rtl">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Our <span className="text-brand-green">Impact</span> in Numbers
+            <span className="text-brand-green">تأثيرنا</span> بالأرقام
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            See how Leading Steps has been making a difference in children{"'"}s
-            lives over the years
+            شاهد كيف أحدثت خطوات رائدة فرقاً في حياة الأطفال على مر السنين
           </p>
         </div>
 

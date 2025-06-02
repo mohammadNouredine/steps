@@ -6,6 +6,11 @@ export async function getAllKids() {
   const { startOfDay, startOfNextDay } = getDayRangeFromDate(new Date());
   const kids = await prisma.kid.findMany({
     include: {
+      subscriptions: {
+        include: {
+          plan: true,
+        },
+      },
       attendances: {
         where: {
           date: {
@@ -21,6 +26,8 @@ export async function getAllKids() {
   });
   const formattedKids = kids.map((kid) => ({
     ...kid,
+    subscriptionPlan: kid.subscriptions[0].plan,
+    subscriptions: undefined,
     hasAttendedToday: kid.attendances.some(
       (attendance) =>
         attendance.date > startOfDay && attendance.date < startOfNextDay

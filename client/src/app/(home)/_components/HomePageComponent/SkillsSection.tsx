@@ -1,59 +1,58 @@
 const SkillsSection = () => {
   const skills = [
     {
-      category: "Physical Development",
+      category: "التطور البدني",
       skills: [
-        { name: "Swimming Proficiency", icon: "🏊‍♂️" },
-        { name: "Physical Fitness", icon: "💪" },
-        { name: "Coordination", icon: "🤸‍♂️" },
-        { name: "Balance & Agility", icon: "⚖️" },
+        { name: "إتقان السباحة", icon: "🏊‍♂️" },
+        { name: "اللياقة البدنية", icon: "💪" },
+        { name: "التنسيق", icon: "🤸‍♂️" },
+        { name: "التوازن والرشاقة", icon: "⚖️" },
       ],
       color: "brand-green",
     },
     {
-      category: "Social & Emotional",
+      category: "المهارات الاجتماعية والعاطفية",
       skills: [
-        { name: "Teamwork", icon: "🤝" },
-        { name: "Communication", icon: "💬" },
-        { name: "Empathy", icon: "❤️" },
-        { name: "Leadership", icon: "👑" },
+        { name: "العمل الجماعي", icon: "🤝" },
+        { name: "التواصل", icon: "💬" },
+        { name: "التعاطف", icon: "❤️" },
+        { name: "القيادة", icon: "👑" },
       ],
       color: "brand-yellow",
     },
     {
-      category: "Cognitive & Creative",
+      category: "المهارات المعرفية والإبداعية",
       skills: [
-        { name: "Problem Solving", icon: "🧩" },
-        { name: "Creativity", icon: "🎨" },
-        { name: "Critical Thinking", icon: "🧠" },
-        { name: "Innovation", icon: "💡" },
+        { name: "حل المشكلات", icon: "🧩" },
+        { name: "الإبداع", icon: "🎨" },
+        { name: "التفكير النقدي", icon: "🧠" },
+        { name: "الابتكار", icon: "💡" },
       ],
       color: "brand-red",
     },
     {
-      category: "Life Skills",
+      category: "مهارات الحياة",
       skills: [
-        { name: "Independence", icon: "🎯" },
-        { name: "Time Management", icon: "⏰" },
-        { name: "Responsibility", icon: "✅" },
-        { name: "Adaptability", icon: "🔄" },
+        { name: "الاستقلالية", icon: "🎯" },
+        { name: "إدارة الوقت", icon: "⏰" },
+        { name: "المسؤولية", icon: "✅" },
+        { name: "التكيف", icon: "🔄" },
       ],
       color: "brand-green",
     },
   ];
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white" dir="rtl">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            <span className="text-brand-green">Skills & Abilities</span> We
-            Develop
+            <span className="text-brand-green">المهارات والقدرات</span> التي
+            نطورها
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Our comprehensive program focuses on developing essential life
-            skills that will benefit children throughout their lives, preparing
-            them for future success.
+            يركز برنامجنا الشامل على تطوير مهارات الحياة الأساسية التي ستفيد
+            الأطفال طوال حياتهم، مما يعدهم للنجاح المستقبلي.
           </p>
         </div>
 
@@ -81,7 +80,7 @@ const SkillsSection = () => {
                 {category.skills.map((skill, skillIndex) => (
                   <div
                     key={skillIndex}
-                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     <span className="text-2xl">{skill.icon}</span>
                     <span className="text-sm font-medium text-gray-700">
@@ -97,15 +96,14 @@ const SkillsSection = () => {
         <div className="mt-12">
           <div className="bg-gradient-to-r from-brand-green/10 via-brand-yellow/10 to-brand-red/10 rounded-2xl p-8 text-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Building Tomorrow{"'"}s Leaders Today
+              بناء قادة الغد اليوم
             </h3>
             <p className="text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Every activity at Leading Steps is designed with purpose. We don
-              {"'"}t just keep children busy – we actively work to develop
-              skills that will serve them throughout their educational journey
-              and into adulthood. From the confidence gained through swimming to
-              the creativity fostered in arts and crafts, every moment is a step
-              toward their bright future.
+              كل نشاط في خطوات رائدة مصمم لغرض محدد. نحن لا نجعل الأطفال مشغولين
+              فقط - بل نعمل بنشاط على تطوير المهارات التي ستخدمهم طوال رحلة
+              تعليمهم وحتى مرحلة البلوغ. من الثقة المكتسبة من خلال السباحة إلى
+              الإبداع الذي يتم تنميته في الفنون والحرف، كل لحظة هي خطوة نحو
+              مستقبلهم المشرق.
             </p>
           </div>
         </div>

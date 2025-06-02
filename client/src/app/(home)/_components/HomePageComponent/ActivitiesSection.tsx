@@ -1,69 +1,68 @@
 const ActivitiesSection = () => {
   const activities = [
     {
-      name: "Swimming",
-      description: "Professional swimming lessons for all skill levels",
+      name: "السباحة",
+      description: "دروس سباحة احترافية لجميع المستويات",
       icon: "🏊‍♂️",
       color: "brand-green",
     },
     {
-      name: "Religious Lessons",
-      description: "Spiritual growth and moral values education",
+      name: "الدروس الدينية",
+      description: "نمو روحي وتعليم القيم الأخلاقية",
       icon: "📿",
       color: "brand-yellow",
     },
     {
-      name: "Reading Sessions",
-      description: "Building literacy and love for books",
+      name: "جلسات القراءة",
+      description: "بناء مهارات القراءة وحب الكتب",
       icon: "📚",
       color: "brand-red",
     },
     {
-      name: "Kitchen Activities",
-      description: "Cooking skills and healthy eating habits",
+      name: "أنشطة المطبخ",
+      description: "مهارات الطبخ وعادات الأكل الصحية",
       icon: "👨‍🍳",
       color: "brand-green",
     },
     {
-      name: "Sports & Games",
-      description: "Team sports and physical fitness activities",
+      name: "الرياضة والألعاب",
+      description: "رياضات جماعية وأنشطة اللياقة البدنية",
       icon: "⚽",
       color: "brand-yellow",
     },
     {
-      name: "Arts & Crafts",
-      description: "Creative expression through various art forms",
+      name: "الفنون والحرف",
+      description: "تعبير إبداعي من خلال أشكال فنية متنوعة",
       icon: "🎨",
       color: "brand-red",
     },
     {
-      name: "Nature Exploration",
-      description: "Outdoor adventures and environmental learning",
+      name: "استكشاف الطبيعة",
+      description: "مغامرات خارجية وتعلم بيئي",
       icon: "🌿",
       color: "brand-green",
     },
-
     {
-      name: "Science Experiments",
-      description: "Fun hands-on learning experiences",
+      name: "تجارب علمية",
+      description: "تجارب تعليمية عملية ممتعة",
       icon: "🔬",
       color: "brand-red",
     },
     {
-      name: "Team Building",
-      description: "Collaborative games and trust exercises",
+      name: "بناء الفريق",
+      description: "ألعاب تعاونية وتمارين بناء الثقة",
       icon: "🤝",
       color: "brand-green",
     },
     {
-      name: "Drama & Theater",
-      description: "Performance arts and confidence building",
+      name: "المسرح والدراما",
+      description: "فنون الأداء وبناء الثقة",
       icon: "🎭",
       color: "brand-yellow",
     },
     {
-      name: "Adventure Challenges",
-      description: "Safe obstacle courses and problem solving",
+      name: "تحديات المغامرة",
+      description: "مسارات عقبات آمنة وحل المشكلات",
       icon: "🏃‍♂️",
       color: "brand-red",
     },
@@ -73,16 +72,16 @@ const ActivitiesSection = () => {
     <section
       id="activities"
       className="py-16 bg-gradient-to-br from-blue-50 to-white"
+      dir="rtl"
     >
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Exciting <span className="text-brand-green">Activities</span> Await
+            <span className="text-brand-green">أنشطة</span> مثيرة تنتظركم
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            From swimming and sports to arts and sciences, our diverse activity
-            program ensures every child finds their passion and develops new
-            skills.
+            من السباحة والرياضة إلى الفنون والعلوم، برنامجنا المتنوع يضمن لكل
+            طفل أن يجد شغفه ويطور مهارات جديدة.
           </p>
         </div>
 
@@ -122,37 +121,37 @@ const ActivitiesSection = () => {
         <div className="mt-12 text-center">
           <div className="bg-white rounded-2xl p-8 shadow-lg max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Daily Schedule Highlights
+              أبرز الجدول اليومي
             </h3>
-            <div className="grid md:grid-cols-3 gap-6 text-left">
+            <div className="grid md:grid-cols-3 gap-6 text-right">
               <div className="space-y-2">
                 <h4 className="font-semibold text-brand-green">
-                  Morning (9:00 - 12:00)
+                  الصباح (9:00 - 12:00)
                 </h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Swimming Lessons</li>
-                  <li>• Sports Activities</li>
-                  <li>• Team Building</li>
+                  <li>• دروس السباحة</li>
+                  <li>• الأنشطة الرياضية</li>
+                  <li>• بناء الفريق</li>
                 </ul>
               </div>
               <div className="space-y-2">
                 <h4 className="font-semibold text-brand-yellow">
-                  Afternoon (1:00 - 4:00)
+                  بعد الظهر (1:00 - 4:00)
                 </h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Arts & Crafts</li>
-                  <li>• Reading Sessions</li>
-                  <li>• Science Fun</li>
+                  <li>• الفنون والحرف</li>
+                  <li>• جلسات القراءة</li>
+                  <li>• متعة العلوم</li>
                 </ul>
               </div>
               <div className="space-y-2">
                 <h4 className="font-semibold text-brand-red">
-                  Evening (4:00 - 6:00)
+                  المساء (4:00 - 6:00)
                 </h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Music & Dance</li>
-                  <li>• Free Play</li>
-                  <li>• Reflection Time</li>
+                  <li>• الموسيقى والرقص</li>
+                  <li>• اللعب الحر</li>
+                  <li>• وقت التأمل</li>
                 </ul>
               </div>
             </div>

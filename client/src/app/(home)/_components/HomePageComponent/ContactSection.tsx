@@ -18,7 +18,7 @@ const ContactSection = () => {
     e.preventDefault();
 
     // Simulate form submission
-    toast.success("Message Sent Successfully! 🎉");
+    toast.success("تم إرسال الرسالة بنجاح! 🎉");
 
     // Reset form
     setFormData({
@@ -41,16 +41,15 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-16 bg-white">
+    <section id="contact" className="py-16 bg-white" dir="rtl">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Ready to <span className="text-brand-green">Get Started?</span>
+            هل أنت مستعد <span className="text-brand-green">للبدء؟</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Contact us today to enroll your child in Leading Steps Summer Camp.
-            We{"'"}re here to answer all your questions and help you choose the
-            perfect program.
+            اتصل بنا اليوم لتسجيل طفلك في معسكر خطوات رائدة الصيفي. نحن هنا
+            للإجابة على جميع أسئلتك ومساعدتك في اختيار البرنامج المثالي.
           </p>
         </div>
 
@@ -58,27 +57,27 @@ const ContactSection = () => {
           {/* Contact Form */}
           <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 shadow-lg">
             <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-              📝 Enrollment Inquiry
+              📝 استفسار التسجيل
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Parent/Guardian Name *
+                    اسم الوالد/الوصي *
                   </label>
                   <Input
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Your full name"
+                    placeholder="الاسم الكامل"
                     required
                     className="border-gray-300 focus:border-brand-green focus:ring-brand-green"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address *
+                    البريد الإلكتروني *
                   </label>
                   <Input
                     name="email"
@@ -95,7 +94,7 @@ const ContactSection = () => {
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number *
+                    رقم الهاتف *
                   </label>
                   <Input
                     name="phone"
@@ -109,14 +108,14 @@ const ContactSection = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Child{"'"}s Age
+                    عمر الطفل
                   </label>
                   <Input
                     name="childAge"
                     type="number"
                     value={formData.childAge}
                     onChange={handleChange}
-                    placeholder="Age (5-12)"
+                    placeholder="العمر (5-12)"
                     min="5"
                     max="12"
                     className="border-gray-300 focus:border-brand-green focus:ring-brand-green"
@@ -126,26 +125,26 @@ const ContactSection = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Child{"'"}s Name
+                  اسم الطفل
                 </label>
                 <Input
                   name="childName"
                   value={formData.childName}
                   onChange={handleChange}
-                  placeholder="Your child's name"
+                  placeholder="اسم طفلك"
                   className="border-gray-300 focus:border-brand-green focus:ring-brand-green"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Message or Questions
+                  الرسالة أو الأسئلة
                 </label>
                 <Textarea
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  placeholder="Tell us about your child's interests, any special needs, or questions you have about our programs..."
+                  placeholder="أخبرنا عن اهتمامات طفلك، أي احتياجات خاصة، أو أسئلة لديك حول برامجنا..."
                   rows={4}
                   className="border-gray-300 focus:border-brand-green focus:ring-brand-green"
                 />
@@ -154,7 +153,7 @@ const ContactSection = () => {
               <Button
                 buttonType="submit"
                 className="w-full bg-brand-green hover:bg-brand-green-neutral text-white py-3"
-                text=" Send Inquiry & Get Information"
+                text="إرسال الاستفسار والحصول على المعلومات"
               />
             </form>
           </div>
@@ -164,46 +163,45 @@ const ContactSection = () => {
             {/* Contact Details */}
             <div className="bg-gradient-to-br from-brand-green/10 to-brand-green/5 rounded-2xl p-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-                📞 Contact Information
+                📞 معلومات الاتصال
               </h3>
 
               <div className="space-y-6">
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start gap-x-4">
                   <MapPin className="w-6 h-6 text-brand-green mt-1" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">
-                      Our Location
-                    </h4>
-                    <p className="text-gray-600">Arabsalim, Lebanon</p>
+                    <h4 className="font-semibold text-gray-900">موقعنا</h4>
+                    <p className="text-gray-600">عربصاليم، لبنان</p>
                     <p className="text-sm text-gray-500">
-                      Beautiful countryside setting perfect for outdoor
-                      activities
+                      موقع ريفي جميل مثالي للأنشطة الخارجية
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start gap-x-4">
                   <Phone className="w-6 h-6 text-brand-green mt-1" />
                   <div>
                     <h4 className="font-semibold text-gray-900">
-                      Phone & WhatsApp
+                      الهاتف وواتساب
                     </h4>
                     <p className="text-gray-600">+961 XX XXX XXX</p>
                     <p className="text-sm text-gray-500">
-                      Available daily 8 AM - 8 PM for inquiries
+                      متاح يومياً من 8 صباحاً حتى 8 مساءً للاستفسارات
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start gap-x-4">
                   <Clock className="w-6 h-6 text-brand-green mt-1" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">Camp Hours</h4>
+                    <h4 className="font-semibold text-gray-900">
+                      ساعات المعسكر
+                    </h4>
                     <p className="text-gray-600">
-                      Monday - Friday: 9:00 AM - 6:00 PM
+                      الاثنين - الجمعة: 9:00 صباحاً - 6:00 مساءً
                     </p>
                     <p className="text-sm text-gray-500">
-                      Extended hours available upon request
+                      ساعات ممتدة متاحة عند الطلب
                     </p>
                   </div>
                 </div>
@@ -213,39 +211,33 @@ const ContactSection = () => {
             {/* Quick Facts */}
             <div className="bg-gradient-to-br from-brand-yellow/10 to-brand-yellow/5 rounded-2xl p-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-                ⭐ Why Choose Leading Steps?
+                ⭐ لماذا تختار خطوات رائدة؟
               </h3>
 
               <div className="space-y-4">
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-x-3">
                   <Star className="w-5 h-5 text-brand-yellow fill-current" />
                   <span className="text-gray-700">
-                    Licensed & certified camp facility
+                    منشأة معسكر مرخصة ومعتمدة
                   </span>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-x-3">
+                  <Star className="w-5 h-5 text-brand-yellow fill-current" />
+                  <span className="text-gray-700">طاقم مدرب وذو خبرة</span>
+                </div>
+                <div className="flex items-center gap-x-3">
                   <Star className="w-5 h-5 text-brand-yellow fill-current" />
                   <span className="text-gray-700">
-                    Trained & experienced staff
+                    مجموعات صغيرة للاهتمام الشخصي
                   </span>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-x-3">
                   <Star className="w-5 h-5 text-brand-yellow fill-current" />
-                  <span className="text-gray-700">
-                    Small group sizes for personal attention
-                  </span>
+                  <span className="text-gray-700">بروتوكولات سلامة شاملة</span>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-x-3">
                   <Star className="w-5 h-5 text-brand-yellow fill-current" />
-                  <span className="text-gray-700">
-                    Comprehensive safety protocols
-                  </span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Star className="w-5 h-5 text-brand-yellow fill-current" />
-                  <span className="text-gray-700">
-                    Daily parent communication
-                  </span>
+                  <span className="text-gray-700">تواصل يومي مع الأهل</span>
                 </div>
               </div>
             </div>

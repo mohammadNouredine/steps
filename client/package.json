@@ -36,7 +36,7 @@
     "react-spinners": "^0.15.0",
     "react-to-print": "^3.0.4",
     "rsuite": "^5.70.2",
-    "swiper": "^11.2.1",
+    "swiper": "^11.2.8",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",

@@ -14,7 +14,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Brand Section */}
           <div className="md:col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
+            <div className="flex items-center gap-x-3 mb-4">
               <div className="w-10 h-10 bg-gradient-to-br from-brand-green to-brand-green-neutral rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-lg">LS</span>
               </div>
@@ -28,7 +28,7 @@ const Footer = () => {
               confidence, and lifelong learning through engaging summer camp
               experiences in Arabsalim, Lebanon.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex gap-x-4">
               <div className="text-2xl">🏕️</div>
               <div className="text-2xl">🏊‍♂️</div>
               <div className="text-2xl">🎨</div>

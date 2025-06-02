@@ -32,7 +32,7 @@ function IconButton({
       disabled={disabled}
       className={cn(
         styleClasses[style],
-        "px-2 rounded-md transition-all disabled:opacity-50"
+        "px-2 rounded-md transition-all disabled:opacity-50 py-2"
       )}
       onClick={onClick}
     >

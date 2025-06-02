@@ -1,6 +1,6 @@
 import { useReadData } from "@/api/api-service/useReadData";
 import { DASHBOARD_ENDPOINTS } from "../dashboard-endpoints";
-import { Attendance, Kid } from "@prisma/client";
+import { Attendance, Kid, SubscriptionPlan } from "@prisma/client";
 
 export function useGetAllKids() {
   return useReadData<GetAllKidsResponse>({
@@ -15,4 +15,5 @@ type GetAllKidsResponse = {
 export type KidType = Kid & {
   attendances: Attendance[];
   hasAttendedToday: boolean;
+  subscriptionPlan: SubscriptionPlan;
 };

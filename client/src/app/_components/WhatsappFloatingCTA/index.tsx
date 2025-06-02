@@ -116,7 +116,7 @@ const Bubble = ({
     >
       <div className="min-w-32 relative w-fit text-end text-nowrap bg-white p-3 min-h-12 rounded-lg shadow-[0_0_14px_0_rgba(0,0,0,.1)] z-10">
         {!startText && (
-          <div className="absolute inset-0 flex space-x-1 justify-end items-center px-3">
+          <div className="absolute inset-0 flex gap-x-1 justify-end items-center px-3">
             {[...Array(3)].map((_, index) => (
               <motion.span
                 key={index}

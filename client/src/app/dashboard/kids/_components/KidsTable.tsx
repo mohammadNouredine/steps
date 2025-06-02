@@ -17,6 +17,9 @@ import { Checkbox } from "rsuite";
 import { useToggleAttendance } from "../../api-hookts/attendance/useToggleAttendance";
 import CardContainer from "../../_common/components/CardContainer";
 import SearchInput from "@/components/fields/form/SearchInput";
+import IconButton from "@/components/common/ui/IconButton";
+import { FaPrint } from "react-icons/fa6";
+import PrintAllKidsModal from "./PrintAllKidsModal";
 
 function KidsTable({
   isOpen,
@@ -32,6 +35,8 @@ function KidsTable({
   const [isOpenViewingKid, setIsOpenViewingKid] = React.useState(false);
   const [isOpenAttendance, setIsOpenAttendance] = React.useState(false);
   const [isAttendanceMode, setIsAttendanceMode] = React.useState(false);
+  const [isOpenPrintAllKids, setIsOpenPrintAllKids] = React.useState(false);
+
   const [searchQuery, setSearchQuery] = React.useState("");
   //------------------API CALLS-------------------------
   const { data: kids_data } = useGetAllKids();
@@ -56,6 +61,7 @@ function KidsTable({
             header: () => <span>ID</span>,
             cell: (info: CellContext<KidType, unknown>) => {
               const isFemale = info.row.original.gender === Gender.FEMALE;
+              const index = info.row.index + 1;
               return (
                 <div
                   className={cn(
@@ -63,7 +69,7 @@ function KidsTable({
                     "text-white text-center rounded-full py-0.5"
                   )}
                 >
-                  {info.row.original.id}
+                  {index}
                 </div>
               );
             },
@@ -103,6 +109,15 @@ function KidsTable({
           {
             accessorKey: "loanBalance",
             header: () => <span>Loan</span>,
+          },
+          {
+            accessorKey: "subscriptionPlan",
+            header: () => <span> Plan</span>,
+            cell: (info: CellContext<KidType, unknown>) => {
+              const plan = info.row.original.subscriptionPlan;
+              if (!plan) return <div>-</div>;
+              return <div>{plan.name}</div>;
+            },
           },
 
           {
@@ -190,7 +205,7 @@ function KidsTable({
   //---------------------------RENDER-----------------
   return (
     <div>
-      <CardContainer className="flex items-center gap-x-4  space-y-2">
+      <CardContainer className="flex items-center gap-x-4  space-y-2 mb-2">
         <SearchInput value={searchQuery} setValue={setSearchQuery} />
         <Checkbox
           checked={isAttendanceMode}
@@ -201,6 +216,12 @@ function KidsTable({
         >
           <p className="text-gray-900 font-medium">Attendance Mode</p>
         </Checkbox>
+
+        <IconButton
+          onClick={() => setIsOpenPrintAllKids(true)}
+          Icon={FaPrint}
+          style={"yellow"}
+        />
       </CardContainer>
       <DashboardTable
         showDelete={!isAttendanceMode}
@@ -218,6 +239,11 @@ function KidsTable({
         isOpen={isOpenAttendance}
         setIsOpen={setIsOpenAttendance}
         kid={viewingKid}
+      />
+      <PrintAllKidsModal
+        isOpen={isOpenPrintAllKids}
+        setIsOpen={setIsOpenPrintAllKids}
+        kids={kids_data?.data || []}
       />
       {viewingKid && (
         <ViewKidModal

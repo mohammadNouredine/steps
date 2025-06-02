@@ -4,65 +4,64 @@ const TestimonialsSection = () => {
   const testimonials = [
     {
       quote:
-        "Leading Steps transformed my daughter's summer! She learned to swim, made wonderful friends, and gained so much confidence. The staff is incredibly caring and professional.",
-      author: "Sarah M.",
-      role: "Parent of Layla (8 years old)",
+        "خطوات رائدة غيرت صيف ابنتي! تعلمت السباحة، وأقامت صداقات رائعة، واكتسبت الكثير من الثقة. الموظفون يهتمون بشكل لا يصدق ومهنيون.",
+      author: "سارة م.",
+      role: "والدة ليلى (8 سنوات)",
       icon: "👩",
       rating: 5,
     },
     {
       quote:
-        "My son used to be shy and hesitant about new activities. After just two weeks at Leading Steps, he was leading group activities and had made several close friends. Amazing transformation!",
-      author: "Ahmad K.",
-      role: "Parent of Omar (10 years old)",
+        "كان ابني خجولاً ومتردداً في الأنشطة الجديدة. بعد أسبوعين فقط في خطوات رائدة، كان يقود الأنشطة الجماعية وأقام العديد من الصداقات الوثيقة. تحول مذهل!",
+      author: "أحمد ك.",
+      role: "والد عمر (10 سنوات)",
       icon: "👨",
       rating: 5,
     },
     {
       quote:
-        "The variety of activities keeps the kids engaged every single day. From swimming to arts and crafts, there's something for every child's interests. Highly recommend!",
-      author: "Fatima H.",
-      role: "Parent of Zara (7 years old)",
+        "تنوع الأنشطة يحافظ على انخراط الأطفال كل يوم. من السباحة إلى الفنون والحرف، هناك شيء لكل اهتمامات الطفل. أنصح بشدة!",
+      author: "فاطمة ح.",
+      role: "والدة زارا (7 سنوات)",
       icon: "👩",
       rating: 5,
     },
     {
       quote:
-        "I love going to Leading Steps! I learned how to swim, made lots of friends, and we go on the coolest trips. The teachers are super nice and help us with everything!",
-      author: "Karim A.",
-      role: "Camper (9 years old)",
+        "أحب الذهاب إلى خطوات رائدة! تعلمت السباحة، وأقمت الكثير من الصداقات، ونذهب في أروع الرحلات. المعلمون لطفاء جداً ويساعدوننا في كل شيء!",
+      author: "كريم أ.",
+      role: "مشارك (9 سنوات)",
       icon: "👦",
       rating: 5,
     },
     {
       quote:
-        "As a working parent, I needed a safe place for my kids during summer. Leading Steps exceeded all expectations. The kids learn, play, and grow in the best environment.",
-      author: "Nadia R.",
-      role: "Parent of twins (6 years old)",
+        "كأم عاملة، كنت بحاجة إلى مكان آمن لأطفالي خلال الصيف. خطوات رائدة تجاوزت كل التوقعات. يتعلم الأطفال ويلعبون وينمون في أفضل بيئة.",
+      author: "نادية ر.",
+      role: "والدة توأم (6 سنوات)",
       icon: "👩",
       rating: 5,
     },
     {
       quote:
-        "The camp helped my daughter overcome her fear of water. Now she's a confident swimmer! The step-by-step approach and patience of the instructors made all the difference.",
-      author: "Hassan B.",
-      role: "Parent of Maya (11 years old)",
+        "ساعد المعسكر ابنتي على التغلب على خوفها من الماء. الآن هي سباحة واثقة! النهج التدريجي وصبر المدربين أحدثا كل الفرق.",
+      author: "حسن ب.",
+      role: "والد مايا (11 سنة)",
       icon: "👨",
       rating: 5,
     },
   ];
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white" dir="rtl">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            What <span className="text-brand-green">Families</span> Say About Us
+            ما يقوله <span className="text-brand-green">الأهل</span> عنا
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Don{"'"}t just take our word for it – hear from the parents and
-            children who have experienced the Leading Steps difference
-            firsthand.
+            لا تأخذوا كلمتنا فقط - استمعوا إلى الآباء والأطفال الذين اختبروا فرق
+            خطوات رائدة بأنفسهم.
           </p>
         </div>
 
@@ -74,7 +73,7 @@ const TestimonialsSection = () => {
             >
               <div className="flex items-center mb-4">
                 <div className="text-2xl mr-3">{testimonial.icon}</div>
-                <div className="flex space-x-1">
+                <div className="flex gap-x-1">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <FaStar
                       key={i}
@@ -103,35 +102,34 @@ const TestimonialsSection = () => {
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div className="text-center p-6 bg-brand-green/10 rounded-xl">
             <div className="text-3xl font-bold text-brand-green mb-2">98%</div>
-            <div className="text-gray-700 font-medium">Parent Satisfaction</div>
-            <div className="text-sm text-gray-600">
-              Would recommend to others
-            </div>
+            <div className="text-gray-700 font-medium">رضا الأهل</div>
+            <div className="text-sm text-gray-600">يوصون بالمعسكر للآخرين</div>
           </div>
 
           <div className="text-center p-6 bg-brand-yellow/10 rounded-xl">
             <div className="text-3xl font-bold text-brand-yellow mb-2">95%</div>
-            <div className="text-gray-700 font-medium">Return Rate</div>
-            <div className="text-sm text-gray-600">Kids return next summer</div>
+            <div className="text-gray-700 font-medium">معدل العودة</div>
+            <div className="text-sm text-gray-600">
+              الأطفال يعودون الصيف القادم
+            </div>
           </div>
 
           <div className="text-center p-6 bg-brand-red/10 rounded-xl">
             <div className="text-3xl font-bold text-brand-red mb-2">100%</div>
-            <div className="text-gray-700 font-medium">Safety Record</div>
-            <div className="text-sm text-gray-600">Zero incidents reported</div>
+            <div className="text-gray-700 font-medium">سجل السلامة</div>
+            <div className="text-sm text-gray-600">لا حوادث مسجلة</div>
           </div>
         </div>
 
         <div className="text-center">
           <div className="bg-gradient-to-r from-brand-green/10 via-brand-yellow/10 to-brand-red/10 rounded-2xl p-8 max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Join Our Growing Family of Happy Campers!
+              انضم إلى عائلتنا المتنامية من المشاركين السعداء!
             </h3>
             <p className="text-gray-600 leading-relaxed">
-              Every testimonial represents a child who took their leading steps
-              toward growth, confidence, and joy. We{"'"}re honored to be part
-              of their journey and excited to welcome your child to our camp
-              family.
+              كل شهادة تمثل طفلاً خطا خطواته الرائدة نحو النمو والثقة والفرح.
+              يشرفنا أن نكون جزءاً من رحلتهم ونحن متحمسون لترحيب طفلك في عائلة
+              معسكرنا.
             </p>
           </div>
         </div>

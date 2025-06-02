@@ -1,68 +1,69 @@
 const TripsSection = () => {
   const trips = [
     {
-      name: "Beach Adventure",
-      description:
-        "Sun, sand, and splash! Building sandcastles and beach games.",
+      name: "مغامرة الشاطئ",
+      description: "شمس ورمل ومرح! بناء قصور الرمل وألعاب الشاطئ.",
       icon: "🏖️",
-      highlight: "Swimming & Beach Sports",
+      highlight: "السباحة والرياضات الشاطئية",
     },
     {
-      name: "Mountain Hiking",
-      description: "Exploring nature trails and discovering local wildlife.",
+      name: "تسلق الجبال",
+      description: "استكشاف مسارات الطبيعة واكتشاف الحياة البرية المحلية.",
       icon: "⛰️",
-      highlight: "Nature Discovery",
+      highlight: "اكتشاف الطبيعة",
     },
     {
-      name: "Local Farm Visit",
+      name: "زيارة المزرعة المحلية",
       description:
-        "Learning about agriculture and meeting friendly farm animals.",
+        "التعلم عن الزراعة والتعرف على الحيوانات الودودة في المزرعة.",
       icon: "🚜",
-      highlight: "Agricultural Learning",
+      highlight: "التعلم الزراعي",
     },
     {
-      name: "Historical Sites",
-      description: "Discovering Lebanon's rich history and cultural heritage.",
+      name: "المواقع التاريخية",
+      description: "اكتشاف تاريخ لبنان الغني وتراثه الثقافي.",
       icon: "🏛️",
-      highlight: "Cultural Education",
+      highlight: "التعليم الثقافي",
     },
     {
-      name: "Water Parks",
-      description: "Thrilling water slides and swimming pool adventures.",
+      name: "حدائق المياه",
+      description: "زحاليق مائية مثيرة ومغامرات حمامات السباحة.",
       icon: "🎢",
-      highlight: "Aquatic Fun",
+      highlight: "المرح المائي",
     },
     {
-      name: "Science Museums",
-      description: "Interactive exhibits and hands-on learning experiences.",
+      name: "المتاحف العلمية",
+      description: "معارض تفاعلية وتجارب تعليمية عملية.",
       icon: "🔬",
-      highlight: "STEM Learning",
+      highlight: "التعلم العلمي",
     },
     {
-      name: "Local Markets",
-      description: "Understanding commerce and local community life.",
+      name: "الأسواق المحلية",
+      description: "فهم التجارة وحياة المجتمع المحلي.",
       icon: "🛒",
-      highlight: "Community Interaction",
+      highlight: "التفاعل المجتمعي",
     },
     {
-      name: "Outdoor Camping",
-      description: "Overnight adventures with storytelling and stargazing.",
+      name: "التخييم الخارجي",
+      description: "مغامرات ليلية مع سرد القصص ومراقبة النجوم.",
       icon: "🏕️",
-      highlight: "Adventure Skills",
+      highlight: "مهارات المغامرة",
     },
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-br from-blue-50 to-white">
+    <section
+      className="py-16 bg-gradient-to-br from-blue-50 to-white"
+      dir="rtl"
+    >
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Amazing <span className="text-brand-green">Trips</span> & Adventures
+            <span className="text-brand-green">رحلات</span> ومغامرات رائعة
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Beyond our daily activities, we take children on exciting
-            educational trips that broaden their horizons and create
-            unforgettable memories.
+            إلى جانب أنشطتنا اليومية، نأخذ الأطفال في رحلات تعليمية مثيرة توسع
+            آفاقهم وتخلق ذكريات لا تُنسى.
           </p>
         </div>
 
@@ -96,58 +97,56 @@ const TripsSection = () => {
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           <div className="bg-white rounded-xl p-8 shadow-lg">
             <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-              🗓️ Trip Schedule
+              🗓️ جدول الرحلات
             </h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                 <span className="font-medium text-gray-700">
-                  Weekly Local Trips
+                  رحلات محلية أسبوعية
                 </span>
-                <span className="text-brand-green font-semibold">
-                  Every Friday
-                </span>
+                <span className="text-brand-green font-semibold">كل جمعة</span>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="font-medium text-gray-700">Beach Days</span>
+                <span className="font-medium text-gray-700">أيام الشاطئ</span>
                 <span className="text-brand-yellow font-semibold">
-                  Bi-weekly
+                  كل أسبوعين
                 </span>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="font-medium text-gray-700">
-                  Special Excursions
-                </span>
-                <span className="text-brand-red font-semibold">Monthly</span>
+                <span className="font-medium text-gray-700">رحلات خاصة</span>
+                <span className="text-brand-red font-semibold">شهرياً</span>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                 <span className="font-medium text-gray-700">
-                  Camping Adventures
+                  مغامرات التخييم
                 </span>
-                <span className="text-brand-green font-semibold">Seasonal</span>
+                <span className="text-brand-green font-semibold">موسمية</span>
               </div>
             </div>
           </div>
 
           <div className="bg-white rounded-xl p-8 shadow-lg">
             <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-              🎒 What We Bring
+              🎒 ما نقدمه
             </h3>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-x-3 p-3 bg-gray-50 rounded-lg">
                 <span className="text-xl">🚌</span>
-                <span className="text-gray-700">Safe transportation</span>
+                <span className="text-gray-700">مواصلات آمنة</span>
               </div>
-              <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-x-3 p-3 bg-gray-50 rounded-lg">
                 <span className="text-xl">🥙</span>
-                <span className="text-gray-700">Healthy snacks & meals</span>
+                <span className="text-gray-700">وجبات خفيفة صحية</span>
               </div>
-              <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-x-3 p-3 bg-gray-50 rounded-lg">
                 <span className="text-xl">👨‍⚕️</span>
-                <span className="text-gray-700">First aid & medical care</span>
+                <span className="text-gray-700">
+                  الإسعافات الأولية والرعاية الطبية
+                </span>
               </div>
-              <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-x-3 p-3 bg-gray-50 rounded-lg">
                 <span className="text-xl">📸</span>
-                <span className="text-gray-700">Photo memories</span>
+                <span className="text-gray-700">ذكريات مصورة</span>
               </div>
             </div>
           </div>
@@ -156,13 +155,12 @@ const TripsSection = () => {
         <div className="text-center">
           <div className="bg-gradient-to-r from-brand-green/10 to-brand-yellow/10 rounded-2xl p-8 max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              {`"`}Adventure is the best way to learn{`"`}
+              {`"`}المغامرة هي أفضل طريقة للتعلم{`"`}
             </h3>
             <p className="text-gray-600 leading-relaxed">
-              Our carefully planned trips are more than just fun outings – they
-              {"'"}re educational experiences that teach children about their
-              environment, culture, and community while building confidence and
-              independence.
+              رحلاتنا المخطط لها بعناية هي أكثر من مجرد رحلات ترفيهية - إنها
+              تجارب تعليمية تعلم الأطفال عن بيئتهم وثقافتهم ومجتمعهم مع بناء
+              الثقة والاستقلالية.
             </p>
           </div>
         </div>

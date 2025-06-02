@@ -10,27 +10,26 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="pt-20 pb-16 bg-gradient-to-br from-blue-50 via-white to-brand-green-light/20">
-      <div className="container mx-auto px-4">
+    <section
+      className="pt-20 pb-16 bg-gradient-to-br from-blue-50 via-white to-brand-green-light/20"
+      dir="rtl"
+    >
+      <div className="container mx-auto px-4 mt-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <div className="space-y-4">
-              <div className="flex items-center space-x-2 text-brand-green">
+              <div className="flex items-center gap-x-2 text-brand-green">
                 <Star className="w-5 h-5 fill-current" />
-                <span className="text-sm font-medium">
-                  Premium Summer Experience
-                </span>
+                <span className="text-sm font-medium">تجربة صيفية متميزة</span>
               </div>
               <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                Take Your{" "}
-                <span className="text-brand-green">Leading Steps</span> This
-                Summer
+                خذ <span className="text-brand-green">خطواتك الرائدة</span> هذا
+                الصيف
               </h1>
               <p className="text-lg text-gray-600 leading-relaxed">
-                Join our vibrant summer camp in Arabsalim, Lebanon, where
-                children develop essential life skills, make lasting
-                friendships, and create unforgettable memories through engaging
-                activities and expert guidance.
+                انضم إلى معسكرنا الصيفي النابض بالحياة في عربصاليم، لبنان، حيث
+                يطور الأطفال مهارات حياتية أساسية، ويقيمون صداقات دائمة، ويخلقون
+                ذكريات لا تُنسى من خلال الأنشطة التفاعلية والتوجيه الخبير.
               </p>
             </div>
 
@@ -39,29 +38,27 @@ const HeroSection = () => {
                 onClick={scrollToContact}
                 className="bg-brand-green hover:bg-brand-green-neutral text-white px-8 py-3"
               >
-                Enroll Your Child
+                سجل طفلك
               </Button>
               <Button
                 variant="outline"
                 size="lg"
                 className="border-brand-green text-brand-green hover:bg-brand-green hover:text-white px-8 py-3"
               >
-                Learn More
+                اعرف المزيد
               </Button>
             </div>
 
-            <div className="flex items-center space-x-8 pt-4">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-x-8 pt-4">
+              <div className="flex items-center gap-x-2">
                 <Users className="w-5 h-5 text-brand-green" />
                 <span className="text-sm text-gray-600">
-                  100+ Happy Campers
+                  أكثر من 100 طفل سعيد
                 </span>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-x-2">
                 <Calendar className="w-5 h-5 text-brand-green" />
-                <span className="text-sm text-gray-600">
-                  4 Years Experience
-                </span>
+                <span className="text-sm text-gray-600">4 سنوات من الخبرة</span>
               </div>
             </div>
           </div>
@@ -72,27 +69,24 @@ const HeroSection = () => {
                 <div className="w-24 h-24 bg-gradient-to-br from-brand-yellow to-brand-yellow-neutral rounded-full mx-auto flex items-center justify-center">
                   <span className="text-2xl">🏕️</span>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">
-                  Summer 2024
-                </h3>
+                <h3 className="text-2xl font-bold text-gray-900">صيف 2024</h3>
                 <p className="text-gray-600">
-                  An amazing journey of growth, learning, and fun awaits your
-                  child!
+                  رحلة رائعة من النمو والتعلم والمرح تنتظر طفلك!
                 </p>
                 <div className="grid grid-cols-3 gap-4 pt-4">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-brand-green">4</div>
-                    <div className="text-sm text-gray-600">Years</div>
+                    <div className="text-sm text-gray-600">سنوات</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-brand-yellow">
                       100+
                     </div>
-                    <div className="text-sm text-gray-600">Kids</div>
+                    <div className="text-sm text-gray-600">طفل</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-brand-red">14+</div>
-                    <div className="text-sm text-gray-600">Swimmers</div>
+                    <div className="text-sm text-gray-600">سباح</div>
                   </div>
                 </div>
               </div>
