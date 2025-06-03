@@ -55,7 +55,7 @@ const ActivitiesCarousel = () => {
   return (
     <section className="py-12 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-8">أنشطة اليوم</h2>
+        <h2 className="text-3xl font-bold text-center mb-8">أنشطة منوّعة</h2>
         <Swiper
           modules={[Navigation, Autoplay]}
           spaceBetween={30}
@@ -72,7 +72,7 @@ const ActivitiesCarousel = () => {
             <SwiperSlide key={activity.id}>
               <div className="p-4">
                 <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                  <div className="relative h-64">
+                  <div className="relative aspect-square">
                     <img
                       src={activity.image}
                       alt={activity.title}

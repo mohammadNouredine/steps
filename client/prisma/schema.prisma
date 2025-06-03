@@ -145,3 +145,15 @@ model Note {
     description  String?
     reminderDate DateTime? @map("reminder_date")
 }
+
+model ContactMessage {
+    id        Int      @id @default(autoincrement())
+    name      String
+    email     String
+    childName String
+    childAge  Int
+    phone     String
+    message   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

@@ -1,4 +1,7 @@
 export const DASHBOARD_ENDPOINTS = {
+  //---------------------------CONTACT
+  GET_ALL_CONTACT_MESSAGES: "/contact", //GET
+
   //---------------------------PAYMENTS
   GET_ALL_PAYMENTS: "/payment", //GET
   CREATE_PAYMENT: "/payment", //POST

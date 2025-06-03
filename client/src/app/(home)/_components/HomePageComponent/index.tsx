@@ -4,7 +4,6 @@ import StatisticsSection from "./StatisticsSection";
 import GoalsSection from "./GoalsSection";
 import ActivitiesSection from "./ActivitiesSection";
 import SkillsSection from "./SkillsSection";
-import TripsSection from "./TripsSection";
 import ContactSection from "./ContactSection";
 import Footer from "./Footer";
 import SpecificActivities from "./SpecificActivities";
@@ -20,7 +19,7 @@ const Index = () => {
       <GoalsSection />
       <ActivitiesSection />
       <SkillsSection />
-      <TripsSection />
+      {/* <TripsSection /> */}
       {/* <TestimonialsSection /> */}
       {/* <SubscriptionsSection /> */}
       <ContactSection />

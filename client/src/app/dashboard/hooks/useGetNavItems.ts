@@ -1,4 +1,10 @@
-import { FaChild, FaLayerGroup, FaMoneyCheck, FaStore } from "react-icons/fa6";
+import {
+  FaChild,
+  FaEnvelope,
+  FaLayerGroup,
+  FaMoneyCheck,
+  FaStore,
+} from "react-icons/fa6";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { GrFingerPrint } from "react-icons/gr";
 import { CgNotes } from "react-icons/cg";
@@ -51,6 +57,11 @@ export const useGetNavItems = () => {
       name: "Summary",
       href: "/dashboard/summary",
       icon: FaLayerGroup,
+    },
+    {
+      name: "Contact Messages",
+      href: "/dashboard/contact",
+      icon: FaEnvelope,
     },
   ];
   return DASHBOARD_NAV_ITEMS;
