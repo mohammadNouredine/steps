@@ -5,7 +5,6 @@ import NumberField from "@/components/fields/form/NumberField";
 import { Form, Formik } from "formik";
 import { MapPin, Phone, Clock, Star } from "lucide-react";
 import * as yup from "yup";
-import { useState } from "react";
 import { useSendContactMessage } from "@/api/api-hooks/contact/useSendContactMessage";
 const schema = yup.object().shape({
   name: yup.string().required("الاسم الكامل مطلوب"),
@@ -18,7 +17,6 @@ const schema = yup.object().shape({
 type FormValues = yup.InferType<typeof schema>;
 
 const ContactSection = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const { mutate: sendContactMessage, isPending: isSending } =
     useSendContactMessage();
 
@@ -26,7 +24,6 @@ const ContactSection = () => {
     sendContactMessage(values, {
       onSuccess: () => {
         resetForm();
-        setIsLoading(false);
       },
     });
   };
@@ -96,11 +93,11 @@ const ContactSection = () => {
                   type="button"
                   className="w-full mt-4 bg-brand-green hover:bg-brand-green-neutral text-white py-3"
                   text={
-                    isLoading
+                    isSending
                       ? "جاري الإرسال..."
                       : "إرسال الاستفسار والحصول على المعلومات"
                   }
-                  disabled={isLoading}
+                  disabled={isSending}
                 />
               </div>
             </Form>
@@ -206,19 +203,18 @@ const ContactSection = () => {
         </div>
 
         {/* Call to Action Banner */}
-        <div className="mt-12 text-center">
+        <div dir="ltr" className="mt-12 text-center">
           <div className="bg-gradient-to-r from-brand-green via-brand-yellow to-brand-red bg-opacity-10 rounded-2xl p-8 max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
               🚀 Ready for an Amazing Summer Adventure?
             </h3>
-            <p className="text-gray-600 leading-relaxed mb-6">
+            <p className="text-white text-lg leading-relaxed mb-6">
               Don{"'"}t wait – spots fill up quickly! Contact us today to secure
               your child{"'"}s place in the most exciting summer camp experience
               in Arabsalim. Let{"'"}s help your child take their leading steps
               toward an unforgettable summer!
             </p>
             <Button
-              //   size="lg"
               className="bg-brand-green hover:bg-brand-green-neutral text-white px-8 py-3"
               text=" Start Your Journey Today! 🌟"
             />

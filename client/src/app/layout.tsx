@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ClientProvider } from "@/providers/ClientProvider";
 import { Toaster } from "react-hot-toast";
-import { Inter, Zain } from "next/font/google";
+import { Zain } from "next/font/google";
 
 const zain = Zain({
   subsets: ["arabic", "latin"],
