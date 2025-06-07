@@ -7,11 +7,13 @@ function PageHeader({
   onAddClick,
   summaryValues,
   hasAddButton = true,
+  isLoading = false,
 }: {
   title: string;
   onAddClick?: () => void;
   summaryValues?: SummaryValue[];
   hasAddButton?: boolean;
+  isLoading?: boolean;
 }) {
   return (
     <div className="w-full mb-10">
@@ -20,7 +22,9 @@ function PageHeader({
         onAddClick={onAddClick}
         hasAddButton={hasAddButton}
       />
-      {summaryValues && <Summary values={summaryValues} />}
+      {summaryValues && (
+        <Summary isLoading={isLoading} values={summaryValues} />
+      )}
     </div>
   );
 }

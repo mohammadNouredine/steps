@@ -6,7 +6,7 @@ import { useGetSummary } from "../api-hookts/summary/useGetSummary";
 import { SummaryValue } from "../_common/components/PageHeader/Summary";
 
 const SummaryPage: React.FC = () => {
-  const { data: summaryData } = useGetSummary();
+  const { data: summaryData, isPending } = useGetSummary();
 
   // 1. All payments I want from kids (loan balance)
   const totalLoanBalance: number = summaryData?.loans.totalLoanBalance ?? 0;
@@ -100,6 +100,7 @@ const SummaryPage: React.FC = () => {
   return (
     <div>
       <PageHeader
+        isLoading={isPending}
         hasAddButton={false}
         title="Summary"
         summaryValues={summaryValues}

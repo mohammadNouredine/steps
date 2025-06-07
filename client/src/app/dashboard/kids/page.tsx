@@ -9,7 +9,7 @@ import { LiaBirthdayCakeSolid } from "react-icons/lia";
 
 function KidsPage() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const { data: kids_data } = useGetAllKids();
+  const { data: kids_data, isPending } = useGetAllKids();
   const kids = kids_data?.data;
   const kidsLength = kids?.length || 0;
   const totalLoans = kids?.reduce((acc, kid) => {
@@ -54,6 +54,7 @@ function KidsPage() {
   return (
     <div>
       <PageHeader
+        isLoading={isPending}
         summaryValues={orderSummaryValues}
         title="Kids"
         onAddClick={() => setIsOpen(true)}

@@ -44,7 +44,7 @@ function ExpensesTable({
 
   //------------------API CALLS-------------------------
 
-  const { data: expensesData } = useGetExpenses({
+  const { data: expensesData, isPending } = useGetExpenses({
     params: {
       pageIndex: 0,
       pageSize: 10,
@@ -138,7 +138,7 @@ function ExpensesTable({
   //---------------------------RENDER-----------------
   return (
     <div>
-      <Summary values={summaryValues} />
+      <Summary values={summaryValues} isLoading={isPending} />
 
       <div className="space-y-4">
         <CardContainer className="flex items-center gap-x-4 flex-wrap space-y-2">

@@ -5,7 +5,7 @@ export const addPaymentSchema = yup.object().shape({
   kidId: yup.number().required(),
   amount: yup.number().required(),
   paymentDate: validateDateAndTransformToDate.required(),
-  note: yup.string().required(),
+  note: yup.string().optional(),
 });
 
 export type AddPaymentSchemaType = yup.InferType<typeof addPaymentSchema>;

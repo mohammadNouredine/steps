@@ -11,7 +11,13 @@ export type SummaryValue = {
   shouldNotFormat?: boolean;
   textColor?: "red" | "green" | "yellow" | "orange" | "success";
 };
-function Summary({ values }: { values: SummaryValue[] }) {
+function Summary({
+  values,
+  isLoading,
+}: {
+  values: SummaryValue[];
+  isLoading: boolean;
+}) {
   const colorClassName = {
     red: "text-brand-red-neutral",
     green: "text-brandGreen",
@@ -20,7 +26,6 @@ function Summary({ values }: { values: SummaryValue[] }) {
     orange: "text-orange",
     normal: "text-gray-700",
   };
-
   return (
     <div className="w-full rounded-xl bg-white flex items-center justify-between p-4 mt-8 shadow-[0_0_8px_0_rgba(0,0,0,0.1)]">
       <div className="lg:flex-row flex-col flex gap-x-8 w-full flex-wrap lg:gap-y-4 ">
@@ -34,18 +39,22 @@ function Summary({ values }: { values: SummaryValue[] }) {
                 <p className="text-gray-400 text-sm font-medium">
                   {item.title}
                 </p>
-                <p
-                  className={cn(
-                    "font-bold text-2xl ",
-                    colorClassName[item.textColor || "normal"]
-                  )}
-                >
-                  {item.shouldNotFormat
-                    ? item.value
-                    : typeof item.value === "number"
-                    ? item.value.toFixed(2)
-                    : item.value}
-                </p>
+                {isLoading ? (
+                  <div className="w-10 h-4 bg-gray-200 rounded-md animate-pulse"></div>
+                ) : (
+                  <p
+                    className={cn(
+                      "font-bold text-2xl ",
+                      colorClassName[item.textColor || "normal"]
+                    )}
+                  >
+                    {item.shouldNotFormat
+                      ? item.value
+                      : typeof item.value === "number"
+                      ? item.value.toFixed(2)
+                      : item.value}
+                  </p>
+                )}
               </div>
             </div>
             {_index !== data.length && (

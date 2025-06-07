@@ -43,7 +43,7 @@ function PaymentsTable({
 
   //------------------API CALLS-------------------------
 
-  const { data: paymentsData } = useGetPayments({
+  const { data: paymentsData, isPending } = useGetPayments({
     params: {
       pageIndex: 0,
       pageSize: 10,
@@ -114,7 +114,7 @@ function PaymentsTable({
   //---------------------------RENDER-----------------
   return (
     <div>
-      <Summary values={summary_values} />
+      <Summary values={summary_values} isLoading={isPending} />
       <div className="space-y-4 mt-4">
         <CardContainer className="flex items-center gap-x-4 flex-wrap space-y-2">
           <div className="w-[20rem]">
