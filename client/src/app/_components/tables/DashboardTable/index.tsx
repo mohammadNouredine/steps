@@ -29,6 +29,7 @@ export function DashboardTable({
   showDelete = true,
   hasRefresh,
   data,
+  isLoading = false,
   total = 0,
   columns,
   deleteMutation,
@@ -45,6 +46,7 @@ export function DashboardTable({
   hasRefresh?: boolean;
 
   data: any;
+  isLoading?: boolean;
   total?: number;
   columns: any;
   deleteMutation?: UseMutateFunction<
@@ -178,8 +180,31 @@ export function DashboardTable({
             </tr>
           ))}
         </thead>
-        {!data ? (
+        {!data || isLoading ? (
           <>{loadingTableRows}</>
+        ) : data.length <= 0 ? (
+          <tbody>
+            <tr>
+              <td colSpan={table.getAllColumns().length}>
+                <div className="px-4 py-4 flex lg:flex-row flex-col items-center justify-center w-full">
+                  <img
+                    src="/illustrations/no-records.svg"
+                    alt="no-records"
+                    className="w-full max-w-[300px]"
+                  />
+                  <div className="text-center  py-10">
+                    <h3 className="text-lg font-medium text-gray-600">
+                      No records found
+                    </h3>
+                    <p className="text-sm text-gray-400">
+                      Please try again with different filters or search
+                      criteria.
+                    </p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
         ) : (
           <tbody className="px-4 ">
             {table.getRowModel().rows.map((row, rowIdx) => (
