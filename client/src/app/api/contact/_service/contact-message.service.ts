@@ -65,3 +65,17 @@ export async function getContactMessages(
     },
   });
 }
+//--------------------------------DELETE--------------------------------
+
+export async function deleteContactMessage(id: number) {
+  const contactMessage = await prisma.contactMessage.delete({
+    where: {
+      id,
+    },
+  });
+
+  return NextResponse.json({
+    data: contactMessage,
+    message: "تم حذف الرسالة بنجاح",
+  });
+}

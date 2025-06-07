@@ -6,6 +6,7 @@ import CardContainer from "@/app/dashboard/_common/components/CardContainer";
 import SearchInput from "@/components/fields/form/SearchInput";
 import { useGetContactMessages } from "@/app/dashboard/api-hookts/contact/useGetContactMessages";
 import { ContactMessage } from "@prisma/client";
+import { useDeleteContactMessage } from "@/app/dashboard/api-hookts/contact/useDeleteContactMessage";
 
 function ContactMessagesTable() {
   //------------------STATES-------------------------
@@ -25,6 +26,7 @@ function ContactMessagesTable() {
     pageSize: pagination.pageSize,
   });
 
+  const { mutate: deleteContactMessage } = useDeleteContactMessage();
   //------------------COLUMNS-------------------------
   const payments_columns: ColumnDef<ContactMessage>[] = [
     {
@@ -53,6 +55,7 @@ function ContactMessagesTable() {
           columns={payments_columns}
           pagination={pagination}
           setPagination={setPagination}
+          deleteMutation={deleteContactMessage}
         />
       </div>
     </div>

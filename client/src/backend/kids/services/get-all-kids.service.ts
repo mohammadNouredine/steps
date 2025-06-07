@@ -26,7 +26,7 @@ export async function getAllKids() {
   });
   const formattedKids = kids.map((kid) => ({
     ...kid,
-    subscriptionPlan: kid.subscriptions[0].plan,
+    subscriptionPlan: kid.subscriptions[0]?.plan || null,
     subscriptions: undefined,
     hasAttendedToday: kid.attendances.some(
       (attendance) =>
