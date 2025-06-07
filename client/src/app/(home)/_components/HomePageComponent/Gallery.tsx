@@ -11,7 +11,7 @@ import "./Gallery.css";
 // Import plugins
 import lgThumbnail from "lightgallery/plugins/thumbnail";
 import lgZoom from "lightgallery/plugins/zoom";
-//@ts-ignore
+//@ts-expect-error that this module has no types
 import fjGallery from "flickr-justified-gallery";
 
 interface Image {
