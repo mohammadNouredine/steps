@@ -6,7 +6,7 @@ import ContactMessagesTable from "./_components/ContactMessagesTable";
 function ContactsPage() {
   return (
     <div>
-      <PageHeader title="Contact Messages" />
+      <PageHeader title="Contact Messages" hasAddButton={false} />
       <ContactMessagesTable />
     </div>
   );
