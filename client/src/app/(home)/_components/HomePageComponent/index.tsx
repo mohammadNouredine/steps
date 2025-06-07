@@ -8,7 +8,7 @@ import ContactSection from "./ContactSection";
 import Footer from "./Footer";
 import SpecificActivities from "./SpecificActivities";
 import ActivitiesCarousel from "./ActivitiesCarousel";
-// import Gallery from "./Gallery";
+import Gallery from "./Gallery";
 const Index = () => {
   return (
     <div className="min-h-screen">
@@ -25,7 +25,7 @@ const Index = () => {
       {/* <TestimonialsSection /> */}
       {/* <SubscriptionsSection /> */}
       <ContactSection />
-      {/* <Gallery /> */}
+      <Gallery />
 
       <Footer />
     </div>

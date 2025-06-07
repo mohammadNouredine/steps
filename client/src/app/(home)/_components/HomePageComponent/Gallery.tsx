@@ -1,101 +1,97 @@
 "use client";
-import React, { useEffect } from "react";
-import LightGallery from "lightgallery/react";
-
-// Import styles
-import "lightgallery/css/lightgallery.css";
-import "lightgallery/css/lg-zoom.css";
-import "lightgallery/css/lg-thumbnail.css";
+import React, { useState } from "react";
+import Lightbox from "yet-another-react-lightbox";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
 import "./Gallery.css";
 
+// Import styles
+
 // Import plugins
-import lgThumbnail from "lightgallery/plugins/thumbnail";
-import lgZoom from "lightgallery/plugins/zoom";
-//@ts-expect-error that this module has no types
-import fjGallery from "flickr-justified-gallery";
 
 interface Image {
   src: string;
   alt: string;
-  subHtml: string;
-  responsive: {
-    breakpoint: number;
-    width: number;
-    height: number;
-  }[];
-  size: "small" | "medium" | "large";
+  width: number;
+  height: number;
 }
 
-function Gallery() {
-  useEffect(() => {
-    fjGallery(document.querySelectorAll(".gallery"), {
-      itemSelector: ".gallery__item",
-      rowHeight: 180,
-      lastRow: "start",
-      gutter: 2,
-      rowHeightTolerance: 0.1,
-      calculateItemsHeight: false,
-    });
-  }, []);
-
-  // Generate array of image paths with different sizes
-  const images: Image[] = Array.from({ length: 20 }, (_, i) => {
+const generateImages = (): Image[] => {
+  return Array.from({ length: 20 }, (_, i) => {
     // Determine size based on index to create an interesting pattern
-    let size: "small" | "medium" | "large";
-    if (i % 5 === 0) size = "large";
-    else if (i % 3 === 0) size = "medium";
-    else size = "small";
+    const isLarge = i % 5 === 0;
+    const isMedium = i % 3 === 0;
 
     return {
       src: `/home/gallery/${i + 1}.jpg`,
-      alt: `أنشطة النّادي الصيفي STEPS`,
-      subHtml: `<h4>أنشطة النّادي الصيفي</h4>`,
-      responsive: [
-        {
-          breakpoint: 1024,
-          width: size === "large" ? 1200 : size === "medium" ? 800 : 400,
-          height: size === "large" ? 800 : size === "medium" ? 600 : 400,
-        },
-      ],
-      size,
+      alt: "أنشطة النّادي الصيفي STEPS",
+      width: isLarge ? 800 : isMedium ? 600 : 400,
+      height: isLarge ? 600 : isMedium ? 450 : 300,
     };
   });
+};
+
+const Gallery: React.FC = () => {
+  const [index, setIndex] = useState(-1);
+  const images = generateImages();
+
+  const slides = images.map((image) => ({
+    src: image.src,
+    alt: image.alt,
+  }));
 
   return (
     <div className="container mx-auto px-4 py-8 bg-gradient-to-b from-brand-green/10 to-brand-yellow/10">
       <h2 className="text-3xl font-bold text-center mb-8">معرض الصور</h2>
       <div className="gallery-container">
-        <LightGallery
-          speed={500}
-          plugins={[lgThumbnail, lgZoom]}
-          mode="lg-fade"
-          pager={false}
-          thumbnail={true}
-          galleryId={"nature"}
-          autoplayFirstVideo={false}
-          elementClassNames={"gallery"}
-          mobileSettings={{
-            controls: false,
-            showCloseIcon: false,
-            download: false,
-            rotate: false,
-          }}
-        >
+        <div className="gallery">
           {images.map((image, idx) => (
-            <a
+            <div
               key={idx}
-              data-lg-size="1600-2400"
-              className={`gallery__item gallery__item--${image.size}`}
-              data-src={image.src}
-              data-sub-html={image.subHtml}
+              className="gallery__item"
+              style={{
+                gridColumn: `span ${Math.ceil(image.width / 200)}`,
+                gridRow: `span ${Math.ceil(image.height / 200)}`,
+              }}
+              onClick={() => setIndex(idx)}
             >
-              <img className="img-responsive" src={image.src} alt={image.alt} />
-            </a>
+              <img src={image.src} alt={image.alt} />
+            </div>
           ))}
-        </LightGallery>
+        </div>
+
+        <Lightbox
+          slides={slides}
+          open={index >= 0}
+          index={index}
+          close={() => setIndex(-1)}
+          plugins={[Zoom, Thumbnails]}
+          zoom={{
+            maxZoomPixelRatio: 3,
+            zoomInMultiplier: 2,
+            doubleTapDelay: 300,
+            doubleClickDelay: 300,
+            doubleClickMaxStops: 2,
+            keyboardMoveDistance: 50,
+            wheelZoomDistanceFactor: 100,
+            pinchZoomDistanceFactor: 100,
+            scrollToZoom: true,
+          }}
+          thumbnails={{
+            width: 120,
+            height: 80,
+            padding: 4,
+            border: 2,
+            borderRadius: 4,
+            gap: 16,
+            imageFit: "contain",
+          }}
+        />
       </div>
     </div>
   );
-}
+};
 
 export default Gallery;
