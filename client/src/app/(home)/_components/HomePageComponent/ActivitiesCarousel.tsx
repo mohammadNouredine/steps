@@ -15,39 +15,39 @@ interface Activity {
 const activities: Activity[] = [
   {
     id: 1,
-    title: "صلاة الصبح",
+    title: "جلسة صباحيّة",
     image: "/home/activities/act1.jpg",
-    description: "ابدأ يومك بالصلاة والتأمل الروحي",
+    description: "ابدأ يومك بالتأمل الروحي",
   },
   {
     id: 2,
-    title: "قراءة القرآن",
+    title: "أنشطة عاشورائيّة",
     image: "/home/activities/act2.jpg",
-    description: "تلاوة يومية للقرآن الكريم",
+    description: "أنشطة عاشورائيّة مختلفة",
   },
   {
     id: 3,
-    title: "جلسة ذكر",
+    title: "أنشطة فنّيّة",
     image: "/home/activities/act3.jpg",
-    description: "ذكر الله في الصباح والمساء",
+    description: "أنشطة فنية مختلفة",
   },
   {
     id: 4,
-    title: "نشاط رياضي",
+    title: "نشاط فنّي",
     image: "/home/activities/act4.jpg",
-    description: "ممارسة الرياضة للحفاظ على الصحة",
+    description: "ممارسة الفنّ للحفاظ على الإبداع",
   },
   {
     id: 5,
-    title: "ورشة عمل فنية",
+    title: "ورشة عمل زراعيّة",
     image: "/home/activities/act5.jpg",
-    description: "تطوير المهارات الفنية والإبداعية",
+    description: "تطوير المهارات الزراعية",
   },
   {
     id: 6,
-    title: "جلسة تعليمية",
+    title: "أنشطة سباحة",
     image: "/home/activities/act6.jpg",
-    description: "تعلم مهارات جديدة كل يوم",
+    description: "تعلم السباحة و ممارستها",
   },
 ];
 
