@@ -14,11 +14,11 @@ export async function addContactMessage(
   const contactMessage = await prisma.contactMessage.create({
     data: {
       name,
-      email,
+      email: email || "",
       phone,
       childName,
       childAge,
-      message,
+      message: message || "",
     },
   });
 
