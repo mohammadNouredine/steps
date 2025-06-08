@@ -5,8 +5,7 @@ import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
-import "./Gallery.css";
-
+import "./gallery.css";
 // Import styles
 
 // Import plugins
@@ -20,15 +19,15 @@ interface Image {
 
 const generateImages = (): Image[] => {
   return Array.from({ length: 20 }, (_, i) => {
-    // Determine size based on index to create an interesting pattern
-    const isLarge = i % 5 === 0;
-    const isMedium = i % 3 === 0;
+    // Create a more dynamic masonry layout with varying heights
+    const height = Math.floor(Math.random() * (600 - 300) + 300); // Random height between 300-600px
+    const width = Math.floor(Math.random() * (400 - 200) + 200); // Random width between 200-400px
 
     return {
       src: `/home/gallery/${i + 1}.jpg`,
       alt: "أنشطة النّادي الصيفي STEPS",
-      width: isLarge ? 800 : isMedium ? 600 : 400,
-      height: isLarge ? 600 : isMedium ? 450 : 300,
+      width,
+      height,
     };
   });
 };
@@ -43,21 +42,22 @@ const Gallery: React.FC = () => {
   }));
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-gradient-to-b from-brand-green/10 to-brand-yellow/10">
-      <h2 className="text-3xl font-bold text-center mb-8">معرض الصور</h2>
-      <div className="gallery-container">
-        <div className="gallery">
-          {images.map((image, idx) => (
+    <div className=" bg-gradient-to-b from-brand-green/10 to-brand-yellow/10">
+      <div className="container mx-auto px-4 py-8">
+        <h2 className="text-3xl font-bold text-center mb-8">معرض الصور</h2>
+        <div className="masonry-grid">
+          {images.map((image, index) => (
             <div
-              key={idx}
-              className="gallery__item"
-              style={{
-                gridColumn: `span ${Math.ceil(image.width / 200)}`,
-                gridRow: `span ${Math.ceil(image.height / 200)}`,
-              }}
-              onClick={() => setIndex(idx)}
+              onClick={() => setIndex(index)}
+              key={image.src}
+              className="masonry-item"
             >
-              <img src={image.src} alt={image.alt} />
+              <img
+                src={image.src || "/placeholder.svg"}
+                alt={image.alt}
+                className="w-full h-auto rounded-[2px] shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                loading="lazy"
+              />
             </div>
           ))}
         </div>
