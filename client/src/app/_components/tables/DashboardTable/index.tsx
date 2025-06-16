@@ -5,9 +5,11 @@ import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   PaginationState,
   Row,
   RowData,
+  SortingState,
   Table,
   useReactTable,
 } from "@tanstack/react-table";
@@ -63,6 +65,7 @@ export function DashboardTable({
 }) {
   const [selectedRowId, setSelectedRowId] = React.useState<number | null>(null);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = React.useState(false);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
 
   // Extend columns with delete functionality if deleteFn is provided
   const enhancedColumns = React.useMemo(() => {
@@ -120,6 +123,12 @@ export function DashboardTable({
     columns: enhancedColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    state: {
+      pagination,
+      sorting,
+    },
     manualPagination: true,
     onPaginationChange: (newPagination) => {
       console.log("NEW PAGINATION", newPagination);
@@ -127,9 +136,6 @@ export function DashboardTable({
     },
     rowCount: total,
     pageCount: Math.ceil(total / pagination.pageSize) || 1,
-    state: {
-      pagination,
-    },
   });
 
   //-------------------UPDATE SELECTED ROWS----------------
@@ -167,14 +173,21 @@ export function DashboardTable({
               {headerGroup.headers.map((header, hIndex) => (
                 <th
                   key={`header-${hgIndex}-${hIndex}`}
-                  className="px-4 py-4 font-normal text-gray-400 text-start"
+                  className="px-4 py-4 font-normal text-gray-400 text-start cursor-pointer"
+                  onClick={header.column.getToggleSortingHandler()}
                 >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
+                  {header.isPlaceholder ? null : (
+                    <div className="flex items-center gap-2">
+                      {flexRender(
                         header.column.columnDef.header,
                         header.getContext()
                       )}
+                      {{
+                        asc: " 🔼",
+                        desc: " 🔽",
+                      }[header.column.getIsSorted() as string] ?? null}
+                    </div>
+                  )}
                 </th>
               ))}
             </tr>

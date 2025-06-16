@@ -20,6 +20,9 @@ import SearchInput from "@/components/fields/form/SearchInput";
 import IconButton from "@/components/common/ui/IconButton";
 import { FaPrint } from "react-icons/fa6";
 import PrintAllKidsModal from "./PrintAllKidsModal";
+import SelectFieldControlled from "@/components/fields/controlled/SelectFieldControlled";
+import { useGetAllSubscriptionPlans } from "../../api-hookts/subscriptions/subscription-plans/useGetAllSubscriptionPlans";
+import ToolTipWrapper from "@/components/common/ui/ToolTipWrapper";
 
 function KidsTable({
   isOpen,
@@ -36,11 +39,35 @@ function KidsTable({
   const [isOpenAttendance, setIsOpenAttendance] = React.useState(false);
   const [isAttendanceMode, setIsAttendanceMode] = React.useState(false);
   const [isOpenPrintAllKids, setIsOpenPrintAllKids] = React.useState(false);
+  const [selectedSubscriptionTypeId, setSelectedSubscriptionTypeId] =
+    React.useState<number | undefined>();
+  const [selectedGender, setSelectedGender] = React.useState<
+    Gender | undefined
+  >();
+  const [showOnlyWithLoan, setShowOnlyWithLoan] = React.useState(false);
 
   const [searchQuery, setSearchQuery] = React.useState("");
   //------------------API CALLS-------------------------
+
+  const { data: subscriptionPlans } = useGetAllSubscriptionPlans();
   const { data: kids_data } = useGetAllKids();
   const filteredKids = kids_data?.data.filter((kid) => {
+    if (selectedSubscriptionTypeId) {
+      console.log("SELECTED SUBSCRIPTION TYPE", selectedSubscriptionTypeId);
+      if (kid.subscriptionPlan?.id !== selectedSubscriptionTypeId) {
+        return false;
+      }
+    }
+    if (selectedGender) {
+      if (kid.gender !== selectedGender) {
+        return false;
+      }
+    }
+    if (showOnlyWithLoan) {
+      if (kid.loanBalance === 0) {
+        return false;
+      }
+    }
     return (
       kid.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       kid.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -79,6 +106,7 @@ function KidsTable({
     {
       accessorKey: "image",
       header: () => <span>Image</span>,
+      enableSorting: false,
       cell: (info) => (
         <div>
           {info.row.original.image ? (
@@ -97,6 +125,7 @@ function KidsTable({
     {
       accessorKey: "firstName",
       header: () => <span>Name</span>,
+      enableSorting: false,
       cell: (info) => (
         <div>
           {info.row.original.firstName} {info.row.original.lastName}
@@ -123,6 +152,15 @@ function KidsTable({
           {
             accessorKey: "dateOfBirth",
             header: () => <span>Age</span>,
+            sortingFn: (
+              rowA: { original: KidType },
+              rowB: { original: KidType }
+            ) => {
+              const dobA = rowA.original.dateOfBirth;
+              const dobB = rowB.original.dateOfBirth;
+              if (!dobA || !dobB) return 0;
+              return new Date(dobA).getTime() - new Date(dobB).getTime();
+            },
             cell: (info: CellContext<KidType, unknown>) => {
               const dob = info.row.original.dateOfBirth;
               if (!dob) return <div>-</div>;
@@ -142,6 +180,7 @@ function KidsTable({
       },
       accessorKey: "hasAttendedToday",
       header: () => <span>Attended Today</span>,
+      enableSorting: false,
       cell: (info) => {
         const hasAttendedToday = info.row.original.hasAttendedToday;
         return (
@@ -165,37 +204,39 @@ function KidsTable({
       ? [
           {
             accessorKey: "id",
-            header: () => <span>Edit</span>,
+            header: () => <span>Actions</span>,
+            enableSorting: false,
             cell: (info: CellContext<KidType, unknown>) => (
               <div className="flex gap-2">
-                <button
+                <IconButton
+                  toolTip="إضافة الطفل"
                   onClick={() => {
                     setViewingKid(info.row.original);
                     setIsOpenAttendance(true);
                   }}
-                  className="border border-red-500 px-2 py-2 rounded-lg text-red-500"
-                >
-                  <BsFillPersonPlusFill />
-                </button>
-                <button
+                  Icon={BsFillPersonPlusFill}
+                  style={"red"}
+                />
+
+                <IconButton
+                  toolTip="تعديل الطفل"
                   onClick={() => {
                     setEditingKid(info.row.original);
                     setIsOpen(true);
                   }}
-                  className="border border-green px-2 py-2 rounded-lg text-green"
-                >
-                  <FiEdit2 />
-                </button>
+                  Icon={FiEdit2}
+                  style={"green"}
+                />
 
-                <button
+                <IconButton
+                  toolTip="عرض الطفل"
                   onClick={() => {
                     setViewingKid(info.row.original);
                     setIsOpenViewingKid(true);
                   }}
-                  className="border border-blue px-2 py-2 rounded-lg text-blue"
-                >
-                  <FiEye />
-                </button>
+                  Icon={FiEye}
+                  style={"yellow"}
+                />
               </div>
             ),
           },
@@ -205,21 +246,68 @@ function KidsTable({
   //---------------------------RENDER-----------------
   return (
     <div>
-      <CardContainer className="flex items-center gap-x-4  space-y-2 mb-2">
-        <SearchInput value={searchQuery} setValue={setSearchQuery} />
-        <Checkbox
-          checked={isAttendanceMode}
-          onChange={(_, checked) => {
-            setIsAttendanceMode(checked);
+      <CardContainer className="flex flex-wrap items-center gap-x-4  space-y-2 mb-2">
+        <div className="w-[20rem]">
+          <SearchInput value={searchQuery} setValue={setSearchQuery} />
+        </div>
+        <SelectFieldControlled
+          toolTip="اختر نوع الاشتراك"
+          name="subscriptionType"
+          placeHolder="Subscription Type"
+          data={
+            subscriptionPlans?.map((plan) => ({
+              label: plan.name,
+              value: plan.id,
+              ...plan,
+            })) || []
+          }
+          value={selectedSubscriptionTypeId}
+          onChange={(value) => {
+            setSelectedSubscriptionTypeId(value);
           }}
-          title="Show only attendance"
-        >
-          <p className="text-gray-900 font-medium">Attendance Mode</p>
-        </Checkbox>
+        />
 
+        <SelectFieldControlled
+          toolTip="اختر الجنس"
+          name="gender"
+          placeHolder="Gender"
+          data={[
+            { label: "Male", value: Gender.MALE },
+            { label: "Female", value: Gender.FEMALE },
+          ]}
+          value={selectedGender}
+          onChange={(value) => {
+            setSelectedGender(value);
+          }}
+        />
+        <ToolTipWrapper toolTip="اظهر الأطفال الذين لديهم قرض">
+          <Checkbox
+            checked={showOnlyWithLoan}
+            onChange={(_, checked) => {
+              setShowOnlyWithLoan(checked);
+            }}
+            title="Show only kids with loan"
+          >
+            <p className="text-gray-900 font-medium">
+              Show only kids with loan
+            </p>
+          </Checkbox>
+        </ToolTipWrapper>
+        <ToolTipWrapper toolTip="اظهر الأطفال الذين لديهم حضور">
+          <Checkbox
+            checked={isAttendanceMode}
+            onChange={(_, checked) => {
+              setIsAttendanceMode(checked);
+            }}
+            title="Show only attendance"
+          >
+            <p className="text-gray-900 font-medium">Attendance Mode</p>
+          </Checkbox>
+        </ToolTipWrapper>
         <IconButton
           onClick={() => setIsOpenPrintAllKids(true)}
           Icon={FaPrint}
+          toolTip="طباعة الأطفال"
           style={"yellow"}
         />
       </CardContainer>
@@ -243,7 +331,7 @@ function KidsTable({
       <PrintAllKidsModal
         isOpen={isOpenPrintAllKids}
         setIsOpen={setIsOpenPrintAllKids}
-        kids={kids_data?.data || []}
+        kids={filteredKids || []}
       />
       {viewingKid && (
         <ViewKidModal

@@ -17,51 +17,61 @@ export const useGetNavItems = () => {
       name: "Dashboard",
       href: "/dashboard",
       icon: RiDashboardHorizontalFill,
+      toolTip: "الصفحة الرئيسية",
     },
     {
       name: "Kids",
       href: "/dashboard/kids",
       icon: FaChild,
+      toolTip: "الأطفال (حيث يمكنك إضافة طفل جديد أو حذف طفل...)",
     },
     {
       name: "Subscriptions",
       href: "/dashboard/subscriptions",
       icon: FaMoneyCheck,
+      toolTip: "الاشتراكات و أنواعها",
     },
     {
       name: "Attendance",
       href: "/dashboard/attendance",
       icon: GrFingerPrint,
+      toolTip: "الحضور اليومي للأطفال",
     },
     {
       name: "Purchases",
       href: "/dashboard/purchases",
       icon: FaStore,
+      toolTip: "المشتريات اليومية",
     },
     {
       name: "Notes",
       href: "/dashboard/notes",
       icon: CgNotes,
+      toolTip: "الملاحظات للتّذكير",
     },
     {
       name: "Expenses",
       href: "/dashboard/expenses",
       icon: MdAttachMoney,
+      toolTip: "المصاريف (مثل: أغراض, معاشات...)",
     },
     {
       name: "Payments",
       href: "/dashboard/payments",
       icon: BiMoney,
+      toolTip: "المدفوعات للأطفال",
     },
     {
       name: "Summary",
       href: "/dashboard/summary",
       icon: FaLayerGroup,
+      toolTip: "الملخص الشهري للأموال",
     },
     {
       name: "Contact Messages",
       href: "/dashboard/contact",
       icon: FaEnvelope,
+      toolTip: "الرسائل التي يرسلها الأهل",
     },
   ];
   return DASHBOARD_NAV_ITEMS;
@@ -70,4 +80,5 @@ export type DashboardLink = {
   name: string;
   href: string;
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
+  toolTip?: string;
 };

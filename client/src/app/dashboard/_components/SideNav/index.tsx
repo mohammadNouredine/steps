@@ -7,6 +7,7 @@ import { cn } from "@/utils/cn";
 import BurgerMenu from "@/components/common/layout/Header/BurgerMenu";
 import { useGetNavItems } from "../../hooks/useGetNavItems";
 import { useMenuStore } from "@/store/dashboardStore/useMenuStore";
+import { Tooltip, Whisper } from "rsuite";
 
 // Variants for the mobile "curtain" transition from left to right
 const mobileVariants = {
@@ -74,31 +75,38 @@ function NavContent() {
           const isActive = lastPath === lastItemRef;
 
           return (
-            <Link
+            <Whisper
               key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-2 rounded-lg py-2 pl-5 pr-4 text-sm font-medium hover:no-underline active:!no-underline border transition-all",
-                isActive
-                  ? "bg-primary/10 text-primary border-primary/40"
-                  : "hover:bg-gray-100 border-transparent"
-              )}
+              placement="auto"
+              trigger="hover"
+              speaker={<Tooltip>{item.toolTip}</Tooltip>}
+              className="w-full"
             >
-              <item.icon
+              <Link
+                href={item.href}
                 className={cn(
-                  "text-lg",
-                  isActive ? "text-primary" : "text-gray-500"
+                  "flex items-center gap-2 rounded-lg py-2 pl-5 pr-4 text-sm font-medium hover:no-underline active:!no-underline border transition-all",
+                  isActive
+                    ? "bg-primary/10 text-primary border-primary/40"
+                    : "hover:bg-gray-100 border-transparent"
                 )}
-              />
-              <motion.span
-                variants={textVariants}
-                initial={isOpen ? "open" : "closed"}
-                animate={isOpen ? "open" : "closed"}
-                className="overflow-hidden whitespace-nowrap"
               >
-                {item.name}
-              </motion.span>
-            </Link>
+                <item.icon
+                  className={cn(
+                    "text-lg",
+                    isActive ? "text-primary" : "text-gray-500"
+                  )}
+                />
+                <motion.span
+                  variants={textVariants}
+                  initial={isOpen ? "open" : "closed"}
+                  animate={isOpen ? "open" : "closed"}
+                  className="overflow-hidden whitespace-nowrap"
+                >
+                  {item.name}
+                </motion.span>
+              </Link>
+            </Whisper>
           );
         })}
       </div>

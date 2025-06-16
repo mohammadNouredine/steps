@@ -5,6 +5,7 @@ import { cn } from "@/utils/cn";
 import { DashboardLink, useGetNavItems } from "./hooks/useGetNavItems";
 import { useGetNotesInfinite } from "./api-hookts/notes/useGetNotes";
 import SingleNoteCard from "./notes/_components/NotesTable/SingleNoteCard";
+import { Tooltip, Whisper } from "rsuite";
 
 function Dashboard() {
   const DASHBOARD_NAV_ITEMS = useGetNavItems();
@@ -38,20 +39,27 @@ function Dashboard() {
 
 const DashboardLinkCard = ({ link }: { link: DashboardLink }) => {
   return (
-    <Link
-      href={link.href}
-      key={link.name}
-      className="transition-all p-10 bg-white rounded-lg shadow-[0_0_2px_0_rgba(0,0,0,.1)] group border border-transparent hover:border-primary"
+    <Whisper
+      placement="top"
+      trigger="hover"
+      speaker={<Tooltip>{link.toolTip}</Tooltip>}
+      className="w-full"
     >
-      <link.icon
-        className={cn(
-          "transition-all text-2xl text-gray-500 group-hover:text-primary"
-        )}
-      />
-      <p className="transition-all mt-2 text-lg !decoration-0 group-hover:text-primary">
-        {link.name}
-      </p>
-    </Link>
+      <Link
+        href={link.href}
+        key={link.name}
+        className="transition-all p-10 bg-white rounded-lg shadow-[0_0_2px_0_rgba(0,0,0,.1)] group border border-transparent hover:border-primary"
+      >
+        <link.icon
+          className={cn(
+            "transition-all text-2xl text-gray-500 group-hover:text-primary"
+          )}
+        />
+        <p className="transition-all mt-2 text-lg !decoration-0 group-hover:text-primary">
+          {link.name}
+        </p>
+      </Link>
+    </Whisper>
   );
 };
 export default Dashboard;

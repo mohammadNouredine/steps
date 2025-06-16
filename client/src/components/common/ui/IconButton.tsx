@@ -1,6 +1,7 @@
 import { cn } from "@/utils/cn";
 import React from "react";
 import { IconType } from "react-icons";
+import ToolTipWrapper from "./ToolTipWrapper";
 
 type StyleType = "yellow" | "green" | "red" | "gray" | "lightGray";
 
@@ -9,6 +10,7 @@ interface IconButtonProps {
   style: StyleType;
   disabled?: boolean;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
+  toolTip?: string;
 }
 
 const styleClasses: Record<StyleType, string> = {
@@ -26,18 +28,21 @@ function IconButton({
   style,
   onClick,
   disabled = false,
+  toolTip,
 }: IconButtonProps) {
   return (
-    <button
-      disabled={disabled}
-      className={cn(
-        styleClasses[style],
-        "px-2 rounded-md transition-all disabled:opacity-50 py-2"
-      )}
-      onClick={onClick}
-    >
-      <Icon />
-    </button>
+    <ToolTipWrapper toolTip={toolTip}>
+      <button
+        disabled={disabled}
+        className={cn(
+          styleClasses[style],
+          "px-2 rounded-md transition-all disabled:opacity-50 py-2"
+        )}
+        onClick={onClick}
+      >
+        <Icon />
+      </button>
+    </ToolTipWrapper>
   );
 }
 
