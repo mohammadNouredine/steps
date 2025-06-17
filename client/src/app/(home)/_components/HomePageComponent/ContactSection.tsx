@@ -148,6 +148,9 @@ const ContactSection = () => {
                       الاثنين - الجمعة: 9:00 صباحاً - 1:00 ظهرا
                     </p>
                     <p className="text-sm text-gray-500">الأربعا يوم عطلة</p>
+                    <p className="text-sm text-gray-500">
+                      نستقبل الاستفسارات يوم السبت فقط, الاحد غير متاح
+                    </p>
                   </div>
                 </div>
               </div>
