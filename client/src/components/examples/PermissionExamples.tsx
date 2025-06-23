@@ -108,7 +108,7 @@ export function ConditionalRenderingExample() {
       <PermissionGuard
         module="Reports"
         action="export"
-        fallback={<p>You don't have permission to export reports.</p>}
+        fallback={<p>You don&apos;t have permission to export reports.</p>}
       >
         <button>Export Report</button>
       </PermissionGuard>

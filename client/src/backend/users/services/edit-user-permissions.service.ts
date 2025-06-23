@@ -36,18 +36,18 @@ export async function editUserPermissions({
 
     // Add new permissions
     for (const [moduleName, actions] of Object.entries(permissions)) {
-      const module = await prisma.permissionModule.findUnique({
+      const moduleRecord = await prisma.permissionModule.findUnique({
         where: { name: moduleName },
       });
 
-      if (module) {
+      if (moduleRecord) {
         for (const [actionName, allowed] of Object.entries(
           actions as Record<string, boolean>
         )) {
           const action = await prisma.permissionAction.findFirst({
             where: {
               name: actionName,
-              moduleId: module.id,
+              moduleId: moduleRecord.id,
             },
           });
 

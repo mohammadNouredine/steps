@@ -50,25 +50,25 @@ export async function seedPermissions() {
     ];
 
     // Create modules first
-    for (const module of permissionModules) {
-      console.log(`Processing module: ${module.name}`);
+    for (const moduleConfig of permissionModules) {
+      console.log(`Processing module: ${moduleConfig.name}`);
 
       try {
         // Create or find the module
         const permissionModule = await prisma.permissionModule.upsert({
-          where: { name: module.name },
+          where: { name: moduleConfig.name },
           update: {},
-          create: { name: module.name },
+          create: { name: moduleConfig.name },
         });
 
         console.log(
-          `Module ${module.name} created/found with ID: ${permissionModule.id}`
+          `Module ${moduleConfig.name} created/found with ID: ${permissionModule.id}`
         );
 
         // Create actions for this module
-        for (const actionName of module.actions) {
+        for (const actionName of moduleConfig.actions) {
           console.log(
-            `Processing action: ${actionName} for module: ${module.name}`
+            `Processing action: ${actionName} for module: ${moduleConfig.name}`
           );
 
           try {
@@ -86,18 +86,21 @@ export async function seedPermissions() {
               },
             });
             console.log(
-              `Action ${actionName} created/found for module ${module.name}`
+              `Action ${actionName} created/found for module ${moduleConfig.name}`
             );
           } catch (actionError) {
             console.error(
-              `Error creating action ${actionName} for module ${module.name}:`,
+              `Error creating action ${actionName} for module ${moduleConfig.name}:`,
               actionError
             );
             // Continue with other actions
           }
         }
       } catch (moduleError) {
-        console.error(`Error processing module ${module.name}:`, moduleError);
+        console.error(
+          `Error processing module ${moduleConfig.name}:`,
+          moduleError
+        );
         // Continue with other modules
       }
     }

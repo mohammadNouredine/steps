@@ -64,18 +64,18 @@ export async function addUser({ req }: { req: NextRequest }) {
       // Add permissions if provided
       if (permissions && typeof permissions === "object") {
         for (const [moduleName, actions] of Object.entries(permissions)) {
-          const module = await tx.permissionModule.findUnique({
+          const moduleRecord = await tx.permissionModule.findUnique({
             where: { name: moduleName },
           });
 
-          if (module) {
+          if (moduleRecord) {
             for (const [actionName, allowed] of Object.entries(
               actions as Record<string, boolean>
             )) {
               const action = await tx.permissionAction.findFirst({
                 where: {
                   name: actionName,
-                  moduleId: module.id,
+                  moduleId: moduleRecord.id,
                 },
               });
 

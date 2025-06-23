@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import CenteredModal from "@/app/_components/popups/CenteredModal";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
@@ -84,7 +84,7 @@ export default function AddEditUserModal({
 
   const handleSubmit = (
     values: FormValues,
-    { setSubmitting, resetForm }: FormikHelpers<FormValues>
+    { setSubmitting }: FormikHelpers<FormValues>
   ) => {
     const submitData = {
       username: values.username,

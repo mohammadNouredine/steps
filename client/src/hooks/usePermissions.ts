@@ -1,19 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
-import axiosClient from "@/lib/axios-client";
 import useIsAuthenticated from "@/api/api-hooks/auth/useIsAuthenticated";
-
-interface UserPermissions {
-  [module: string]: {
-    [action: string]: boolean;
-  };
-}
-
-interface User {
-  id: number;
-  username: string;
-  roles: Array<{ role: { name: string } }>;
-  permissions: UserPermissions;
-}
 
 export function usePermissions() {
   const { user } = useIsAuthenticated();
