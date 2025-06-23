@@ -9,6 +9,7 @@ export interface User {
   registrationToken?: string;
   isActive: boolean;
   roles: Role[];
+  permissions?: Record<string, Record<string, boolean>>;
   blocked: boolean;
   preferedLanguage: string;
   createdAt: string;

@@ -3,7 +3,7 @@ import { Toggle } from "rsuite";
 import { useState, useEffect } from "react";
 import { cn } from "@/utils/cn";
 
-const getNestedValue = (obj: any, path: string) => {
+export const getNestedValue = (obj: any, path: string) => {
   return path
     .split(".")
     .reduce(

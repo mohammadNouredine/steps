@@ -17,7 +17,14 @@ function DashboardAuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   //user but not admin
-  if (user && !(user.role === "admin" || user.role === "super_admin"))
+  if (
+    user &&
+    !(
+      user.role === "admin" ||
+      user.role === "super_admin" ||
+      user.role === "dashboard_user"
+    )
+  )
     return <div>YOU DONT HAVE PERMISSIONS TO ACCESS THIS PAGE </div>;
 
   //user and admin

@@ -23,15 +23,16 @@ model UserRole {
 }
 
 model User {
-    id           Int        @id @default(autoincrement())
-    username     String     @unique
-    firstName    String?
-    lastName     String?
-    image        String?
-    passwordHash String     @map("password_hash")
-    createdAt    DateTime   @default(now())
-    updatedAt    DateTime   @updatedAt
-    userRoles    UserRole[]
+    id              Int              @id @default(autoincrement())
+    username        String           @unique
+    firstName       String?
+    lastName        String?
+    image           String?
+    passwordHash    String           @map("password_hash")
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
+    userRoles       UserRole[]
+    userPermissions UserPermission[]
 }
 
 enum Gender {
@@ -156,4 +157,32 @@ model ContactMessage {
     message   String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+model PermissionModule {
+    id              Int                @id @default(autoincrement())
+    name            String             @unique
+    actions         PermissionAction[]
+    userPermissions UserPermission[]
+}
+
+model PermissionAction {
+    id              Int              @id @default(autoincrement())
+    name            String // e.g., "read", "write", "delete"
+    module          PermissionModule @relation(fields: [moduleId], references: [id])
+    moduleId        Int
+    userPermissions UserPermission[]
+
+    @@unique([name, moduleId])
+}
+
+model UserPermission {
+    id                 Int               @id @default(autoincrement())
+    user               User              @relation(fields: [userId], references: [id])
+    userId             Int
+    action             PermissionAction  @relation(fields: [actionId], references: [id])
+    actionId           Int
+    allowed            Boolean           @default(false)
+    PermissionModule   PermissionModule? @relation(fields: [permissionModuleId], references: [id])
+    permissionModuleId Int?
 }

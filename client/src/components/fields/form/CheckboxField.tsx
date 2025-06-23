@@ -2,6 +2,13 @@ import { useFormikContext } from "formik";
 import { useEffect, useState } from "react";
 import { Checkbox } from "rsuite";
 
+// Helper function to get nested object values
+function getNestedValue(obj: any, path: string): any {
+  return path.split(".").reduce((current, key) => {
+    return current && current[key] !== undefined ? current[key] : false;
+  }, obj);
+}
+
 function CheckboxField({
   title,
   description,
@@ -17,9 +24,11 @@ function CheckboxField({
     [key: string]: any;
   }>();
   const [checked, setChecked] = useState(false);
+
   useEffect(() => {
-    setChecked(values[name]);
-  }, [values[name]]);
+    setChecked(getNestedValue(values, name));
+  }, [values, name]);
+
   return (
     <div className="cursor-pointer">
       <Checkbox

@@ -4,6 +4,7 @@ import {
   FaLayerGroup,
   FaMoneyCheck,
   FaStore,
+  FaUser,
 } from "react-icons/fa6";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { GrFingerPrint } from "react-icons/gr";
@@ -72,6 +73,12 @@ export const useGetNavItems = () => {
       href: "/dashboard/contact",
       icon: FaEnvelope,
       toolTip: "الرسائل التي يرسلها الأهل",
+    },
+    {
+      name: "Users",
+      href: "/dashboard/users",
+      icon: FaUser,
+      toolTip: "المستخدمين",
     },
   ];
   return DASHBOARD_NAV_ITEMS;

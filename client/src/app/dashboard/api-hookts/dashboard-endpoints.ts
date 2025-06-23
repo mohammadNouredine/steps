@@ -1,4 +1,12 @@
 export const DASHBOARD_ENDPOINTS = {
+  //---------------------------USERS
+  GET_ALL_USERS: "/users", //GET
+  CREATE_USER: "/users", //POST
+  UPDATE_USER: (id: number) => `/users/${id}`, //PUT
+  DELETE_USER: "/users/", //DELETE
+  EDIT_USER_PERMISSIONS: (id: number) => `/users/${id}/permissions`, //PUT
+  GET_USER_ROLES: "/roles", //GET
+
   //---------------------------CONTACT
   GET_ALL_CONTACT_MESSAGES: "/contact", //GET
   DELETE_CONTACT_MESSAGE: `/contact/`, //DELETE
