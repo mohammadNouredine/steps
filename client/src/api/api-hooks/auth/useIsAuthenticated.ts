@@ -8,6 +8,16 @@ export default function useIsAuthenticated() {
         id: number;
         role: string;
         username: string;
+        permissions: {
+          [key: string]: {
+            [key: string]: boolean;
+          };
+        };
+        roles: {
+          role: {
+            name: string;
+          };
+        }[];
       };
     }>({
       queryKey: [["auth"]],

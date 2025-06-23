@@ -9,7 +9,10 @@ export type PermissionModule =
   | "Subscriptions"
   | "Expenses"
   | "Users"
-  | "Reports";
+  | "Reports"
+  | "Accounting"
+  | "Purchases"
+  | "Notes";
 
 // Arrays of permission values for iteration
 export const PERMISSION_ACTIONS: PermissionAction[] = [
@@ -26,6 +29,9 @@ export const PERMISSION_MODULES: PermissionModule[] = [
   "Expenses",
   "Users",
   "Reports",
+  "Accounting",
+  "Purchases",
+  "Notes",
 ];
 
 // Define which actions are available for each module
@@ -37,6 +43,9 @@ export const MODULE_ACTIONS: Record<PermissionModule, PermissionAction[]> = {
   Expenses: ["read", "write", "delete"],
   Users: ["read", "write", "delete"],
   Reports: ["read", "export"],
+  Accounting: ["read", "write", "delete"],
+  Purchases: ["read", "write", "delete"],
+  Notes: ["read", "write", "delete"],
 };
 
 // Permission schema type

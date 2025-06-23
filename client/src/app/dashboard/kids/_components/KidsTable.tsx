@@ -23,6 +23,7 @@ import PrintAllKidsModal from "./PrintAllKidsModal";
 import SelectFieldControlled from "@/components/fields/controlled/SelectFieldControlled";
 import { useGetAllSubscriptionPlans } from "../../api-hookts/subscriptions/subscription-plans/useGetAllSubscriptionPlans";
 import ToolTipWrapper from "@/components/common/ui/ToolTipWrapper";
+import { usePermissions } from "@/hooks/usePermissions";
 
 function KidsTable({
   isOpen,
@@ -76,6 +77,7 @@ function KidsTable({
   });
   const { mutate: deleteKid } = useDeleteKid();
   const { mutate: toggleAttendance } = useToggleAttendance();
+  const { canSeeLoanBalance, canSeeLoanFilter } = usePermissions();
   //------------------COLUMNS-------------------------
   const kids_columns: ColumnDef<KidType>[] = [
     ...(!isAttendanceMode
@@ -138,6 +140,10 @@ function KidsTable({
           {
             accessorKey: "loanBalance",
             header: () => <span>Loan</span>,
+            cell: (info: CellContext<KidType, unknown>) => {
+              if (!canSeeLoanBalance()) return <div>-</div>;
+              return <div>{info.row.original.loanBalance} </div>;
+            },
           },
           {
             accessorKey: "subscriptionPlan",
@@ -280,19 +286,21 @@ function KidsTable({
             setSelectedGender(value);
           }}
         />
-        <ToolTipWrapper toolTip="اظهر الأطفال الذين لديهم قرض">
-          <Checkbox
-            checked={showOnlyWithLoan}
-            onChange={(_, checked) => {
-              setShowOnlyWithLoan(checked);
-            }}
-            title="Show only kids with loan"
-          >
-            <p className="text-gray-900 font-medium">
-              Show only kids with loan
-            </p>
-          </Checkbox>
-        </ToolTipWrapper>
+        {canSeeLoanFilter() && (
+          <ToolTipWrapper toolTip="اظهر الأطفال الذين لديهم قرض">
+            <Checkbox
+              checked={showOnlyWithLoan}
+              onChange={(_, checked) => {
+                setShowOnlyWithLoan(checked);
+              }}
+              title="Show only kids with loan"
+            >
+              <p className="text-gray-900 font-medium">
+                Show only kids with loan
+              </p>
+            </Checkbox>
+          </ToolTipWrapper>
+        )}
         <ToolTipWrapper toolTip="اظهر الأطفال الذين لديهم حضور">
           <Checkbox
             checked={isAttendanceMode}

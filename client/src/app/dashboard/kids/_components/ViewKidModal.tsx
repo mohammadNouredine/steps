@@ -3,6 +3,7 @@ import Image from "next/image";
 import CenteredModal from "../../../_components/popups/CenteredModal";
 import { Kid } from "@prisma/client";
 import { FaTimes } from "react-icons/fa";
+import { usePermissions } from "@/hooks/usePermissions";
 
 interface ViewKidModalProps {
   isOpen: boolean;
@@ -47,7 +48,7 @@ export default function ViewKidModal({
       style: "currency",
       currency: "USD",
     }).format(value);
-
+  const { canSeeLoanBalance } = usePermissions();
   return (
     <CenteredModal
       title=""
@@ -89,21 +90,25 @@ export default function ViewKidModal({
             ["Date of Birth", formatDate(dateOfBirth)],
             ["Phone", phoneNumber || "N/A"],
             ["Gender", gender || "Not specified"],
-            ["Loan Balance", formatCurrency(loanBalance)],
+            canSeeLoanBalance()
+              ? ["Loan Balance", formatCurrency(loanBalance)]
+              : null,
             ["Date Joined", formatDate(dateJoined)],
             ["Created At", formatDate(createdAt)],
             ["Updated At", formatDate(updatedAt)],
-          ].map(([label, value]) => (
-            <div
-              key={label}
-              className="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col"
-            >
-              <span className="text-sm uppercase text-gray-500">{label}</span>
-              <span className="mt-1 text-lg font-medium text-gray-900">
-                {value}
-              </span>
-            </div>
-          ))}
+          ]
+            .filter((item) => item !== null)
+            .map(([label, value]) => (
+              <div
+                key={label}
+                className="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col"
+              >
+                <span className="text-sm uppercase text-gray-500">{label}</span>
+                <span className="mt-1 text-lg font-medium text-gray-900">
+                  {value}
+                </span>
+              </div>
+            ))}
 
           {/* Notes spans full width */}
           <div className="sm:col-span-2 p-4 bg-gray-50 rounded-lg shadow-sm">

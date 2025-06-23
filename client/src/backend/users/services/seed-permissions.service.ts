@@ -35,6 +35,18 @@ export async function seedPermissions() {
         name: "Reports",
         actions: ["read", "export"],
       },
+      {
+        name: "Accounting",
+        actions: ["read", "write", "delete"],
+      },
+      {
+        name: "Purchases",
+        actions: ["read", "write", "delete"],
+      },
+      {
+        name: "Notes",
+        actions: ["read", "write", "delete"],
+      },
     ];
 
     // Create modules first

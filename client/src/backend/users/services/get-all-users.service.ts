@@ -4,17 +4,30 @@ import { NextResponse } from "next/server";
 export async function getAllUsers() {
   try {
     const users = await prisma.user.findMany({
-      include: {
+      select: {
+        id: true,
+        username: true,
+        firstName: true,
+        lastName: true,
+        image: true,
+        createdAt: true,
+        updatedAt: true,
         userRoles: {
           include: {
             role: true,
           },
         },
         userPermissions: {
-          include: {
+          select: {
+            allowed: true,
             action: {
-              include: {
-                module: true,
+              select: {
+                name: true,
+                module: {
+                  select: {
+                    name: true,
+                  },
+                },
               },
             },
           },
@@ -55,6 +68,9 @@ export async function getAllUsers() {
         "Expenses",
         "Users",
         "Reports",
+        "Accounting",
+        "Purchases",
+        "Notes",
       ];
       const allActions = ["read", "write", "delete", "export"];
 

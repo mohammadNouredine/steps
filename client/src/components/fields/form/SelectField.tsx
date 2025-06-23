@@ -11,7 +11,7 @@ export default function SelectField({
   extraLabelClassName,
   name,
   data,
-  searchable = false,
+  searchable = true,
   multiSelect = false,
   disabled = false,
   value,

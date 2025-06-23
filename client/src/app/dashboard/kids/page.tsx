@@ -6,6 +6,7 @@ import { SummaryValue } from "../_common/components/PageHeader/Summary";
 import { FaChild, FaMoneyBill } from "react-icons/fa6";
 import { KidType, useGetAllKids } from "../api-hookts/kids/useGetAllKids";
 import { LiaBirthdayCakeSolid } from "react-icons/lia";
+import { usePermissions } from "@/hooks/usePermissions";
 
 function KidsPage() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -32,7 +33,7 @@ function KidsPage() {
           return acc + getKidAge(kid);
         }, 0) / kidsLength
       : 0;
-
+  const { canSeeTotalLoans } = usePermissions();
   const orderSummaryValues: SummaryValue[] = [
     {
       title: "Total Number of Kids",
@@ -40,17 +41,19 @@ function KidsPage() {
       icon: <FaChild />,
       shouldNotFormat: true,
     },
-    {
-      title: "Total Loans ($)",
-      value: totalLoans || 0,
-      icon: <FaMoneyBill />,
-    },
+    canSeeTotalLoans()
+      ? {
+          title: "Total Loans ($)",
+          value: totalLoans || 0,
+          icon: <FaMoneyBill />,
+        }
+      : null,
     {
       title: "Average Kid Age",
       value: averageKidsAge || 0,
       icon: <LiaBirthdayCakeSolid />,
     },
-  ];
+  ].filter(Boolean) as SummaryValue[];
   return (
     <div>
       <PageHeader

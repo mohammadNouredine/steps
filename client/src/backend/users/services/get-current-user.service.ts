@@ -1,18 +1,20 @@
 import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function getUserById({ id }: { id: number }) {
+export async function getCurrentUser({ userId }: { userId: number }) {
   try {
     const user = await prisma.user.findUnique({
-      where: { id },
+      where: {
+        id: Number(userId),
+      },
       select: {
-        id: true,
-        username: true,
         firstName: true,
         lastName: true,
+        updatedAt: true,
+        id: true,
+        username: true,
         image: true,
         createdAt: true,
-        updatedAt: true,
         userRoles: {
           include: {
             role: true,
@@ -49,7 +51,7 @@ export async function getUserById({ id }: { id: number }) {
       image: user.image,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      roles: user.userRoles.map((ur: any) => ur.role.name),
+      roles: user.userRoles,
       permissions: (() => {
         // Initialize permissions object with all modules and actions set to false
         const permissions: Record<string, Record<string, boolean>> = {};
@@ -110,9 +112,9 @@ export async function getUserById({ id }: { id: number }) {
 
     return NextResponse.json({ data: transformedUser });
   } catch (error) {
-    console.error("Error fetching user:", error);
+    console.error("Error fetching current user:", error);
     return NextResponse.json(
-      { message: "Failed to fetch user" },
+      { message: "Failed to fetch current user" },
       { status: 500 }
     );
   }
