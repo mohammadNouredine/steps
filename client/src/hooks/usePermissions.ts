@@ -21,62 +21,97 @@ export function usePermissions() {
     return roleNames.some((role) => hasRole(role));
   };
 
+  const hasAdminRole = (): boolean => {
+    return hasAnyRole(["admin", "super_admin"]);
+  };
+
   // Navigation visibility helpers
   const canSeeKids = (): boolean => {
-    return hasAnyPermission("Kids", ["read", "write", "delete"]);
+    return (
+      hasAnyPermission("Kids", ["read", "write", "delete"]) || hasAdminRole()
+    );
   };
 
   const canSeeAttendance = (): boolean => {
-    return hasAnyPermission("Attendance", ["read", "write", "delete"]);
+    return (
+      hasAnyPermission("Attendance", ["read", "write", "delete"]) ||
+      hasAdminRole()
+    );
   };
 
   const canSeePayments = (): boolean => {
-    return hasAnyPermission("Payments", ["read", "write", "delete"]);
+    return (
+      hasAnyPermission("Payments", ["read", "write", "delete"]) ||
+      hasAdminRole()
+    );
   };
 
   const canSeeSubscriptions = (): boolean => {
-    return hasAnyPermission("Subscriptions", ["read", "write", "delete"]);
+    return (
+      hasAnyPermission("Subscriptions", ["read", "write", "delete"]) ||
+      hasAdminRole()
+    );
   };
 
   const canSeeExpenses = (): boolean => {
-    return hasAnyPermission("Expenses", ["read", "write", "delete"]);
+    return (
+      hasAnyPermission("Expenses", ["read", "write", "delete"]) ||
+      hasAdminRole()
+    );
   };
 
   const canSeeUsers = (): boolean => {
-    return hasAnyRole(["admin", "super_admin"]);
+    return hasAdminRole();
   };
 
   const canSeeContactMessages = (): boolean => {
-    return hasAnyRole(["admin", "super_admin"]);
+    return hasAdminRole();
   };
 
   const canSeeReports = (): boolean => {
-    return hasAnyPermission("Reports", ["read", "export"]);
+    return hasAnyPermission("Reports", ["read", "export"]) || hasAdminRole();
   };
 
   const canSeeAccounting = (): boolean => {
-    return hasAnyPermission("Accounting", ["read", "write", "delete"]);
+    return (
+      hasAnyPermission("Accounting", ["read", "write", "delete"]) ||
+      hasAdminRole()
+    );
   };
 
   const canSeePurchases = (): boolean => {
-    return hasAnyPermission("Purchases", ["read", "write", "delete"]);
+    return (
+      hasAnyPermission("Purchases", ["read", "write", "delete"]) ||
+      hasAdminRole()
+    );
   };
 
   const canSeeNotes = (): boolean => {
-    return hasAnyPermission("Notes", ["read", "write", "delete"]);
+    return (
+      hasAnyPermission("Notes", ["read", "write", "delete"]) || hasAdminRole()
+    );
   };
 
   // Feature visibility helpers
   const canSeeLoanBalance = (): boolean => {
-    return hasAnyPermission("Accounting", ["read", "write", "delete"]);
+    return (
+      hasAnyPermission("Accounting", ["read", "write", "delete"]) ||
+      hasAdminRole()
+    );
   };
 
   const canSeeTotalLoans = (): boolean => {
-    return hasAnyPermission("Accounting", ["read", "write", "delete"]);
+    return (
+      hasAnyPermission("Accounting", ["read", "write", "delete"]) ||
+      hasAdminRole()
+    );
   };
 
   const canSeeLoanFilter = (): boolean => {
-    return hasAnyPermission("Accounting", ["read", "write", "delete"]);
+    return (
+      hasAnyPermission("Accounting", ["read", "write", "delete"]) ||
+      hasAdminRole()
+    );
   };
 
   return {
