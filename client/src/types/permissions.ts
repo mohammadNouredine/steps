@@ -14,6 +14,33 @@ export type PermissionModule =
   | "Purchases"
   | "Notes";
 
+// Enums for better type safety
+export enum PermissionActionEnum {
+  READ = "read",
+  WRITE = "write",
+  DELETE = "delete",
+  EXPORT = "export",
+}
+
+export enum PermissionModuleEnum {
+  KIDS = "Kids",
+  ATTENDANCE = "Attendance",
+  PAYMENTS = "Payments",
+  SUBSCRIPTIONS = "Subscriptions",
+  EXPENSES = "Expenses",
+  USERS = "Users",
+  REPORTS = "Reports",
+  ACCOUNTING = "Accounting",
+  PURCHASES = "Purchases",
+  NOTES = "Notes",
+}
+
+export enum RoleEnum {
+  ADMIN = "admin",
+  SUPER_ADMIN = "superadmin",
+  USER = "user",
+}
+
 // Arrays of permission values for iteration
 export const PERMISSION_ACTIONS: PermissionAction[] = [
   "read",
@@ -54,3 +81,13 @@ export interface PermissionSchema {
     [action: string]: boolean;
   };
 }
+
+// Middleware types
+export type WithPermissionConfig = {
+  module: PermissionModuleEnum;
+  action: PermissionActionEnum;
+};
+
+export type WithRoleConfig = {
+  roles: RoleEnum[];
+};

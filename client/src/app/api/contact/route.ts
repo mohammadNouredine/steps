@@ -1,4 +1,7 @@
 import { withErrorHandling } from "@/backend/helpers/withErrorHandling";
+import { withAuth } from "@/backend/helpers/withAuth";
+import { withRole } from "@/backend/helpers/withRole";
+import { RoleEnum } from "@/types/permissions";
 import {
   addContactMessage,
   getContactMessages,
@@ -17,5 +20,9 @@ export const POST = withErrorHandling(
 );
 
 export const GET = withErrorHandling(
-  withQueryValidation(getContactMessages, getContactMessageSchema)
+  withAuth(
+    withRole({
+      roles: [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN],
+    })(withQueryValidation(getContactMessages, getContactMessageSchema))
+  )
 );
