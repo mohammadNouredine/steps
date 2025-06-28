@@ -25,6 +25,10 @@ export const DASHBOARD_ENDPOINTS = {
   CREATE_EXPENSE: "/expense", //POST
   UPDATE_EXPENSE: `/expense`, //PUT
   DELETE_EXPENSE: `/expense/`, //DELETE
+  //---------------------------TRANSACTIONS
+  GET_ALL_TRANSACTIONS: "/transaction", //GET
+  CREATE_TRANSACTION: "/transaction", //POST
+  DELETE_TRANSACTION: `/transaction/`, //DELETE
   //---------------------------NOTES
   GET_ALL_NOTES: "/note", //GET
   CREATE_NOTE: "/note", //POST
@@ -46,6 +50,7 @@ export const DASHBOARD_ENDPOINTS = {
   CREATE_KID: "/kids", //POST
   DELETE_KID: `/kids/`, //DELETE
   UPDATE_KID: (id: number) => `/kids/${id}`, //PUT
+  UPDATE_KID_LOAN: (id: number) => `/kids/${id}/loan`, //PATCH
 
   //----------------------------SUBSCRIPTION PLANS
   GET_ALL_SUBSCRIPTION_PLANS: "/subscription-plans", //GET

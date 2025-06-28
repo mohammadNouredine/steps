@@ -31,13 +31,9 @@ model User {
     passwordHash    String           @map("password_hash")
     createdAt       DateTime         @default(now())
     updatedAt       DateTime         @updatedAt
-    userRoles       UserRole[]
+    Transaction     Transaction[]
     userPermissions UserPermission[]
-}
-
-enum Gender {
-    MALE
-    FEMALE
+    userRoles       UserRole[]
 }
 
 model Kid {
@@ -51,21 +47,22 @@ model Kid {
     gender        Gender?
     loanBalance   Float           @default(0) @map("loan_balance")
     dateJoined    DateTime        @default(now()) @map("date_joined")
-    attendances   Attendance[]
-    purchases     PurchasedItem[]
-    subscriptions Subscription[]
-    payments      Payment[]
     createdAt     DateTime        @default(now()) @map("created_at")
     updatedAt     DateTime        @default(now()) @updatedAt
+    attendances   Attendance[]
+    payments      Payment[]
+    purchases     PurchasedItem[]
+    subscriptions Subscription[]
+    Transaction   Transaction[]
 }
 
 model Attendance {
     id          Int             @id @default(autoincrement())
-    kid         Kid             @relation(fields: [kidId], references: [id])
     kidId       Int             @map("kid_id")
-    date        DateTime
     note        String?
     extraCharge Float?          @map("extra_charge")
+    date        DateTime
+    kid         Kid             @relation(fields: [kidId], references: [id])
     purchases   PurchasedItem[]
 
     @@unique([kidId, date])
@@ -73,26 +70,21 @@ model Attendance {
 
 model PurchasedItem {
     id           Int         @id @default(autoincrement())
-    kid          Kid         @relation(fields: [kidId], references: [id])
     kidId        Int         @map("kid_id")
-    attendance   Attendance? @relation(fields: [attendanceId], references: [id])
     attendanceId Int?        @map("attendance_id")
     purchaseDate DateTime    @map("purchase_date")
     note         String?
     totalPrice   Float       @map("total_price")
     paidAmount   Float       @map("paid_amount")
-}
-
-enum BillingMode {
-    PREPAID // charge all up front
-    USAGE // charge per attendance
+    attendance   Attendance? @relation(fields: [attendanceId], references: [id])
+    kid          Kid         @relation(fields: [kidId], references: [id])
 }
 
 model SubscriptionPlan {
     id            Int            @id @default(autoincrement())
     name          String
     price         Float
-    duration      Int            @default(1) // in days
+    duration      Int            @default(1)
     description   String?
     billingMode   BillingMode    @default(PREPAID)
     subscriptions Subscription[]
@@ -100,9 +92,7 @@ model SubscriptionPlan {
 
 model Subscription {
     id                 Int                @id @default(autoincrement())
-    kid                Kid                @relation(fields: [kidId], references: [id])
     kidId              Int                @map("kid_id")
-    plan               SubscriptionPlan   @relation(fields: [planId], references: [id])
     planId             Int                @map("plan_id")
     startDate          DateTime           @map("start_date")
     endDate            DateTime?          @map("end_date")
@@ -112,21 +102,36 @@ model Subscription {
     status             SubscriptionStatus
     createdAt          DateTime           @default(now())
     updatedAt          DateTime           @updatedAt
-}
-
-enum SubscriptionStatus {
-    ACTIVE
-    CANCELLED
-    COMPLETED
+    kid                Kid                @relation(fields: [kidId], references: [id])
+    plan               SubscriptionPlan   @relation(fields: [planId], references: [id])
 }
 
 model Payment {
     id          Int      @id @default(autoincrement())
-    kid         Kid      @relation(fields: [kidId], references: [id])
     kidId       Int      @map("kid_id")
     amount      Float
     paymentDate DateTime @map("payment_date")
     note        String?
+    kid         Kid      @relation(fields: [kidId], references: [id])
+}
+
+model Transaction {
+    id                           Int      @id @default(autoincrement())
+    kidId                        Int      @map("kid_id")
+    userId                       Int      @map("user_id")
+    loanBalanceBeforeTransaction Float    @map("loan_balance_before_transaction")
+    loanBalanceAfterTransaction  Float    @map("loan_balance_after_transaction")
+    exchangeOfLoans              Float    @map("exchange_of_loans")
+    transactionDate              DateTime @default(now()) @map("transaction_date")
+    note                         String?
+    createdAt                    DateTime @default(now()) @map("created_at")
+    updatedAt                    DateTime @updatedAt
+    Kid                          Kid      @relation(fields: [kidId], references: [id])
+    User                         User     @relation(fields: [userId], references: [id])
+
+    @@index([kidId])
+    @@index([transactionDate])
+    @@index([userId])
 }
 
 model Expense {
@@ -168,9 +173,9 @@ model PermissionModule {
 
 model PermissionAction {
     id              Int              @id @default(autoincrement())
-    name            String // e.g., "read", "write", "delete"
-    module          PermissionModule @relation(fields: [moduleId], references: [id])
+    name            String
     moduleId        Int
+    module          PermissionModule @relation(fields: [moduleId], references: [id])
     userPermissions UserPermission[]
 
     @@unique([name, moduleId])
@@ -178,11 +183,27 @@ model PermissionAction {
 
 model UserPermission {
     id                 Int               @id @default(autoincrement())
-    user               User              @relation(fields: [userId], references: [id])
     userId             Int
-    action             PermissionAction  @relation(fields: [actionId], references: [id])
     actionId           Int
     allowed            Boolean           @default(false)
-    PermissionModule   PermissionModule? @relation(fields: [permissionModuleId], references: [id])
     permissionModuleId Int?
+    action             PermissionAction  @relation(fields: [actionId], references: [id])
+    PermissionModule   PermissionModule? @relation(fields: [permissionModuleId], references: [id])
+    user               User              @relation(fields: [userId], references: [id])
+}
+
+enum Gender {
+    MALE
+    FEMALE
+}
+
+enum BillingMode {
+    PREPAID
+    USAGE
+}
+
+enum SubscriptionStatus {
+    ACTIVE
+    CANCELLED
+    COMPLETED
 }

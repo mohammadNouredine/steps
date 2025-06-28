@@ -18,13 +18,14 @@ import { useToggleAttendance } from "../../api-hookts/attendance/useToggleAttend
 import CardContainer from "../../_common/components/CardContainer";
 import SearchInput from "@/components/fields/form/SearchInput";
 import IconButton from "@/components/common/ui/IconButton";
-import { FaMoneyBill, FaPrint } from "react-icons/fa6";
+import { FaMoneyBill, FaPrint, FaCalculator } from "react-icons/fa6";
 import PrintAllKidsModal from "./PrintAllKidsModal";
 import SelectFieldControlled from "@/components/fields/controlled/SelectFieldControlled";
 import { useGetAllSubscriptionPlans } from "../../api-hookts/subscriptions/subscription-plans/useGetAllSubscriptionPlans";
 import ToolTipWrapper from "@/components/common/ui/ToolTipWrapper";
 import { usePermissions } from "@/hooks/usePermissions";
 import AddEditPaymentModal from "../../payments/_components/PaymentsTable/AddEditPaymentModal";
+import UpdateLoanModal from "./UpdateLoanModal";
 
 function KidsTable({
   isOpen,
@@ -49,6 +50,11 @@ function KidsTable({
   const [showOnlyWithLoan, setShowOnlyWithLoan] = React.useState(false);
   const [isOpenPayments, setIsOpenPayments] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [isOpenUpdateLoan, setIsOpenUpdateLoan] = React.useState(false);
+  const [updatingLoanKid, setUpdatingLoanKid] = React.useState<
+    Kid | undefined
+  >();
+
   //------------------API CALLS-------------------------
 
   const { data: subscriptionPlans } = useGetAllSubscriptionPlans();
@@ -78,8 +84,9 @@ function KidsTable({
   });
   const { mutate: deleteKid } = useDeleteKid();
   const { mutate: toggleAttendance } = useToggleAttendance();
-  const { canSeeLoanBalance, canSeeLoanFilter, canAddPayment } =
+  const { canSeeLoanBalance, canSeeLoanFilter, canAddPayment, canCorrectLoan } =
     usePermissions();
+
   //------------------COLUMNS-------------------------
   const kids_columns: ColumnDef<KidType>[] = [
     ...(!isAttendanceMode
@@ -237,6 +244,18 @@ function KidsTable({
                   />
                 )}
 
+                {canCorrectLoan() && (
+                  <IconButton
+                    toolTip="تصحيح الدّين"
+                    onClick={() => {
+                      setUpdatingLoanKid(info.row.original);
+                      setIsOpenUpdateLoan(true);
+                    }}
+                    Icon={FaCalculator}
+                    style={"gray"}
+                  />
+                )}
+
                 <IconButton
                   toolTip="إضافة الحضور"
                   onClick={() => {
@@ -376,6 +395,13 @@ function KidsTable({
         setIsOpen={setIsOpenPayments}
         kid={viewingKid}
       />
+      {updatingLoanKid && (
+        <UpdateLoanModal
+          isOpen={isOpenUpdateLoan}
+          setIsOpen={setIsOpenUpdateLoan}
+          kid={updatingLoanKid}
+        />
+      )}
     </div>
   );
 }

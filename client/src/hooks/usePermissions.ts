@@ -39,6 +39,10 @@ export function usePermissions() {
     );
   };
 
+  const canCorrectLoan = (): boolean => {
+    return hasAnyRole(["admin", "super_admin"]);
+  };
+
   const canSeePayments = (): boolean => {
     return (
       hasAnyPermission("Payments", ["read", "write", "delete"]) ||
@@ -135,6 +139,7 @@ export function usePermissions() {
     canSeeAccounting,
     canSeePurchases,
     canSeeNotes,
+    canCorrectLoan,
     // Feature helpers
     canSeeLoanBalance,
     canSeeTotalLoans,

@@ -5,6 +5,7 @@ import {
   FaMoneyCheck,
   FaStore,
   FaUser,
+  FaCalculator,
 } from "react-icons/fa6";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { GrFingerPrint } from "react-icons/gr";
@@ -25,6 +26,7 @@ export const useGetNavItems = () => {
     canSeeReports,
     canSeePurchases,
     canSeeNotes,
+    canSeeAccounting,
   } = usePermissions();
 
   const DASHBOARD_NAV_ITEMS: DashboardLink[] = [
@@ -76,6 +78,13 @@ export const useGetNavItems = () => {
       icon: MdAttachMoney,
       toolTip: "المصاريف (مثل: أغراض, معاشات...)",
       isVisible: canSeeExpenses(),
+    },
+    {
+      name: "Transactions",
+      href: "/dashboard/transactions",
+      icon: FaCalculator,
+      toolTip: "معاملات تصحيح الدّين",
+      isVisible: canSeeAccounting(),
     },
     {
       name: "Payments",
