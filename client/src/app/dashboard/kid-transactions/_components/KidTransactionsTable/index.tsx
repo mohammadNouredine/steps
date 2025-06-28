@@ -16,12 +16,17 @@ import Summary, {
 import { FaHistory } from "react-icons/fa";
 import { FaMoneyBill } from "react-icons/fa6";
 import { KidTransactionAction, KidTransactionOperation } from "@prisma/client";
+import { useGetAllKids } from "@/app/dashboard/api-hookts/kids/useGetAllKids";
+import SelectFieldControlled from "@/components/fields/controlled/SelectFieldControlled";
 
 function KidTransactionsTable() {
   //------------------STATES-------------------------
   const [selectedDateRange, setSelectedDateRange] =
     React.useState<DateRange | null>();
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [selectedKidId, setSelectedKidId] = React.useState<
+    number | undefined
+  >();
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
@@ -29,10 +34,12 @@ function KidTransactionsTable() {
   });
 
   //------------------API CALLS-------------------------
+  const { data: kidsData } = useGetAllKids();
   const { data: transactionsData, isPending } = useGetKidTransactions({
     params: {
       limit: pagination.pageSize,
       offset: pagination.pageIndex * pagination.pageSize,
+      kidId: selectedKidId,
       startDate: selectedDateRange?.[0]
         ? formatDateToDashes(selectedDateRange?.[0])
         : undefined,
@@ -45,30 +52,30 @@ function KidTransactionsTable() {
   //------------------HELPER FUNCTIONS-------------------------
   const getActionTypeLabel = (actionType: KidTransactionAction) => {
     const labels: Record<KidTransactionAction, string> = {
-      KID_CREATE: "إنشاء طفل",
-      KID_UPDATE: "تعديل طفل",
-      KID_DELETE: "حذف طفل",
-      PAYMENT_CREATE: "إنشاء دفعة",
-      PAYMENT_UPDATE: "تعديل دفعة",
-      PAYMENT_DELETE: "حذف دفعة",
-      SUBSCRIPTION_CREATE: "إنشاء اشتراك",
-      SUBSCRIPTION_UPDATE: "تعديل اشتراك",
-      SUBSCRIPTION_DELETE: "حذف اشتراك",
-      ATTENDANCE_CREATE: "تسجيل حضور",
-      ATTENDANCE_UPDATE: "تعديل حضور",
-      ATTENDANCE_DELETE: "حذف حضور",
-      PURCHASE_CREATE: "إنشاء مشترى",
-      PURCHASE_UPDATE: "تعديل مشترى",
-      PURCHASE_DELETE: "حذف مشترى",
+      KID_CREATE: "Create Kid",
+      KID_UPDATE: "Update Kid",
+      KID_DELETE: "Delete Kid",
+      PAYMENT_CREATE: "Create Payment",
+      PAYMENT_UPDATE: "Update Payment",
+      PAYMENT_DELETE: "Delete Payment",
+      SUBSCRIPTION_CREATE: "Create Subscription",
+      SUBSCRIPTION_UPDATE: "Update Subscription",
+      SUBSCRIPTION_DELETE: "Delete Subscription",
+      ATTENDANCE_CREATE: "Create Attendance",
+      ATTENDANCE_UPDATE: "Update Attendance",
+      ATTENDANCE_DELETE: "Delete Attendance",
+      PURCHASE_CREATE: "Create Purchase",
+      PURCHASE_UPDATE: "Update Purchase",
+      PURCHASE_DELETE: "Delete Purchase",
     };
     return labels[actionType] || actionType;
   };
 
   const getOperationTypeLabel = (operationType: KidTransactionOperation) => {
     const labels: Record<KidTransactionOperation, string> = {
-      CREATE: "إنشاء",
-      UPDATE: "تعديل",
-      DELETE: "حذف",
+      CREATE: "Create",
+      UPDATE: "Update",
+      DELETE: "Delete",
     };
     return labels[operationType] || operationType;
   };
@@ -83,11 +90,24 @@ function KidTransactionsTable() {
     return "text-gray-600";
   };
 
+  //------------------KIDS OPTIONS-------------------------
+  const kidsOptions = React.useMemo(() => {
+    if (!kidsData?.data) return [];
+
+    return [
+      { value: undefined, label: "All Kids" },
+      ...kidsData.data.map((kid) => ({
+        value: kid.id,
+        label: `${kid.firstName} ${kid.lastName}`,
+      })),
+    ];
+  }, [kidsData?.data]);
+
   //------------------COLUMNS-------------------------
   const transactions_columns: ColumnDef<DashboardKidTransactionType>[] = [
     {
       accessorKey: "kid",
-      header: () => <span>الطفل</span>,
+      header: () => <span>Kid</span>,
       cell: (info: any) => (
         <div className="font-medium">
           {info.row.original.kid.firstName} {info.row.original.kid.lastName}
@@ -96,7 +116,7 @@ function KidTransactionsTable() {
     },
     {
       accessorKey: "actionType",
-      header: () => <span>نوع العملية</span>,
+      header: () => <span>Action Type</span>,
       cell: (info: any) => (
         <div className="text-sm">
           {getActionTypeLabel(info.row.original.actionType)}
@@ -105,7 +125,7 @@ function KidTransactionsTable() {
     },
     {
       accessorKey: "operationType",
-      header: () => <span>نوع العمل</span>,
+      header: () => <span>Operation Type</span>,
       cell: (info: any) => (
         <div className="text-sm">
           {getOperationTypeLabel(info.row.original.operationType)}
@@ -114,7 +134,7 @@ function KidTransactionsTable() {
     },
     {
       accessorKey: "totalAmount",
-      header: () => <span>المبلغ</span>,
+      header: () => <span>Amount</span>,
       cell: (info: any) => (
         <div
           className={`font-semibold ${getAmountColor(
@@ -122,13 +142,13 @@ function KidTransactionsTable() {
             info.row.original.actionType
           )}`}
         >
-          {info.row.original.totalAmount.toFixed(2)} د.ك
+          ${info.row.original.totalAmount.toFixed(2)}
         </div>
       ),
     },
     {
       accessorKey: "user",
-      header: () => <span>المستخدم</span>,
+      header: () => <span>User</span>,
       cell: (info: any) => (
         <div className="text-sm">
           {info.row.original.user.firstName} {info.row.original.user.lastName}
@@ -140,7 +160,7 @@ function KidTransactionsTable() {
     },
     {
       accessorKey: "transactionDate",
-      header: () => <span>التاريخ</span>,
+      header: () => <span>Date</span>,
       cell: (info: any) => (
         <div className="text-sm">
           {formatDate(info.row.original.transactionDate)}
@@ -149,10 +169,10 @@ function KidTransactionsTable() {
     },
     {
       accessorKey: "loanBalanceAfter",
-      header: () => <span>الرصيد النهائي</span>,
+      header: () => <span>Final Balance</span>,
       cell: (info: any) => (
         <div className="text-sm font-medium">
-          {info.row.original.loanBalanceAfter.toFixed(2)} د.ك
+          ${info.row.original.loanBalanceAfter.toFixed(2)}
         </div>
       ),
     },
@@ -170,9 +190,9 @@ function KidTransactionsTable() {
     {
       title: "Total Amount",
       value: transactionsData?.data
-        ? `${transactionsData.data
+        ? `$${transactionsData.data
             .reduce((sum, t) => sum + t.totalAmount, 0)
-            .toFixed(2)} د.ك`
+            .toFixed(2)}`
         : "---",
       icon: <FaMoneyBill />,
       textColor: "success",
@@ -189,12 +209,21 @@ function KidTransactionsTable() {
             <SearchInput value={searchQuery} setValue={setSearchQuery} />
           </div>
 
+          <div className="w-[20rem]">
+            <SelectFieldControlled
+              value={selectedKidId}
+              onChange={setSelectedKidId}
+              data={kidsOptions}
+              placeHolder="Select Kid"
+            />
+          </div>
+
           <DateRangePicker
             value={selectedDateRange}
             onChange={(value) => {
               setSelectedDateRange(value);
             }}
-            placeholder="اختر نطاق التاريخ"
+            placeholder="Select Date Range"
           />
         </CardContainer>
 
