@@ -7,7 +7,6 @@ import { DateRangePicker } from "rsuite";
 import { formatDate, formatDateToDashes } from "@/helpers/formatDate";
 import SearchInput from "@/components/fields/form/SearchInput";
 import { DateRange } from "rsuite/esm/DateRangePicker";
-import useDebounce from "@/hooks/useDebounce";
 import { DashboardKidTransactionType } from "@/app/dashboard/_common/types/kidTransactions";
 import { useGetKidTransactions } from "@/app/dashboard/api-hookts/kid-transactions/useGetKidTransactions";
 import Summary, {
@@ -27,7 +26,6 @@ function KidTransactionsTable() {
   const [selectedKidId, setSelectedKidId] = React.useState<
     number | undefined
   >();
-  const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
     pageSize: 10,
