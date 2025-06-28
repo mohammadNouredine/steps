@@ -121,7 +121,16 @@ function KidsTable({
               height={50}
             />
           ) : (
-            <div>-</div>
+            <Image
+              src={
+                info.row.original.gender === Gender.FEMALE
+                  ? "/images/girl-placeholder.svg"
+                  : "/images/boy-placeholder.svg"
+              }
+              alt={`${info.row.original.firstName} placeholder`}
+              width={50}
+              height={50}
+            />
           )}
         </div>
       ),

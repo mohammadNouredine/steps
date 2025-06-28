@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import CenteredModal from "../../../_components/popups/CenteredModal";
-import { Kid } from "@prisma/client";
+import { Kid, Gender } from "@prisma/client";
 import { FaTimes } from "react-icons/fa";
 import { usePermissions } from "@/hooks/usePermissions";
 
@@ -11,7 +11,12 @@ interface ViewKidModalProps {
   kid: Kid;
 }
 
-const placeholderImage = "/placeholder.png";
+const getPlaceholderImage = (gender?: Gender | null) => {
+  if (!gender) return "/images/profile-image-fallback.webp";
+  return gender === Gender.FEMALE
+    ? "/images/girl-placeholder.svg"
+    : "/images/boy-placeholder.svg";
+};
 
 export default function ViewKidModal({
   isOpen,
@@ -75,7 +80,7 @@ export default function ViewKidModal({
         <div className="flex-shrink-0">
           <div className="relative w-40 h-40 rounded-xl overflow-hidden ring-2 ring-indigo-500">
             <Image
-              src={image || placeholderImage}
+              src={image || getPlaceholderImage(gender)}
               alt={`${firstName} ${lastName}`}
               layout="fill"
               objectFit="cover"
