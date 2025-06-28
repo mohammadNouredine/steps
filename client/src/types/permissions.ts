@@ -37,7 +37,7 @@ export enum PermissionModuleEnum {
 
 export enum RoleEnum {
   ADMIN = "admin",
-  SUPER_ADMIN = "superadmin",
+  SUPER_ADMIN = "super_admin",
   USER = "user",
 }
 

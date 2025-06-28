@@ -18,12 +18,13 @@ import { useToggleAttendance } from "../../api-hookts/attendance/useToggleAttend
 import CardContainer from "../../_common/components/CardContainer";
 import SearchInput from "@/components/fields/form/SearchInput";
 import IconButton from "@/components/common/ui/IconButton";
-import { FaPrint } from "react-icons/fa6";
+import { FaMoneyBill, FaPrint } from "react-icons/fa6";
 import PrintAllKidsModal from "./PrintAllKidsModal";
 import SelectFieldControlled from "@/components/fields/controlled/SelectFieldControlled";
 import { useGetAllSubscriptionPlans } from "../../api-hookts/subscriptions/subscription-plans/useGetAllSubscriptionPlans";
 import ToolTipWrapper from "@/components/common/ui/ToolTipWrapper";
 import { usePermissions } from "@/hooks/usePermissions";
+import AddEditPaymentModal from "../../payments/_components/PaymentsTable/AddEditPaymentModal";
 
 function KidsTable({
   isOpen,
@@ -35,7 +36,7 @@ function KidsTable({
   //------------------STATES-------------------------
 
   const [editingKid, setEditingKid] = React.useState<Kid | undefined>();
-  const [viewingKid, setViewingKid] = React.useState<Kid | undefined>();
+  const [viewingKid, setViewingKid] = React.useState<KidType | undefined>();
   const [isOpenViewingKid, setIsOpenViewingKid] = React.useState(false);
   const [isOpenAttendance, setIsOpenAttendance] = React.useState(false);
   const [isAttendanceMode, setIsAttendanceMode] = React.useState(false);
@@ -46,7 +47,7 @@ function KidsTable({
     Gender | undefined
   >();
   const [showOnlyWithLoan, setShowOnlyWithLoan] = React.useState(false);
-
+  const [isOpenPayments, setIsOpenPayments] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   //------------------API CALLS-------------------------
 
@@ -77,7 +78,8 @@ function KidsTable({
   });
   const { mutate: deleteKid } = useDeleteKid();
   const { mutate: toggleAttendance } = useToggleAttendance();
-  const { canSeeLoanBalance, canSeeLoanFilter } = usePermissions();
+  const { canSeeLoanBalance, canSeeLoanFilter, canAddPayment } =
+    usePermissions();
   //------------------COLUMNS-------------------------
   const kids_columns: ColumnDef<KidType>[] = [
     ...(!isAttendanceMode
@@ -214,8 +216,20 @@ function KidsTable({
             enableSorting: false,
             cell: (info: CellContext<KidType, unknown>) => (
               <div className="flex gap-2">
+                {canAddPayment() && (
+                  <IconButton
+                    toolTip="الدفع"
+                    onClick={() => {
+                      setViewingKid(info.row.original);
+                      setIsOpenPayments(true);
+                    }}
+                    Icon={FaMoneyBill}
+                    style={"gray"}
+                  />
+                )}
+
                 <IconButton
-                  toolTip="إضافة الطفل"
+                  toolTip="إضافة الحضور"
                   onClick={() => {
                     setViewingKid(info.row.original);
                     setIsOpenAttendance(true);
@@ -348,6 +362,11 @@ function KidsTable({
           kid={viewingKid}
         />
       )}
+      <AddEditPaymentModal
+        isOpen={isOpenPayments}
+        setIsOpen={setIsOpenPayments}
+        kid={viewingKid}
+      />
     </div>
   );
 }

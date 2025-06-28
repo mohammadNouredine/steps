@@ -10,18 +10,21 @@ import {
   addPaymentSchema,
   AddPaymentSchemaType,
 } from "@/app/api/payment/_dto/mutate-payment.dto";
-import { formatDateToDashes } from "@/helpers/formatDate";
 import { useAddPayment } from "@/app/dashboard/api-hookts/payments/useAddPayment";
 import { useEditPayment } from "@/app/dashboard/api-hookts/payments/useEditPayment";
-import { useGetAllKids } from "@/app/dashboard/api-hookts/kids/useGetAllKids";
+import {
+  KidType,
+  useGetAllKids,
+} from "@/app/dashboard/api-hookts/kids/useGetAllKids";
 import SelectField from "@/components/fields/form/SelectField";
 interface PaymentModalProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   editingPayment?: DashboardPaymentType;
-  setEditingPayment: React.Dispatch<
+  setEditingPayment?: React.Dispatch<
     React.SetStateAction<DashboardPaymentType | undefined>
   >;
+  kid?: KidType;
 }
 
 export default function AddEditPaymentModal({
@@ -29,6 +32,7 @@ export default function AddEditPaymentModal({
   setIsOpen,
   editingPayment,
   setEditingPayment,
+  kid,
 }: PaymentModalProps) {
   const { mutate: addPayment, isPending: isAdding } = useAddPayment({
     callBackOnSuccess: () => {
@@ -52,7 +56,7 @@ export default function AddEditPaymentModal({
   return (
     <CenteredModal
       onClose={() => {
-        setEditingPayment(undefined);
+        setEditingPayment?.(undefined);
       }}
       title="Payment"
       isOpenModal={isOpen}
@@ -62,12 +66,12 @@ export default function AddEditPaymentModal({
       <Formik<AddPaymentSchemaType>
         validationSchema={addPaymentSchema}
         initialValues={{
-          amount: editingPayment?.amount || 0,
+          amount: editingPayment?.amount || kid?.loanBalance || 0,
           paymentDate: editingPayment?.paymentDate
-            ? formatDateToDashes(editingPayment?.paymentDate)
-            : formatDateToDashes(new Date()),
+            ? new Date(editingPayment?.paymentDate)
+            : new Date(),
           note: editingPayment?.note || "",
-          kidId: editingPayment?.kidId || -1,
+          kidId: editingPayment?.kidId || kid?.id || -1,
         }}
         onSubmit={(values: AddPaymentSchemaType) => {
           if (editingPayment) {

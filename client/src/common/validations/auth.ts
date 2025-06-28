@@ -12,7 +12,7 @@ export type RegisterWithUsernameBodyParams = Yup.InferType<
 
 export const loginWithUsernameValidation = Yup.object({
   username: Yup.string().required(),
-  password: Yup.string().required().min(8),
+  password: Yup.string().required().min(5),
 });
 
 export type LoginWithUsernameBodyParams = Yup.InferType<

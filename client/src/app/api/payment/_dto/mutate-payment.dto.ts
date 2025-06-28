@@ -1,10 +1,9 @@
 import * as yup from "yup";
-import { validateDateAndTransformToDate } from "../../_common/validation/date-validations";
 
 export const addPaymentSchema = yup.object().shape({
   kidId: yup.number().required(),
   amount: yup.number().required(),
-  paymentDate: validateDateAndTransformToDate.required(),
+  paymentDate: yup.date().required(),
   note: yup.string().optional(),
 });
 

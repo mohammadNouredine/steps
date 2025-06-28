@@ -114,6 +114,10 @@ export function usePermissions() {
     );
   };
 
+  const canAddPayment = (): boolean => {
+    return hasAnyPermission("Payments", ["write"]) || hasAdminRole();
+  };
+
   return {
     hasPermission,
     hasAnyPermission,
@@ -135,6 +139,7 @@ export function usePermissions() {
     canSeeLoanBalance,
     canSeeTotalLoans,
     canSeeLoanFilter,
+    canAddPayment,
     // Current user
     user,
   };
