@@ -34,50 +34,54 @@ model User {
     Transaction     Transaction[]
     userPermissions UserPermission[]
     userRoles       UserRole[]
+    kidTransactions KidTransaction[]
 }
 
 model Kid {
-    id            Int             @id @default(autoincrement())
-    firstName     String          @map("first_name")
-    lastName      String          @map("last_name")
-    dateOfBirth   DateTime        @default(now()) @map("date_of_birth")
-    phoneNumber   String?         @map("phone_number")
-    notes         String?
-    image         String?
-    gender        Gender?
-    loanBalance   Float           @default(0) @map("loan_balance")
-    dateJoined    DateTime        @default(now()) @map("date_joined")
-    createdAt     DateTime        @default(now()) @map("created_at")
-    updatedAt     DateTime        @default(now()) @updatedAt
-    attendances   Attendance[]
-    payments      Payment[]
-    purchases     PurchasedItem[]
-    subscriptions Subscription[]
-    Transaction   Transaction[]
+    id              Int              @id @default(autoincrement())
+    firstName       String           @map("first_name")
+    lastName        String           @map("last_name")
+    dateOfBirth     DateTime         @default(now()) @map("date_of_birth")
+    phoneNumber     String?          @map("phone_number")
+    notes           String?
+    image           String?
+    gender          Gender?
+    loanBalance     Float            @default(0) @map("loan_balance")
+    dateJoined      DateTime         @default(now()) @map("date_joined")
+    createdAt       DateTime         @default(now()) @map("created_at")
+    updatedAt       DateTime         @default(now()) @updatedAt
+    attendances     Attendance[]
+    payments        Payment[]
+    purchases       PurchasedItem[]
+    subscriptions   Subscription[]
+    Transaction     Transaction[]
+    kidTransactions KidTransaction[]
 }
 
 model Attendance {
-    id          Int             @id @default(autoincrement())
-    kidId       Int             @map("kid_id")
-    note        String?
-    extraCharge Float?          @map("extra_charge")
-    date        DateTime
-    kid         Kid             @relation(fields: [kidId], references: [id])
-    purchases   PurchasedItem[]
+    id              Int              @id @default(autoincrement())
+    kidId           Int              @map("kid_id")
+    note            String?
+    extraCharge     Float?           @map("extra_charge")
+    date            DateTime
+    kid             Kid              @relation(fields: [kidId], references: [id])
+    purchases       PurchasedItem[]
+    kidTransactions KidTransaction[]
 
     @@unique([kidId, date])
 }
 
 model PurchasedItem {
-    id           Int         @id @default(autoincrement())
-    kidId        Int         @map("kid_id")
-    attendanceId Int?        @map("attendance_id")
-    purchaseDate DateTime    @map("purchase_date")
-    note         String?
-    totalPrice   Float       @map("total_price")
-    paidAmount   Float       @map("paid_amount")
-    attendance   Attendance? @relation(fields: [attendanceId], references: [id])
-    kid          Kid         @relation(fields: [kidId], references: [id])
+    id              Int              @id @default(autoincrement())
+    kidId           Int              @map("kid_id")
+    attendanceId    Int?             @map("attendance_id")
+    purchaseDate    DateTime         @map("purchase_date")
+    note            String?
+    totalPrice      Float            @map("total_price")
+    paidAmount      Float            @map("paid_amount")
+    attendance      Attendance?      @relation(fields: [attendanceId], references: [id])
+    kid             Kid              @relation(fields: [kidId], references: [id])
+    kidTransactions KidTransaction[]
 }
 
 model SubscriptionPlan {
@@ -104,15 +108,17 @@ model Subscription {
     updatedAt          DateTime           @updatedAt
     kid                Kid                @relation(fields: [kidId], references: [id])
     plan               SubscriptionPlan   @relation(fields: [planId], references: [id])
+    kidTransactions    KidTransaction[]
 }
 
 model Payment {
-    id          Int      @id @default(autoincrement())
-    kidId       Int      @map("kid_id")
-    amount      Float
-    paymentDate DateTime @map("payment_date")
-    note        String?
-    kid         Kid      @relation(fields: [kidId], references: [id])
+    id              Int              @id @default(autoincrement())
+    kidId           Int              @map("kid_id")
+    amount          Float
+    paymentDate     DateTime         @map("payment_date")
+    note            String?
+    kid             Kid              @relation(fields: [kidId], references: [id])
+    kidTransactions KidTransaction[]
 }
 
 model Transaction {
@@ -192,6 +198,61 @@ model UserPermission {
     user               User              @relation(fields: [userId], references: [id])
 }
 
+model KidTransaction {
+    id            Int                     @id @default(autoincrement())
+    kidId         Int                     @map("kid_id")
+    userId        Int                     @map("user_id")
+    actionType    KidTransactionAction    @map("action_type")
+    operationType KidTransactionOperation @map("operation_type")
+
+    // Loan balance tracking
+    loanBalanceBefore Float @map("loan_balance_before")
+    loanBalanceAfter  Float @map("loan_balance_after")
+
+    // Transaction amount details
+    transactionAmount Float  @map("transaction_amount")
+    discountAmount    Float? @map("discount_amount")
+    totalAmount       Float  @map("total_amount")
+
+    // Related entity references (optional, for tracking what was modified)
+    relatedKidId          Int? @map("related_kid_id")
+    relatedPaymentId      Int? @map("related_payment_id")
+    relatedSubscriptionId Int? @map("related_subscription_id")
+    relatedAttendanceId   Int? @map("related_attendance_id")
+    relatedPurchaseId     Int? @map("related_purchase_id")
+
+    // Additional metadata
+    description String?
+    metadata    Json? // For storing additional data like old/new values for updates
+
+    // Timestamps
+    transactionDate DateTime @default(now()) @map("transaction_date")
+    createdAt       DateTime @default(now()) @map("created_at")
+    updatedAt       DateTime @updatedAt
+
+    // Relations
+    kid  Kid  @relation(fields: [kidId], references: [id])
+    user User @relation(fields: [userId], references: [id])
+
+    // Optional relations to track what was modified
+    relatedPayment      Payment?       @relation(fields: [relatedPaymentId], references: [id])
+    relatedSubscription Subscription?  @relation(fields: [relatedSubscriptionId], references: [id])
+    relatedAttendance   Attendance?    @relation(fields: [relatedAttendanceId], references: [id])
+    relatedPurchase     PurchasedItem? @relation(fields: [relatedPurchaseId], references: [id])
+
+    // Indexes for better query performance
+    @@index([kidId])
+    @@index([userId])
+    @@index([actionType])
+    @@index([operationType])
+    @@index([transactionDate])
+    @@index([relatedKidId])
+    @@index([relatedPaymentId])
+    @@index([relatedSubscriptionId])
+    @@index([relatedAttendanceId])
+    @@index([relatedPurchaseId])
+}
+
 enum Gender {
     MALE
     FEMALE
@@ -206,4 +267,28 @@ enum SubscriptionStatus {
     ACTIVE
     CANCELLED
     COMPLETED
+}
+
+enum KidTransactionAction {
+    KID_CREATE
+    KID_UPDATE
+    KID_DELETE
+    PAYMENT_CREATE
+    PAYMENT_UPDATE
+    PAYMENT_DELETE
+    SUBSCRIPTION_CREATE
+    SUBSCRIPTION_UPDATE
+    SUBSCRIPTION_DELETE
+    ATTENDANCE_CREATE
+    ATTENDANCE_UPDATE
+    ATTENDANCE_DELETE
+    PURCHASE_CREATE
+    PURCHASE_UPDATE
+    PURCHASE_DELETE
+}
+
+enum KidTransactionOperation {
+    CREATE
+    UPDATE
+    DELETE
 }

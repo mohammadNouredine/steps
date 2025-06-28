@@ -3,9 +3,11 @@ import prisma from "@/lib/db";
 import { EditSubscriptionSchemaType } from "../_dto/mutate-subscription.dto";
 import { SubscriptionStatus, BillingMode } from "@prisma/client";
 import getDayRange from "@/backend/helpers/getDayRange";
+import { KidTransactionService } from "@/backend/helpers/transactionService";
+import { getLoggedInUserId } from "@/backend/helpers/getLoggedInUserId";
 
 export async function editSubscription(
-  _: NextRequest,
+  req: NextRequest,
   dto: EditSubscriptionSchemaType
 ) {
   const {
@@ -17,6 +19,19 @@ export async function editSubscription(
     status: newStatus,
     endDate,
   } = dto;
+
+  // Store original subscription data for transaction logging
+  const originalSubscription = await prisma.subscription.findUnique({
+    where: { id },
+    include: { plan: true, kid: true },
+  });
+
+  if (!originalSubscription) {
+    return NextResponse.json(
+      { error: "Subscription not found" },
+      { status: 404 }
+    );
+  }
 
   const updated = await prisma.$transaction(async (tx) => {
     const sub = await tx.subscription.findUnique({
@@ -75,7 +90,7 @@ export async function editSubscription(
             )
           : null;
 
-      // Overwrite as “new” subscription with new plan
+      // Overwrite as "new" subscription with new plan
       const up = await tx.subscription.update({
         where: { id },
         data: {
@@ -173,9 +188,55 @@ export async function editSubscription(
 
     return tx.subscription.findUnique({
       where: { id },
-      include: { plan: true },
+      include: { plan: true, kid: true },
     });
   });
+
+  // Log the transaction after successful subscription update
+  try {
+    const userId = getLoggedInUserId({ req });
+    if (userId && updated) {
+      const oldPrice = originalSubscription.price;
+      const newPrice = updated.price;
+      const oldDiscount = originalSubscription.discountPercentage;
+      const newDiscount = updated.discountPercentage || 0;
+
+      // Get the updated subscription with plan data for logging
+      const updatedWithPlan = await prisma.subscription.findUnique({
+        where: { id: updated.id },
+        include: { plan: true },
+      });
+
+      await KidTransactionService.logSubscriptionUpdate(
+        originalSubscription.kidId,
+        userId,
+        updated.id,
+        oldPrice,
+        newPrice,
+        oldDiscount || 0,
+        newDiscount,
+        {
+          oldPlanName: originalSubscription.plan.name,
+          newPlanName: updatedWithPlan?.plan?.name || "Unknown Plan",
+          oldStatus: originalSubscription.status,
+          newStatus: updated.status,
+          oldAmountPaid: originalSubscription.amountPaid,
+          newAmountPaid: updated.amountPaid,
+          oldStartDate: originalSubscription.startDate,
+          newStartDate: updated.startDate,
+          oldEndDate: originalSubscription.endDate,
+          newEndDate: updated.endDate,
+          kidName: `${originalSubscription.kid.firstName} ${originalSubscription.kid.lastName}`,
+        }
+      );
+    }
+  } catch (transactionError) {
+    console.error(
+      "Failed to log subscription update transaction:",
+      transactionError
+    );
+    // Don't fail the main operation if transaction logging fails
+  }
 
   return NextResponse.json({ data: updated });
 }

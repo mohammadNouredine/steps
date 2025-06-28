@@ -3,9 +3,11 @@ import prisma from "@/lib/db";
 import { AddSubscriptionSchemaType } from "../_dto/mutate-subscription.dto";
 import { SubscriptionStatus } from "@prisma/client";
 import getDayRange from "@/backend/helpers/getDayRange";
+import { KidTransactionService } from "@/backend/helpers/transactionService";
+import { getLoggedInUserId } from "@/backend/helpers/getLoggedInUserId";
 
 export async function addSubscription(
-  _: NextRequest,
+  req: NextRequest,
   dto: AddSubscriptionSchemaType
 ) {
   const {
@@ -67,8 +69,9 @@ export async function addSubscription(
   });
 
   // 4️⃣ create payment instead of adding paid for subscription
+  let payment = null;
   if (amountPaid > 0) {
-    await prisma.payment.create({
+    payment = await prisma.payment.create({
       data: {
         amount: amountPaid,
         paymentDate: new Date(),
@@ -90,6 +93,37 @@ export async function addSubscription(
     });
   }
   // else USAGE: we'll bill on attendance
+
+  // Log the transaction after successful subscription creation
+  try {
+    const userId = getLoggedInUserId({ req });
+    if (userId) {
+      await KidTransactionService.logSubscriptionCreation(
+        kidId,
+        userId,
+        subscription.id,
+        plan.price,
+        discountPercentage,
+        {
+          planName: plan.name,
+          planDuration: plan.duration,
+          startDate: startOfStartDate,
+          endDate: endOfEndDate,
+          amountPaid,
+          billingMode: plan.billingMode,
+          discountedPrice: discountedPlanPrice,
+          kidName: `${kid.firstName} ${kid.lastName}`,
+          paymentId: payment?.id,
+        }
+      );
+    }
+  } catch (transactionError) {
+    console.error(
+      "Failed to log subscription creation transaction:",
+      transactionError
+    );
+    // Don't fail the main operation if transaction logging fails
+  }
 
   return NextResponse.json({
     data: subscription,

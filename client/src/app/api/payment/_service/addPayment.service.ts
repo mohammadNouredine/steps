@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { AddPaymentSchemaType } from "../_dto/mutate-payment.dto";
 import { CustomErrorResponse } from "@/backend/helpers/customErrorResponse";
+import { KidTransactionService } from "@/backend/helpers/transactionService";
+import { getLoggedInUserId } from "@/backend/helpers/getLoggedInUserId";
 
-export async function addPayment(_: NextRequest, dto: AddPaymentSchemaType) {
+export async function addPayment(req: NextRequest, dto: AddPaymentSchemaType) {
   const { kidId, amount, paymentDate, note } = dto;
 
   // Create the payment
@@ -27,6 +29,27 @@ export async function addPayment(_: NextRequest, dto: AddPaymentSchemaType) {
       },
     },
   });
+
+  // Log the transaction after successful payment creation
+  try {
+    const userId = getLoggedInUserId({ req });
+    if (userId) {
+      await KidTransactionService.logPaymentCreation(
+        kidId,
+        userId,
+        payment.id,
+        amount,
+        {
+          paymentDate,
+          note,
+          kidName: `${kid.firstName} ${kid.lastName}`,
+        }
+      );
+    }
+  } catch (transactionError) {
+    console.error("Failed to log payment transaction:", transactionError);
+    // Don't fail the main operation if transaction logging fails
+  }
 
   return NextResponse.json({ data: payment, kid });
 }

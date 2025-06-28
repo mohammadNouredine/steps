@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { AddPurchaseDto } from "../_dto/mutatePurchase.dto";
+import { KidTransactionService } from "@/backend/helpers/transactionService";
+import { getLoggedInUserId } from "@/backend/helpers/getLoggedInUserId";
 
-export async function addPurchase(_: NextRequest, data: AddPurchaseDto) {
+export async function addPurchase(req: NextRequest, data: AddPurchaseDto) {
   const { kidId, attendanceId, purchaseDate, note, totalPrice, paidAmount } =
     data;
 
@@ -35,11 +37,38 @@ export async function addPurchase(_: NextRequest, data: AddPurchaseDto) {
       });
     }
 
-    return item;
+    return { item, kid };
   });
 
+  // Log the transaction after successful purchase creation
+  try {
+    const userId = getLoggedInUserId({ req });
+    if (userId) {
+      await KidTransactionService.logPurchaseCreation(
+        kidId,
+        userId,
+        created.item.id,
+        totalPrice,
+        paidAmount,
+        {
+          purchaseDate,
+          note,
+          unpaidAmount,
+          attendanceId,
+          kidName: `${created.kid.firstName} ${created.kid.lastName}`,
+        }
+      );
+    }
+  } catch (transactionError) {
+    console.error(
+      "Failed to log purchase creation transaction:",
+      transactionError
+    );
+    // Don't fail the main operation if transaction logging fails
+  }
+
   return NextResponse.json(
-    { message: "Purchase added successfully", purchase: created },
+    { message: "Purchase added successfully", purchase: created.item },
     { status: 200 }
   );
 }

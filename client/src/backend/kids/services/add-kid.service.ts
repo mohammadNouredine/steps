@@ -8,6 +8,8 @@ import { AddKidValidationSchema } from "@/common/validations/kids";
 import prisma from "@/lib/db";
 import { Gender } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { KidTransactionService } from "@/backend/helpers/transactionService";
+import { getLoggedInUserId } from "@/backend/helpers/getLoggedInUserId";
 
 // 1) Define a Yup schema matching your prisma.kid fields
 
@@ -59,6 +61,7 @@ export async function addKid({ req }: { req: Request }) {
         },
       };
   const url = res.success ? res.result?.secure_url : "";
+
   try {
     const kid = await prisma.kid.create({
       data: {
@@ -71,6 +74,26 @@ export async function addKid({ req }: { req: Request }) {
         dateJoined: data.dateJoined ?? undefined,
       },
     });
+
+    // Log the transaction after successful kid creation
+    try {
+      const userId = getLoggedInUserId({ req });
+      if (userId) {
+        await KidTransactionService.logKidCreation(kid.id, userId, {
+          kidData: {
+            firstName: kid.firstName,
+            lastName: kid.lastName,
+            loanBalance: kid.loanBalance,
+            gender: kid.gender,
+            dateJoined: kid.dateJoined,
+          },
+        });
+      }
+    } catch (transactionError) {
+      console.error("Failed to log transaction:", transactionError);
+      // Don't fail the main operation if transaction logging fails
+    }
+
     return NextResponse.json({
       message: "Kid added successfully",
       data: kid,
