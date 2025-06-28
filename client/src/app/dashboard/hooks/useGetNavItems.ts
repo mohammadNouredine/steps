@@ -6,6 +6,7 @@ import {
   FaStore,
   FaUser,
   FaCalculator,
+  FaClockRotateLeft,
 } from "react-icons/fa6";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { GrFingerPrint } from "react-icons/gr";
@@ -27,6 +28,7 @@ export const useGetNavItems = () => {
     canSeePurchases,
     canSeeNotes,
     canSeeAccounting,
+    canSeeKidTransactions,
   } = usePermissions();
 
   const DASHBOARD_NAV_ITEMS: DashboardLink[] = [
@@ -85,6 +87,13 @@ export const useGetNavItems = () => {
       icon: FaCalculator,
       toolTip: "معاملات تصحيح الدّين",
       isVisible: canSeeAccounting(),
+    },
+    {
+      name: "Kid Transactions",
+      href: "/dashboard/kid-transactions",
+      icon: FaClockRotateLeft,
+      toolTip: "سجل جميع معاملات الأطفال (إضافة، تعديل، حذف)",
+      isVisible: canSeeKidTransactions(),
     },
     {
       name: "Payments",

@@ -29,7 +29,7 @@ export async function DELETE(
       withPermission({
         module: PermissionModuleEnum.KIDS,
         action: PermissionActionEnum.DELETE,
-      })(async () => deleteKid({ id: parseInt(id) }))
+      })(async () => deleteKid({ req, id: parseInt(id) }))
     )
   )(req);
 }

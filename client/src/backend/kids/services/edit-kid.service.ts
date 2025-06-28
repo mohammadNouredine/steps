@@ -15,6 +15,8 @@ import {
   deleteFromCloudinary,
 } from "@/backend/lib/upload-utils";
 import { Gender } from "@prisma/client";
+import { KidTransactionService } from "@/backend/helpers/transactionService";
+import { getLoggedInUserId } from "@/backend/helpers/getLoggedInUserId";
 
 export async function editKid({ req, id }: { req: Request; id: number }) {
   const formData = await req.formData();
@@ -99,6 +101,39 @@ export async function editKid({ req, id }: { req: Request; id: number }) {
         image: imageUrl,
       },
     });
+
+    // Log the transaction after successful kid update
+    try {
+      const userId = getLoggedInUserId({ req });
+      if (userId) {
+        await KidTransactionService.logKidUpdate(
+          id,
+          userId,
+          {
+            firstName: kid.firstName,
+            lastName: kid.lastName,
+            loanBalance: kid.loanBalance,
+            gender: kid.gender,
+            dateJoined: kid.dateJoined,
+            notes: kid.notes,
+            image: kid.image,
+          },
+          {
+            firstName: updated.firstName,
+            lastName: updated.lastName,
+            loanBalance: updated.loanBalance,
+            gender: updated.gender,
+            dateJoined: updated.dateJoined,
+            notes: updated.notes,
+            image: updated.image,
+          }
+        );
+      }
+    } catch (transactionError) {
+      console.error("Failed to log kid update transaction:", transactionError);
+      // Don't fail the main operation if transaction logging fails
+    }
+
     return NextResponse.json({
       message: "Kid updated successfully",
       data: updated,

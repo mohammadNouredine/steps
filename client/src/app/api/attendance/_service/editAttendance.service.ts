@@ -3,9 +3,11 @@ import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { EditAttendanceDto } from "../_dto/mutate-attendee.dto.js";
 import { SubscriptionStatus, BillingMode } from "@prisma/client";
+import { KidTransactionService } from "@/backend/helpers/transactionService";
+import { getLoggedInUserId } from "@/backend/helpers/getLoggedInUserId";
 
 export async function editAttendance(
-  _: NextRequest,
+  req: NextRequest,
   data: EditAttendanceDto
 ): Promise<NextResponse> {
   const { date, kidId, extraCharge, note } = data;
@@ -57,6 +59,35 @@ export async function editAttendance(
         data: { loanBalance: { increment: deltaCharge } },
       });
     }
+  }
+
+  // Log the transaction after successful attendance update
+  try {
+    const userId = getLoggedInUserId({ req });
+    if (userId) {
+      await KidTransactionService.logAttendanceUpdate(
+        kidIdNum,
+        userId,
+        updated.id,
+        oldCharge,
+        newCharge,
+        {
+          date,
+          oldNote: existing.note,
+          newNote: note,
+          oldExtraCharge: oldCharge,
+          newExtraCharge: newCharge,
+          chargeDifference: deltaCharge,
+          kidName: `${kid.firstName} ${kid.lastName}`,
+        }
+      );
+    }
+  } catch (transactionError) {
+    console.error(
+      "Failed to log attendance update transaction:",
+      transactionError
+    );
+    // Don't fail the main operation if transaction logging fails
   }
 
   return NextResponse.json(

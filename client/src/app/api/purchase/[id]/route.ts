@@ -19,7 +19,7 @@ export async function DELETE(
       { status: 400 }
     );
   }
-  return withErrorHandling(async () => deletePurchase(parseInt(id)))(req);
+  return withErrorHandling(async () => deletePurchase(req, parseInt(id)))(req);
 }
 
 //edit plan

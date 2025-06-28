@@ -96,6 +96,10 @@ export function usePermissions() {
     );
   };
 
+  const canSeeKidTransactions = (): boolean => {
+    return hasRole("super_admin");
+  };
+
   // Feature visibility helpers
   const canSeeLoanBalance = (): boolean => {
     return (
@@ -140,6 +144,7 @@ export function usePermissions() {
     canSeePurchases,
     canSeeNotes,
     canCorrectLoan,
+    canSeeKidTransactions,
     // Feature helpers
     canSeeLoanBalance,
     canSeeTotalLoans,

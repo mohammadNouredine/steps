@@ -68,9 +68,15 @@ export class KidTransactionService {
         case "PAYMENT_UPDATE":
           loanBalanceAfter = loanBalanceBefore - totalAmount; // Payment reduces loan
           break;
+        case "PAYMENT_DELETE":
+          loanBalanceAfter = loanBalanceBefore + totalAmount; // Payment deletion increases loan (reverts the payment)
+          break;
         case "SUBSCRIPTION_CREATE":
         case "SUBSCRIPTION_UPDATE":
           loanBalanceAfter = loanBalanceBefore - totalAmount; // Subscription payment reduces loan
+          break;
+        case "SUBSCRIPTION_DELETE":
+          loanBalanceAfter = loanBalanceBefore + totalAmount; // Subscription deletion increases loan (reverts the subscription)
           break;
         case "PURCHASE_CREATE":
         case "PURCHASE_UPDATE":
@@ -78,9 +84,16 @@ export class KidTransactionService {
             totalAmount - (params.metadata?.paidAmount || 0);
           loanBalanceAfter = loanBalanceBefore + purchaseAmount; // Unpaid amount increases loan
           break;
+        case "PURCHASE_DELETE":
+          const unpaidAmount = totalAmount - (params.metadata?.paidAmount || 0);
+          loanBalanceAfter = loanBalanceBefore - unpaidAmount; // Purchase deletion decreases loan (reverts the purchase)
+          break;
         case "ATTENDANCE_CREATE":
         case "ATTENDANCE_UPDATE":
           loanBalanceAfter = loanBalanceBefore + totalAmount; // Extra charges increase loan
+          break;
+        case "ATTENDANCE_DELETE":
+          loanBalanceAfter = loanBalanceBefore - totalAmount; // Attendance deletion decreases loan (reverts the attendance charge)
           break;
         case "KID_CREATE":
         case "KID_UPDATE":
@@ -91,6 +104,9 @@ export class KidTransactionService {
         default:
           loanBalanceAfter = loanBalanceBefore;
       }
+
+      // For deletion operations, don't set the related entity ID since the entity will be deleted
+      const isDeletionOperation = params.operationType === "DELETE";
 
       const transactionData: TransactionData = {
         kidId: params.kidId,
@@ -104,11 +120,19 @@ export class KidTransactionService {
         totalAmount,
         description: params.description,
         metadata: params.metadata,
-        relatedKidId: params.relatedKidId,
-        relatedPaymentId: params.relatedPaymentId,
-        relatedSubscriptionId: params.relatedSubscriptionId,
-        relatedAttendanceId: params.relatedAttendanceId,
-        relatedPurchaseId: params.relatedPurchaseId,
+        relatedKidId: isDeletionOperation ? undefined : params.relatedKidId,
+        relatedPaymentId: isDeletionOperation
+          ? undefined
+          : params.relatedPaymentId,
+        relatedSubscriptionId: isDeletionOperation
+          ? undefined
+          : params.relatedSubscriptionId,
+        relatedAttendanceId: isDeletionOperation
+          ? undefined
+          : params.relatedAttendanceId,
+        relatedPurchaseId: isDeletionOperation
+          ? undefined
+          : params.relatedPurchaseId,
       };
 
       const transaction = await prisma.kidTransaction.create({

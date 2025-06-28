@@ -14,7 +14,16 @@ export async function DELETE(
       { status: 400 }
     );
   }
-  return withErrorHandling(withAuth(async () => deletePayment(parseInt(id))))(
+
+  const numericId = parseInt(id);
+  if (isNaN(numericId)) {
+    return NextResponse.json(
+      { message: "Invalid payment ID format" },
+      { status: 400 }
+    );
+  }
+
+  return withErrorHandling(withAuth(async () => deletePayment(req, numericId)))(
     req
   );
 }
