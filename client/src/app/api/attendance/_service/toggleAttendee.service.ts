@@ -4,9 +4,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { ToggleAttendeeDto } from "../_dto/mutate-attendee.dto";
 import { SubscriptionStatus, BillingMode } from "@prisma/client";
 import { getDayRangeFromDate } from "@/backend/helpers/getDayRange";
+import { KidTransactionService } from "@/backend/helpers/transactionService";
+import { getLoggedInUserId } from "@/backend/helpers/getLoggedInUserId";
 
 export async function toggleAttendee(
-  _: NextRequest,
+  req: NextRequest,
   data: ToggleAttendeeDto
 ): Promise<NextResponse> {
   const { date, kidId } = data;
@@ -43,8 +45,14 @@ export async function toggleAttendee(
       },
       include: { plan: true },
     });
+
+    // Get loan balance BEFORE making changes
+    const loanBalanceBefore = kid.loanBalance;
+
+    let totalCharge = existing.extraCharge ?? 0;
     if (sub && sub.plan.billingMode === BillingMode.USAGE) {
       const refund = sub.plan.price + (existing.extraCharge ?? 0);
+      totalCharge = refund;
       await prisma.kid.update({
         where: { id: kidId },
         data: { loanBalance: { decrement: refund } },
@@ -54,6 +62,47 @@ export async function toggleAttendee(
     const deleted = await prisma.attendance.delete({
       where: { id: existing.id },
     });
+
+    // Calculate loan balance after changes
+    const loanBalanceAfter = loanBalanceBefore - totalCharge;
+
+    // Log the transaction after successful attendance deletion
+    try {
+      const userId = getLoggedInUserId({ req });
+      if (userId) {
+        await KidTransactionService.createTransaction({
+          kidId,
+          userId,
+          actionType: "ATTENDANCE_DELETE",
+          operationType: "DELETE",
+          transactionAmount: totalCharge,
+          loanBalanceBefore,
+          loanBalanceAfter,
+          description: "Attendance deleted",
+          metadata: {
+            date,
+            note: existing.note,
+            extraCharge: existing.extraCharge || 0,
+            usageCharge:
+              sub && sub.plan.billingMode === BillingMode.USAGE
+                ? sub.plan.price
+                : 0,
+            subscriptionId: sub?.id,
+            planName: sub?.plan.name,
+            billingMode: sub?.plan.billingMode,
+            kidName: `${kid.firstName} ${kid.lastName}`,
+          },
+          relatedAttendanceId: existing.id,
+        });
+      }
+    } catch (transactionError) {
+      console.error(
+        "Failed to log attendance deletion transaction:",
+        transactionError
+      );
+      // Don't fail the main operation if transaction logging fails
+    }
+
     return NextResponse.json(
       { data: deleted, message: "Attendance deleted successfully" },
       { status: 200 }
@@ -74,11 +123,56 @@ export async function toggleAttendee(
       },
       include: { plan: true },
     });
+
+    // Get loan balance BEFORE making changes
+    const loanBalanceBefore = kid.loanBalance;
+
+    let totalCharge = 0;
     if (sub && sub.plan.billingMode === BillingMode.USAGE) {
+      totalCharge = sub.plan.price;
       await prisma.kid.update({
         where: { id: kidId },
         data: { loanBalance: { increment: sub.plan.price } },
       });
+    }
+
+    // Calculate loan balance after changes
+    const loanBalanceAfter = loanBalanceBefore + totalCharge;
+
+    // Log the transaction after successful attendance creation
+    try {
+      const userId = getLoggedInUserId({ req });
+      if (userId) {
+        await KidTransactionService.createTransaction({
+          kidId,
+          userId,
+          actionType: "ATTENDANCE_CREATE",
+          operationType: "CREATE",
+          transactionAmount: totalCharge,
+          loanBalanceBefore,
+          loanBalanceAfter,
+          description:
+            totalCharge > 0
+              ? `Attendance with extra charge of ${totalCharge}`
+              : "Attendance recorded",
+          metadata: {
+            date,
+            extraCharge: 0,
+            usageCharge: totalCharge,
+            subscriptionId: sub?.id,
+            planName: sub?.plan.name,
+            billingMode: sub?.plan.billingMode,
+            kidName: `${kid.firstName} ${kid.lastName}`,
+          },
+          relatedAttendanceId: created.id,
+        });
+      }
+    } catch (transactionError) {
+      console.error(
+        "Failed to log attendance creation transaction:",
+        transactionError
+      );
+      // Don't fail the main operation if transaction logging fails
     }
 
     return NextResponse.json(

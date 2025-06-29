@@ -1,12 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { BillingMode } from "@prisma/client";
+import { KidTransactionService } from "@/backend/helpers/transactionService";
+import { getLoggedInUserId } from "@/backend/helpers/getLoggedInUserId";
 
-export async function deleteSubscription({ id }: { id: number }) {
+export async function deleteSubscription(
+  req: NextRequest,
+  { id }: { id: number }
+) {
   // 1️⃣ fetch subscription and plan
   const sub = await prisma.subscription.findUnique({
     where: { id },
-    include: { plan: true },
+    include: { plan: true, kid: true },
   });
   if (!sub) {
     return NextResponse.json(
@@ -15,8 +20,12 @@ export async function deleteSubscription({ id }: { id: number }) {
     );
   }
 
+  // Get loan balance BEFORE making changes
+  const loanBalanceBefore = sub.kid.loanBalance;
+
   // 2️⃣ compute refund/loan adjustment depending on billing mode
   let loanAdjust = 0;
+  let refundAmount = 0;
 
   if (sub.plan.billingMode === BillingMode.PREPAID) {
     // refund unused portion
@@ -31,12 +40,15 @@ export async function deleteSubscription({ id }: { id: number }) {
       },
     });
     const usedAmount = (sub.plan.price / sub.plan.duration) * attendCount;
-    const refund = sub.plan.price - usedAmount;
-    loanAdjust -= refund;
+    refundAmount = sub.plan.price - usedAmount;
+    loanAdjust -= refundAmount;
   } else if (sub.plan.billingMode === BillingMode.USAGE) {
     // For USAGE, refund all remaining loan related to this subscription
-    loanAdjust -= sub.price - sub.amountPaid;
+    refundAmount = sub.price - sub.amountPaid;
+    loanAdjust -= refundAmount;
   }
+
+  const loanBalanceAfter = loanBalanceBefore + loanAdjust;
 
   // 3️⃣ transaction: update loan and delete subscription
   const [data, deleted] = await Promise.all([
@@ -46,6 +58,59 @@ export async function deleteSubscription({ id }: { id: number }) {
     }),
     prisma.subscription.delete({ where: { id } }),
   ]);
+
+  // Log the transaction after successful subscription deletion
+  try {
+    const userId = getLoggedInUserId({ req });
+    if (userId) {
+      const discountAmount = sub.discountPercentage
+        ? (sub.price * sub.discountPercentage) / 100
+        : 0;
+
+      await KidTransactionService.createTransaction({
+        kidId: sub.kidId,
+        userId,
+        actionType: "SUBSCRIPTION_DELETE",
+        operationType: "DELETE",
+        transactionAmount: sub.price,
+        discountAmount,
+        loanBalanceBefore,
+        loanBalanceAfter,
+        description: "Subscription deleted",
+        metadata: {
+          planName: sub.plan.name,
+          planDuration: sub.plan.duration,
+          billingMode: sub.plan.billingMode,
+          startDate: sub.startDate,
+          endDate: sub.endDate,
+          amountPaid: sub.amountPaid,
+          discountPercentage: sub.discountPercentage,
+          refundAmount,
+          attendancesCount:
+            sub.plan.billingMode === BillingMode.PREPAID
+              ? await prisma.attendance.count({
+                  where: {
+                    kidId: sub.kidId,
+                    date: {
+                      gte: sub.startDate,
+                      lte: new Date(),
+                    },
+                  },
+                })
+              : 0,
+          kidName: `${sub.kid.firstName} ${sub.kid.lastName}`,
+        },
+        relatedSubscriptionId: id, // Use the original subscription ID for reference
+      });
+    }
+  } catch (transactionError) {
+    console.error(
+      "Failed to log subscription deletion transaction:",
+      transactionError
+    );
+    // Don't fail the main operation if transaction logging fails
+  }
+
   console.log("DATA:", data);
   return NextResponse.json(
     {

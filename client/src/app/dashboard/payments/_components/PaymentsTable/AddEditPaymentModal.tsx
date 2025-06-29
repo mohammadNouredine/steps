@@ -48,7 +48,7 @@ export default function AddEditPaymentModal({
   const kidsOptions = kids_data?.data.map((kid) => {
     return {
       value: kid.id,
-      label: kid.firstName,
+      label: kid.firstName + " " + kid.lastName,
       loanBalance: kid.loanBalance,
     };
   });

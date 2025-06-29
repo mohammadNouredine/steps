@@ -29,6 +29,8 @@ export const DASHBOARD_ENDPOINTS = {
   GET_ALL_TRANSACTIONS: "/transaction", //GET
   CREATE_TRANSACTION: "/transaction", //POST
   DELETE_TRANSACTION: `/transaction/`, //DELETE
+  //---------------------------KID TRANSACTIONS
+  GET_ALL_KID_TRANSACTIONS: "/kid-transactions", //GET
   //---------------------------NOTES
   GET_ALL_NOTES: "/note", //GET
   CREATE_NOTE: "/note", //POST

@@ -3,9 +3,11 @@ import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { EditAttendanceDto } from "../_dto/mutate-attendee.dto.js";
 import { SubscriptionStatus, BillingMode } from "@prisma/client";
+import { KidTransactionService } from "@/backend/helpers/transactionService";
+import { getLoggedInUserId } from "@/backend/helpers/getLoggedInUserId";
 
 export async function editAttendance(
-  _: NextRequest,
+  req: NextRequest,
   data: EditAttendanceDto
 ): Promise<NextResponse> {
   const { date, kidId, extraCharge, note } = data;
@@ -16,6 +18,9 @@ export async function editAttendance(
   if (!kid) {
     return NextResponse.json({ message: "Kid not found" }, { status: 404 });
   }
+
+  // Get kid's current loan balance BEFORE making changes
+  const loanBalanceBefore = kid.loanBalance;
 
   // 2️⃣ fetch existing attendance
   const existing = await prisma.attendance.findFirst({
@@ -57,6 +62,41 @@ export async function editAttendance(
         data: { loanBalance: { increment: deltaCharge } },
       });
     }
+  }
+
+  const loanBalanceAfter = loanBalanceBefore + deltaCharge;
+
+  // Log the transaction after successful attendance update
+  try {
+    const userId = getLoggedInUserId({ req });
+    if (userId) {
+      await KidTransactionService.createTransaction({
+        kidId: kidIdNum,
+        userId,
+        actionType: "ATTENDANCE_UPDATE",
+        operationType: "UPDATE",
+        transactionAmount: Math.abs(deltaCharge),
+        loanBalanceBefore,
+        loanBalanceAfter,
+        description: `Attendance extra charge updated from ${oldCharge} to ${newCharge}`,
+        metadata: {
+          date,
+          oldNote: existing.note,
+          newNote: note,
+          oldExtraCharge: oldCharge,
+          newExtraCharge: newCharge,
+          chargeDifference: deltaCharge,
+          kidName: `${kid.firstName} ${kid.lastName}`,
+        },
+        relatedAttendanceId: updated.id,
+      });
+    }
+  } catch (transactionError) {
+    console.error(
+      "Failed to log attendance update transaction:",
+      transactionError
+    );
+    // Don't fail the main operation if transaction logging fails
   }
 
   return NextResponse.json(
