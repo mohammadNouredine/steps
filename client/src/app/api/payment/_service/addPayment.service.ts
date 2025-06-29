@@ -8,6 +8,19 @@ import { getLoggedInUserId } from "@/backend/helpers/getLoggedInUserId";
 export async function addPayment(req: NextRequest, dto: AddPaymentSchemaType) {
   const { kidId, amount, paymentDate, note } = dto;
 
+  // Get kid's current loan balance BEFORE making changes
+  const kidBefore = await prisma.kid.findUnique({
+    where: { id: kidId },
+    select: { loanBalance: true, firstName: true, lastName: true },
+  });
+
+  if (!kidBefore) {
+    return CustomErrorResponse("Kid not found", 404);
+  }
+
+  const loanBalanceBefore = kidBefore.loanBalance;
+  const loanBalanceAfter = loanBalanceBefore - amount;
+
   // Create the payment
   const payment = await prisma.payment.create({
     data: {
@@ -34,17 +47,22 @@ export async function addPayment(req: NextRequest, dto: AddPaymentSchemaType) {
   try {
     const userId = getLoggedInUserId({ req });
     if (userId) {
-      await KidTransactionService.logPaymentCreation(
+      await KidTransactionService.createTransaction({
         kidId,
         userId,
-        payment.id,
-        amount,
-        {
+        actionType: "PAYMENT_CREATE",
+        operationType: "CREATE",
+        transactionAmount: amount,
+        loanBalanceBefore,
+        loanBalanceAfter,
+        description: `Payment of ${amount} received`,
+        metadata: {
           paymentDate,
           note,
           kidName: `${kid.firstName} ${kid.lastName}`,
-        }
-      );
+        },
+        relatedPaymentId: payment.id,
+      });
     }
   } catch (transactionError) {
     console.error("Failed to log payment transaction:", transactionError);

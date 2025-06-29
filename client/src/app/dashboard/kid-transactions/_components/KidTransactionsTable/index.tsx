@@ -166,11 +166,13 @@ function KidTransactionsTable() {
       ),
     },
     {
-      accessorKey: "loanBalanceAfter",
-      header: () => <span>Final Balance</span>,
+      accessorKey: "loanBalance",
+      header: () => <span>Balance Change</span>,
       cell: (info: any) => (
-        <div className="text-sm font-medium">
-          ${info.row.original.loanBalanceAfter.toFixed(2)}
+        <div className="text-sm font-medium flex items-center gap-2">
+          <span>${info.row.original.loanBalanceBefore.toFixed(2)}</span>
+          <span className="text-gray-400">→</span>
+          <span>${info.row.original.loanBalanceAfter.toFixed(2)}</span>
         </div>
       ),
     },

@@ -12,6 +12,7 @@ export async function deletePayment(req: NextRequest, id: number) {
         select: {
           firstName: true,
           lastName: true,
+          loanBalance: true,
         },
       },
     },
@@ -20,6 +21,10 @@ export async function deletePayment(req: NextRequest, id: number) {
   if (!payment) {
     return NextResponse.json({ error: "Payment not found" }, { status: 404 });
   }
+
+  // Get loan balance BEFORE making changes
+  const loanBalanceBefore = payment.kid.loanBalance;
+  const loanBalanceAfter = loanBalanceBefore + payment.amount;
 
   // Delete the payment
   await prisma.payment.delete({
@@ -42,17 +47,22 @@ export async function deletePayment(req: NextRequest, id: number) {
   try {
     const userId = getLoggedInUserId({ req });
     if (userId) {
-      await KidTransactionService.logPaymentDeletion(
-        payment.kidId,
+      await KidTransactionService.createTransaction({
+        kidId: payment.kidId,
         userId,
-        id, // Use the original payment ID for reference
-        payment.amount,
-        {
+        actionType: "PAYMENT_DELETE",
+        operationType: "DELETE",
+        transactionAmount: payment.amount,
+        loanBalanceBefore,
+        loanBalanceAfter,
+        description: `Payment of ${payment.amount} deleted`,
+        metadata: {
           paymentDate: payment.paymentDate,
           note: payment.note,
           kidName: `${payment.kid.firstName} ${payment.kid.lastName}`,
-        }
-      );
+        },
+        relatedPaymentId: id, // Use the original payment ID for reference
+      });
     }
   } catch (transactionError) {
     console.error(

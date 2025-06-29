@@ -16,6 +16,9 @@ export async function createAttendance(
     return NextResponse.json({ message: "Kid not found" }, { status: 404 });
   }
 
+  // Get kid's current loan balance BEFORE making changes
+  const loanBalanceBefore = kid.loanBalance;
+
   // 2️⃣ prevent duplicate attendance
   const existing = await prisma.attendance.findUnique({
     where: { kidId_date: { kidId: parseInt(kidId), date } },
@@ -58,18 +61,26 @@ export async function createAttendance(
     });
   }
 
+  const totalCharge = (extraCharge || 0) + usageCharge;
+  const loanBalanceAfter = loanBalanceBefore + totalCharge;
+
   // Log the transaction after successful attendance creation
   try {
     const userId = getLoggedInUserId({ req });
     if (userId) {
-      const totalCharge = (extraCharge || 0) + usageCharge;
-
-      await KidTransactionService.logAttendanceCreation(
-        parseInt(kidId),
+      await KidTransactionService.createTransaction({
+        kidId: parseInt(kidId),
         userId,
-        attendance.id,
-        totalCharge,
-        {
+        actionType: "ATTENDANCE_CREATE",
+        operationType: "CREATE",
+        transactionAmount: totalCharge,
+        loanBalanceBefore,
+        loanBalanceAfter,
+        description:
+          totalCharge > 0
+            ? `Attendance with extra charge of ${totalCharge}`
+            : "Attendance recorded",
+        metadata: {
           date,
           note,
           extraCharge: extraCharge || 0,
@@ -78,8 +89,9 @@ export async function createAttendance(
           planName: subscription?.plan.name,
           billingMode: subscription?.plan.billingMode,
           kidName: `${kid.firstName} ${kid.lastName}`,
-        }
-      );
+        },
+        relatedAttendanceId: attendance.id,
+      });
     }
   } catch (transactionError) {
     console.error(

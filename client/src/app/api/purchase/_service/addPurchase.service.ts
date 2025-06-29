@@ -11,6 +11,19 @@ export async function addPurchase(req: NextRequest, data: AddPurchaseDto) {
   // compute unpaid portion
   const unpaidAmount = totalPrice - paidAmount;
 
+  // Get kid's current loan balance BEFORE making changes
+  const kidBefore = await prisma.kid.findUnique({
+    where: { id: kidId },
+    select: { loanBalance: true, firstName: true, lastName: true },
+  });
+
+  if (!kidBefore) {
+    return NextResponse.json({ error: "Kid not found" }, { status: 404 });
+  }
+
+  const loanBalanceBefore = kidBefore.loanBalance;
+  const loanBalanceAfter = loanBalanceBefore + unpaidAmount;
+
   // wrap in a transaction
   const created = await prisma.$transaction(async (tx) => {
     // ensure kid exists
@@ -44,20 +57,26 @@ export async function addPurchase(req: NextRequest, data: AddPurchaseDto) {
   try {
     const userId = getLoggedInUserId({ req });
     if (userId) {
-      await KidTransactionService.logPurchaseCreation(
+      await KidTransactionService.createTransaction({
         kidId,
         userId,
-        created.item.id,
-        totalPrice,
-        paidAmount,
-        {
+        actionType: "PURCHASE_CREATE",
+        operationType: "CREATE",
+        transactionAmount: totalPrice,
+        loanBalanceBefore,
+        loanBalanceAfter,
+        description: `Purchase created - Total: ${totalPrice}, Paid: ${paidAmount}, Unpaid: ${unpaidAmount}`,
+        metadata: {
+          totalPrice,
+          paidAmount,
+          unpaidAmount,
           purchaseDate,
           note,
-          unpaidAmount,
           attendanceId,
           kidName: `${created.kid.firstName} ${created.kid.lastName}`,
-        }
-      );
+        },
+        relatedPurchaseId: created.item.id,
+      });
     }
   } catch (transactionError) {
     console.error(
@@ -67,8 +86,8 @@ export async function addPurchase(req: NextRequest, data: AddPurchaseDto) {
     // Don't fail the main operation if transaction logging fails
   }
 
-  return NextResponse.json(
-    { message: "Purchase added successfully", purchase: created.item },
-    { status: 200 }
-  );
+  return NextResponse.json({
+    message: "Purchase added successfully",
+    purchase: created.item,
+  });
 }

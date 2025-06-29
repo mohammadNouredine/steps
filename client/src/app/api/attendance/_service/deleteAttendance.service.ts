@@ -20,6 +20,7 @@ export async function deleteAttendance(
         select: {
           firstName: true,
           lastName: true,
+          loanBalance: true,
         },
       },
     },
@@ -30,6 +31,9 @@ export async function deleteAttendance(
       { status: 404 }
     );
   }
+
+  // Get loan balance BEFORE making changes
+  const loanBalanceBefore = attendance.kid.loanBalance;
 
   // 2️⃣ reverse billing for USAGE plans
   const attendanceDate = attendance.date;
@@ -53,6 +57,8 @@ export async function deleteAttendance(
     });
   }
 
+  const loanBalanceAfter = loanBalanceBefore - totalCharge;
+
   // 3️⃣ delete
   const deleted = await prisma.attendance.delete({
     where: { id: attendanceId },
@@ -62,12 +68,16 @@ export async function deleteAttendance(
   try {
     const userId = getLoggedInUserId({ req });
     if (userId) {
-      await KidTransactionService.logAttendanceDeletion(
-        attendance.kidId,
+      await KidTransactionService.createTransaction({
+        kidId: attendance.kidId,
         userId,
-        attendanceId,
-        totalCharge,
-        {
+        actionType: "ATTENDANCE_DELETE",
+        operationType: "DELETE",
+        transactionAmount: totalCharge,
+        loanBalanceBefore,
+        loanBalanceAfter,
+        description: "Attendance deleted",
+        metadata: {
           date: attendance.date,
           note: attendance.note,
           extraCharge: attendance.extraCharge || 0,
@@ -79,8 +89,9 @@ export async function deleteAttendance(
           planName: sub?.plan.name,
           billingMode: sub?.plan.billingMode,
           kidName: `${attendance.kid.firstName} ${attendance.kid.lastName}`,
-        }
-      );
+        },
+        relatedAttendanceId: attendanceId,
+      });
     }
   } catch (transactionError) {
     console.error(

@@ -19,6 +19,9 @@ export async function editAttendance(
     return NextResponse.json({ message: "Kid not found" }, { status: 404 });
   }
 
+  // Get kid's current loan balance BEFORE making changes
+  const loanBalanceBefore = kid.loanBalance;
+
   // 2️⃣ fetch existing attendance
   const existing = await prisma.attendance.findFirst({
     where: { kidId: kidIdNum, date },
@@ -61,17 +64,22 @@ export async function editAttendance(
     }
   }
 
+  const loanBalanceAfter = loanBalanceBefore + deltaCharge;
+
   // Log the transaction after successful attendance update
   try {
     const userId = getLoggedInUserId({ req });
     if (userId) {
-      await KidTransactionService.logAttendanceUpdate(
-        kidIdNum,
+      await KidTransactionService.createTransaction({
+        kidId: kidIdNum,
         userId,
-        updated.id,
-        oldCharge,
-        newCharge,
-        {
+        actionType: "ATTENDANCE_UPDATE",
+        operationType: "UPDATE",
+        transactionAmount: Math.abs(deltaCharge),
+        loanBalanceBefore,
+        loanBalanceAfter,
+        description: `Attendance extra charge updated from ${oldCharge} to ${newCharge}`,
+        metadata: {
           date,
           oldNote: existing.note,
           newNote: note,
@@ -79,8 +87,9 @@ export async function editAttendance(
           newExtraCharge: newCharge,
           chargeDifference: deltaCharge,
           kidName: `${kid.firstName} ${kid.lastName}`,
-        }
-      );
+        },
+        relatedAttendanceId: updated.id,
+      });
     }
   } catch (transactionError) {
     console.error(

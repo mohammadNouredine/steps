@@ -20,6 +20,9 @@ export async function deleteSubscription(
     );
   }
 
+  // Get loan balance BEFORE making changes
+  const loanBalanceBefore = sub.kid.loanBalance;
+
   // 2️⃣ compute refund/loan adjustment depending on billing mode
   let loanAdjust = 0;
   let refundAmount = 0;
@@ -45,6 +48,8 @@ export async function deleteSubscription(
     loanAdjust -= refundAmount;
   }
 
+  const loanBalanceAfter = loanBalanceBefore + loanAdjust;
+
   // 3️⃣ transaction: update loan and delete subscription
   const [data, deleted] = await Promise.all([
     prisma.kid.update({
@@ -62,13 +67,17 @@ export async function deleteSubscription(
         ? (sub.price * sub.discountPercentage) / 100
         : 0;
 
-      await KidTransactionService.logSubscriptionDeletion(
-        sub.kidId,
+      await KidTransactionService.createTransaction({
+        kidId: sub.kidId,
         userId,
-        id, // Use the original subscription ID for reference
-        sub.price,
+        actionType: "SUBSCRIPTION_DELETE",
+        operationType: "DELETE",
+        transactionAmount: sub.price,
         discountAmount,
-        {
+        loanBalanceBefore,
+        loanBalanceAfter,
+        description: "Subscription deleted",
+        metadata: {
           planName: sub.plan.name,
           planDuration: sub.plan.duration,
           billingMode: sub.plan.billingMode,
@@ -90,8 +99,9 @@ export async function deleteSubscription(
                 })
               : 0,
           kidName: `${sub.kid.firstName} ${sub.kid.lastName}`,
-        }
-      );
+        },
+        relatedSubscriptionId: id, // Use the original subscription ID for reference
+      });
     }
   } catch (transactionError) {
     console.error(

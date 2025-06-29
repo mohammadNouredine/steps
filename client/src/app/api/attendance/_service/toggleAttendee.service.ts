@@ -46,6 +46,9 @@ export async function toggleAttendee(
       include: { plan: true },
     });
 
+    // Get loan balance BEFORE making changes
+    const loanBalanceBefore = kid.loanBalance;
+
     let totalCharge = existing.extraCharge ?? 0;
     if (sub && sub.plan.billingMode === BillingMode.USAGE) {
       const refund = sub.plan.price + (existing.extraCharge ?? 0);
@@ -60,16 +63,23 @@ export async function toggleAttendee(
       where: { id: existing.id },
     });
 
+    // Calculate loan balance after changes
+    const loanBalanceAfter = loanBalanceBefore - totalCharge;
+
     // Log the transaction after successful attendance deletion
     try {
       const userId = getLoggedInUserId({ req });
       if (userId) {
-        await KidTransactionService.logAttendanceDeletion(
+        await KidTransactionService.createTransaction({
           kidId,
           userId,
-          existing.id,
-          totalCharge,
-          {
+          actionType: "ATTENDANCE_DELETE",
+          operationType: "DELETE",
+          transactionAmount: totalCharge,
+          loanBalanceBefore,
+          loanBalanceAfter,
+          description: "Attendance deleted",
+          metadata: {
             date,
             note: existing.note,
             extraCharge: existing.extraCharge || 0,
@@ -81,8 +91,9 @@ export async function toggleAttendee(
             planName: sub?.plan.name,
             billingMode: sub?.plan.billingMode,
             kidName: `${kid.firstName} ${kid.lastName}`,
-          }
-        );
+          },
+          relatedAttendanceId: existing.id,
+        });
       }
     } catch (transactionError) {
       console.error(
@@ -113,6 +124,9 @@ export async function toggleAttendee(
       include: { plan: true },
     });
 
+    // Get loan balance BEFORE making changes
+    const loanBalanceBefore = kid.loanBalance;
+
     let totalCharge = 0;
     if (sub && sub.plan.billingMode === BillingMode.USAGE) {
       totalCharge = sub.plan.price;
@@ -122,16 +136,26 @@ export async function toggleAttendee(
       });
     }
 
+    // Calculate loan balance after changes
+    const loanBalanceAfter = loanBalanceBefore + totalCharge;
+
     // Log the transaction after successful attendance creation
     try {
       const userId = getLoggedInUserId({ req });
       if (userId) {
-        await KidTransactionService.logAttendanceCreation(
+        await KidTransactionService.createTransaction({
           kidId,
           userId,
-          created.id,
-          totalCharge,
-          {
+          actionType: "ATTENDANCE_CREATE",
+          operationType: "CREATE",
+          transactionAmount: totalCharge,
+          loanBalanceBefore,
+          loanBalanceAfter,
+          description:
+            totalCharge > 0
+              ? `Attendance with extra charge of ${totalCharge}`
+              : "Attendance recorded",
+          metadata: {
             date,
             extraCharge: 0,
             usageCharge: totalCharge,
@@ -139,8 +163,9 @@ export async function toggleAttendee(
             planName: sub?.plan.name,
             billingMode: sub?.plan.billingMode,
             kidName: `${kid.firstName} ${kid.lastName}`,
-          }
-        );
+          },
+          relatedAttendanceId: created.id,
+        });
       }
     } catch (transactionError) {
       console.error(

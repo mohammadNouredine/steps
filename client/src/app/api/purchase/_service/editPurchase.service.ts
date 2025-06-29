@@ -12,6 +12,18 @@ export async function editPurchase(
   const { kidId, attendanceId, purchaseDate, note, totalPrice, paidAmount } =
     dto;
 
+  // Get kid's current loan balance BEFORE making changes
+  const kidBefore = await prisma.kid.findUnique({
+    where: { id: kidId },
+    select: { loanBalance: true },
+  });
+
+  if (!kidBefore) {
+    return NextResponse.json({ error: "Kid not found" }, { status: 404 });
+  }
+
+  const loanBalanceBefore = kidBefore.loanBalance;
+
   const updated = await prisma.$transaction(async (tx) => {
     // fetch the existing purchase
     const old = await tx.purchasedItem.findUnique({
@@ -56,6 +68,11 @@ export async function editPurchase(
     return { item, old, kid: old.kid };
   });
 
+  const loanBalanceAfter =
+    loanBalanceBefore +
+    (updated.old.totalPrice - updated.old.paidAmount) -
+    (totalPrice - paidAmount);
+
   // Log the transaction after successful purchase update
   try {
     const userId = getLoggedInUserId({ req });
@@ -63,26 +80,34 @@ export async function editPurchase(
       const oldUnpaid = updated.old.totalPrice - updated.old.paidAmount;
       const newUnpaid = totalPrice - paidAmount;
 
-      await KidTransactionService.logPurchaseUpdate(
+      await KidTransactionService.createTransaction({
         kidId,
         userId,
-        id,
-        updated.old.totalPrice,
-        totalPrice,
-        updated.old.paidAmount,
-        paidAmount,
-        {
+        actionType: "PURCHASE_UPDATE",
+        operationType: "UPDATE",
+        transactionAmount: Math.abs(newUnpaid - oldUnpaid),
+        loanBalanceBefore,
+        loanBalanceAfter,
+        description: `Purchase updated - Unpaid amount changed by ${
+          newUnpaid - oldUnpaid
+        }`,
+        metadata: {
+          oldTotalPrice: updated.old.totalPrice,
+          newTotalPrice: totalPrice,
+          oldPaidAmount: updated.old.paidAmount,
+          newPaidAmount: paidAmount,
+          oldUnpaid,
+          newUnpaid,
+          unpaidDifference: newUnpaid - oldUnpaid,
           oldPurchaseDate: updated.old.purchaseDate,
           newPurchaseDate: purchaseDate,
           oldNote: updated.old.note,
           newNote: note,
-          oldUnpaid,
-          newUnpaid,
-          unpaidDifference: newUnpaid - oldUnpaid,
           attendanceId,
           kidName: `${updated.kid.firstName} ${updated.kid.lastName}`,
-        }
-      );
+        },
+        relatedPurchaseId: id,
+      });
     }
   } catch (transactionError) {
     console.error(

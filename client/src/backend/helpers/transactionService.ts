@@ -28,6 +28,8 @@ export interface CreateTransactionParams {
   operationType: KidTransactionOperation;
   transactionAmount: number;
   discountAmount?: number;
+  loanBalanceBefore?: number;
+  loanBalanceAfter?: number;
   description?: string;
   metadata?: any;
   relatedKidId?: number;
@@ -46,63 +48,69 @@ export class KidTransactionService {
    */
   static async createTransaction(params: CreateTransactionParams) {
     try {
-      // Get current kid's loan balance
+      // Verify kid exists and get current loan balance if needed
       const kid = await prisma.kid.findUnique({
         where: { id: params.kidId },
-        select: { loanBalance: true },
+        select: { id: true, loanBalance: true },
       });
 
       if (!kid) {
         throw new Error(`Kid with ID ${params.kidId} not found`);
       }
 
-      const loanBalanceBefore = kid.loanBalance;
       const totalAmount =
         params.transactionAmount - (params.discountAmount || 0);
 
-      // Calculate new loan balance based on action type
-      let loanBalanceAfter = loanBalanceBefore;
+      // Use provided loan balances or calculate them
+      let loanBalanceBefore = params.loanBalanceBefore;
+      let loanBalanceAfter = params.loanBalanceAfter;
 
-      switch (params.actionType) {
-        case "PAYMENT_CREATE":
-        case "PAYMENT_UPDATE":
-          loanBalanceAfter = loanBalanceBefore - totalAmount; // Payment reduces loan
-          break;
-        case "PAYMENT_DELETE":
-          loanBalanceAfter = loanBalanceBefore + totalAmount; // Payment deletion increases loan (reverts the payment)
-          break;
-        case "SUBSCRIPTION_CREATE":
-        case "SUBSCRIPTION_UPDATE":
-          loanBalanceAfter = loanBalanceBefore - totalAmount; // Subscription payment reduces loan
-          break;
-        case "SUBSCRIPTION_DELETE":
-          loanBalanceAfter = loanBalanceBefore + totalAmount; // Subscription deletion increases loan (reverts the subscription)
-          break;
-        case "PURCHASE_CREATE":
-        case "PURCHASE_UPDATE":
-          const purchaseAmount =
-            totalAmount - (params.metadata?.paidAmount || 0);
-          loanBalanceAfter = loanBalanceBefore + purchaseAmount; // Unpaid amount increases loan
-          break;
-        case "PURCHASE_DELETE":
-          const unpaidAmount = totalAmount - (params.metadata?.paidAmount || 0);
-          loanBalanceAfter = loanBalanceBefore - unpaidAmount; // Purchase deletion decreases loan (reverts the purchase)
-          break;
-        case "ATTENDANCE_CREATE":
-        case "ATTENDANCE_UPDATE":
-          loanBalanceAfter = loanBalanceBefore + totalAmount; // Extra charges increase loan
-          break;
-        case "ATTENDANCE_DELETE":
-          loanBalanceAfter = loanBalanceBefore - totalAmount; // Attendance deletion decreases loan (reverts the attendance charge)
-          break;
-        case "KID_CREATE":
-        case "KID_UPDATE":
-        case "KID_DELETE":
-          // For kid operations, loan balance change is already reflected in the kid record
-          loanBalanceAfter = loanBalanceBefore;
-          break;
-        default:
-          loanBalanceAfter = loanBalanceBefore;
+      if (loanBalanceBefore === undefined || loanBalanceAfter === undefined) {
+        // Calculate loan balances based on action type
+        loanBalanceBefore = kid.loanBalance;
+
+        switch (params.actionType) {
+          case "PAYMENT_CREATE":
+          case "PAYMENT_UPDATE":
+            loanBalanceAfter = loanBalanceBefore - totalAmount; // Payment reduces loan
+            break;
+          case "PAYMENT_DELETE":
+            loanBalanceAfter = loanBalanceBefore + totalAmount; // Payment deletion increases loan (reverts the payment)
+            break;
+          case "SUBSCRIPTION_CREATE":
+          case "SUBSCRIPTION_UPDATE":
+            loanBalanceAfter = loanBalanceBefore - totalAmount; // Subscription payment reduces loan
+            break;
+          case "SUBSCRIPTION_DELETE":
+            loanBalanceAfter = loanBalanceBefore + totalAmount; // Subscription deletion increases loan (reverts the subscription)
+            break;
+          case "PURCHASE_CREATE":
+          case "PURCHASE_UPDATE":
+            const purchaseAmount =
+              totalAmount - (params.metadata?.paidAmount || 0);
+            loanBalanceAfter = loanBalanceBefore + purchaseAmount; // Unpaid amount increases loan
+            break;
+          case "PURCHASE_DELETE":
+            const unpaidAmount =
+              totalAmount - (params.metadata?.paidAmount || 0);
+            loanBalanceAfter = loanBalanceBefore - unpaidAmount; // Purchase deletion decreases loan (reverts the purchase)
+            break;
+          case "ATTENDANCE_CREATE":
+          case "ATTENDANCE_UPDATE":
+            loanBalanceAfter = loanBalanceBefore + totalAmount; // Extra charges increase loan
+            break;
+          case "ATTENDANCE_DELETE":
+            loanBalanceAfter = loanBalanceBefore - totalAmount; // Attendance deletion decreases loan (reverts the attendance charge)
+            break;
+          case "KID_CREATE":
+          case "KID_UPDATE":
+          case "KID_DELETE":
+            // For kid operations, loan balance change is already reflected in the kid record
+            loanBalanceAfter = loanBalanceBefore;
+            break;
+          default:
+            loanBalanceAfter = loanBalanceBefore;
+        }
       }
 
       // For deletion operations, don't set the related entity ID since the entity will be deleted
