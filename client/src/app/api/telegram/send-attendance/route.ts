@@ -1,69 +1,226 @@
 import { withErrorHandling } from "@/backend/helpers/withErrorHandling";
 import { withAuth } from "@/backend/helpers/withAuth";
+import { withBodyValidation } from "@/backend/helpers/withValidation";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getDayRangeFromDate } from "@/backend/helpers/getDayRange";
+import {
+  sendTelegramReportSchema,
+  SendTelegramReportDto,
+} from "./_dto/send-telegram-report.dto";
 
-export async function sendAttendanceToTelegram(req: NextRequest) {
+export async function sendTelegramReportToBot(
+  req: NextRequest,
+  data: SendTelegramReportDto
+) {
   try {
-    // Get today's date
-    const today = new Date();
-    const { startOfDay, startOfNextDay } = getDayRangeFromDate(today);
+    const { date, sendAttendance, sendLoans, sendPayments, sendPurchases } =
+      data;
+    const { startOfDay, startOfNextDay } = getDayRangeFromDate(date);
 
-    // Get today's attendance records
-    const attendanceRecords = await prisma.attendance.findMany({
-      where: {
-        date: {
-          gte: startOfDay,
-          lte: startOfNextDay,
-        },
-      },
-      include: {
-        kid: {
-          select: {
-            firstName: true,
-            lastName: true,
-            gender: true,
+    // Fetch data based on selected report types
+    let messageText = `📊 Daily Report - ${date.toDateString()}\n\n`;
+    let hasAnyData = false;
+
+    // 1. ATTENDANCE REPORT
+    if (sendAttendance) {
+      const attendanceRecords = await prisma.attendance.findMany({
+        where: {
+          date: {
+            gte: startOfDay,
+            lte: startOfNextDay,
           },
         },
-      },
-      orderBy: {
-        kid: {
-          firstName: "asc",
+        include: {
+          kid: {
+            select: {
+              firstName: true,
+              lastName: true,
+              gender: true,
+            },
+          },
         },
-      },
-    });
-
-    // Format the attendance message
-    const formatAttendanceMessage = () => {
-      const todayStr = today.toDateString();
-
-      if (attendanceRecords.length === 0) {
-        return `📅 Attendance Report - ${todayStr}\n\n❌ No attendance recorded for today.`;
-      }
-
-      let message = `📅 Attendance Report - ${todayStr}\n\n`;
-      message += `✅ Total Present: ${attendanceRecords.length} kids\n\n`;
-      message += `👥 Present Kids:\n`;
-
-      attendanceRecords.forEach((record, index) => {
-        const emoji = record.kid.gender === "FEMALE" ? "👧" : "👦";
-        message += `${index + 1}. ${emoji} ${record.kid.firstName} ${
-          record.kid.lastName
-        }`;
-        if (record.note) {
-          message += ` - Note: ${record.note}`;
-        }
-        if (record.extraCharge && record.extraCharge > 0) {
-          message += ` - Extra Charge: $${record.extraCharge}`;
-        }
-        message += "\n";
+        orderBy: {
+          kid: {
+            firstName: "asc",
+          },
+        },
       });
 
-      return message;
-    };
+      messageText += `👥 **ATTENDANCE REPORT**\n`;
+      if (attendanceRecords.length === 0) {
+        messageText += `❌ No attendance recorded\n\n`;
+      } else {
+        messageText += `✅ Total Present: ${attendanceRecords.length} kids\n`;
+        attendanceRecords.forEach((record, index) => {
+          const emoji = record.kid.gender === "FEMALE" ? "👧" : "👦";
+          messageText += `${index + 1}. ${emoji} ${record.kid.firstName} ${
+            record.kid.lastName
+          }`;
+          if (record.note) {
+            messageText += ` (Note: ${record.note})`;
+          }
+          if (record.extraCharge && record.extraCharge > 0) {
+            messageText += ` [Extra: $${record.extraCharge}]`;
+          }
+          messageText += "\n";
+        });
+        messageText += "\n";
+        hasAnyData = true;
+      }
+    }
 
-    const messageText = formatAttendanceMessage();
+    // 2. LOANS REPORT
+    if (sendLoans) {
+      const kidsWithLoans = await prisma.kid.findMany({
+        where: {
+          loanBalance: {
+            gt: 0,
+          },
+        },
+        select: {
+          firstName: true,
+          lastName: true,
+          loanBalance: true,
+          gender: true,
+        },
+        orderBy: {
+          loanBalance: "desc",
+        },
+      });
+
+      messageText += `💰 **LOANS REPORT**\n`;
+      if (kidsWithLoans.length === 0) {
+        messageText += `✅ No outstanding loans\n\n`;
+      } else {
+        const totalLoans = kidsWithLoans.reduce(
+          (sum, kid) => sum + kid.loanBalance,
+          0
+        );
+        messageText += `🔢 Total Outstanding: $${totalLoans.toFixed(2)}\n`;
+        kidsWithLoans.forEach((kid, index) => {
+          const emoji = kid.gender === "FEMALE" ? "👧" : "👦";
+          messageText += `${index + 1}. ${emoji} ${kid.firstName} ${
+            kid.lastName
+          }: $${kid.loanBalance.toFixed(2)}\n`;
+        });
+        messageText += "\n";
+        hasAnyData = true;
+      }
+    }
+
+    // 3. PAYMENTS REPORT
+    if (sendPayments) {
+      const payments = await prisma.payment.findMany({
+        where: {
+          paymentDate: {
+            gte: startOfDay,
+            lte: startOfNextDay,
+          },
+        },
+        include: {
+          kid: {
+            select: {
+              firstName: true,
+              lastName: true,
+              gender: true,
+            },
+          },
+        },
+        orderBy: {
+          amount: "desc",
+        },
+      });
+
+      messageText += `💳 **PAYMENTS REPORT**\n`;
+      if (payments.length === 0) {
+        messageText += `❌ No payments recorded\n\n`;
+      } else {
+        const totalPayments = payments.reduce(
+          (sum, payment) => sum + payment.amount,
+          0
+        );
+        messageText += `💵 Total Payments: $${totalPayments.toFixed(2)}\n`;
+        payments.forEach((payment, index) => {
+          const emoji = payment.kid.gender === "FEMALE" ? "👧" : "👦";
+          messageText += `${index + 1}. ${emoji} ${payment.kid.firstName} ${
+            payment.kid.lastName
+          }: $${payment.amount.toFixed(2)}`;
+          if (payment.note) {
+            messageText += ` (${payment.note})`;
+          }
+          messageText += "\n";
+        });
+        messageText += "\n";
+        hasAnyData = true;
+      }
+    }
+
+    // 4. PURCHASES REPORT
+    if (sendPurchases) {
+      const purchases = await prisma.purchasedItem.findMany({
+        where: {
+          purchaseDate: {
+            gte: startOfDay,
+            lte: startOfNextDay,
+          },
+        },
+        include: {
+          kid: {
+            select: {
+              firstName: true,
+              lastName: true,
+              gender: true,
+            },
+          },
+        },
+        orderBy: {
+          totalPrice: "desc",
+        },
+      });
+
+      messageText += `🛒 **PURCHASES REPORT**\n`;
+      if (purchases.length === 0) {
+        messageText += `❌ No purchases recorded\n\n`;
+      } else {
+        const totalPurchases = purchases.reduce(
+          (sum, purchase) => sum + purchase.totalPrice,
+          0
+        );
+        const totalPaid = purchases.reduce(
+          (sum, purchase) => sum + purchase.paidAmount,
+          0
+        );
+        messageText += `🛍️ Total Purchases: $${totalPurchases.toFixed(2)}\n`;
+        messageText += `💰 Total Paid: $${totalPaid.toFixed(2)}\n`;
+        messageText += `🏦 Outstanding: $${(totalPurchases - totalPaid).toFixed(
+          2
+        )}\n`;
+        purchases.forEach((purchase, index) => {
+          const emoji = purchase.kid.gender === "FEMALE" ? "👧" : "👦";
+          messageText += `${index + 1}. ${emoji} ${purchase.kid.firstName} ${
+            purchase.kid.lastName
+          }: $${purchase.totalPrice.toFixed(2)}`;
+          if (purchase.paidAmount < purchase.totalPrice) {
+            messageText += ` (Owing: $${(
+              purchase.totalPrice - purchase.paidAmount
+            ).toFixed(2)})`;
+          }
+          if (purchase.note) {
+            messageText += ` - ${purchase.note}`;
+          }
+          messageText += "\n";
+        });
+        messageText += "\n";
+        hasAnyData = true;
+      }
+    }
+
+    if (!hasAnyData) {
+      messageText += `📝 No data found for the selected report types on this date.\n`;
+    }
+
+    messageText += `\n🕐 Generated at: ${new Date().toLocaleTimeString()}`;
     const telegramToken = process.env.NEXT_PUBLIC_TELEGRAM_TOKEN;
 
     if (!telegramToken) {
@@ -129,8 +286,8 @@ export async function sendAttendanceToTelegram(req: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: "Attendance sent to Telegram successfully",
-        attendanceCount: attendanceRecords.length,
+        message: "Report sent to Telegram successfully",
+        reportDate: date.toDateString(),
       },
       { status: 200 }
     );
@@ -143,4 +300,8 @@ export async function sendAttendanceToTelegram(req: NextRequest) {
   }
 }
 
-export const POST = withErrorHandling(withAuth(sendAttendanceToTelegram));
+export const POST = withErrorHandling(
+  withAuth(
+    withBodyValidation(sendTelegramReportToBot, sendTelegramReportSchema)
+  )
+);

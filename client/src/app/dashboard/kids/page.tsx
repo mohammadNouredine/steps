@@ -7,16 +7,15 @@ import { FaChild, FaMoneyBill } from "react-icons/fa6";
 import { KidType, useGetAllKids } from "../api-hookts/kids/useGetAllKids";
 import { LiaBirthdayCakeSolid } from "react-icons/lia";
 import { usePermissions } from "@/hooks/usePermissions";
-import { useSendAttendanceToTelegram } from "../api-hookts/telegram/useSendAttendanceToTelegram";
 import { PiTelegramLogo } from "react-icons/pi";
 import Button from "@/components/common/ui/Button";
+import TelegramReportModal from "./_components/TelegramReportModal";
 
 function KidsPage() {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isTelegramModalOpen, setIsTelegramModalOpen] = React.useState(false);
   const { data: kids_data, isPending } = useGetAllKids();
   const kids = kids_data?.data;
-  const { mutate: sendAttendanceToTelegram, isPending: isSendingToTelegram } =
-    useSendAttendanceToTelegram();
   const kidsLength = kids?.length || 0;
   const totalLoans = kids?.reduce((acc, kid) => {
     return acc + kid.loanBalance;
@@ -39,10 +38,6 @@ function KidsPage() {
         }, 0) / kidsLength
       : 0;
   const { canSeeTotalLoans } = usePermissions();
-
-  const handleSendAttendanceToTelegram = () => {
-    sendAttendanceToTelegram({});
-  };
 
   const orderSummaryValues: SummaryValue[] = [
     {
@@ -87,15 +82,18 @@ function KidsPage() {
           type="button"
           className="w-fit px-4"
           buttonType="button"
-          text="Send Attendance to Bot"
-          loadingText="Sending..."
-          onClick={handleSendAttendanceToTelegram}
-          isLoading={isSendingToTelegram}
+          text="Send Report to Bot"
+          onClick={() => setIsTelegramModalOpen(true)}
           icon={<PiTelegramLogo />}
         />
       </div>
 
       <KidsTable isOpen={isOpen} setIsOpen={setIsOpen} />
+
+      <TelegramReportModal
+        isOpen={isTelegramModalOpen}
+        setIsOpen={setIsTelegramModalOpen}
+      />
     </div>
   );
 }
