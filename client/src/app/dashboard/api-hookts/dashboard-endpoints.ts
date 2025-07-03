@@ -6,6 +6,8 @@ export const DASHBOARD_ENDPOINTS = {
   DELETE_USER: "/users/", //DELETE
   EDIT_USER_PERMISSIONS: (id: number) => `/users/${id}/permissions`, //PUT
   GET_USER_ROLES: "/roles", //GET
+  //---------------------------TELEGRAM
+  SEND_ATTENDANCE_TO_TELEGRAM: "/telegram/send-attendance", //POST
 
   //---------------------------CONTACT
   GET_ALL_CONTACT_MESSAGES: "/contact", //GET
