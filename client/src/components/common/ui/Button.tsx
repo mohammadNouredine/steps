@@ -9,6 +9,7 @@ function Button({
   loadingText = "Submitting...",
   link = "#",
   disabled,
+  icon,
   buttonType,
   text,
   onClick,
@@ -19,6 +20,7 @@ function Button({
   loadingText?: string;
   link?: string;
   disabled?: boolean;
+  icon?: React.ReactNode;
   buttonType?: "submit" | "button";
   text: string;
   onClick?: () => void;
@@ -37,8 +39,9 @@ function Button({
           disabled={disabled || isLoading}
           onClick={onClick}
           type={buttonType}
-          className="py-2.5 size-full flex items-center justify-center"
+          className="py-2.5 size-full flex items-center justify-center gap-2"
         >
+          {icon}
           {isLoading ? loadingText : text}
         </button>
       ) : (

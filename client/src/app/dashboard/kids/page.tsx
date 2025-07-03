@@ -7,9 +7,13 @@ import { FaChild, FaMoneyBill } from "react-icons/fa6";
 import { KidType, useGetAllKids } from "../api-hookts/kids/useGetAllKids";
 import { LiaBirthdayCakeSolid } from "react-icons/lia";
 import { usePermissions } from "@/hooks/usePermissions";
+import { PiTelegramLogo } from "react-icons/pi";
+import Button from "@/components/common/ui/Button";
+import TelegramReportModal from "./_components/TelegramReportModal";
 
 function KidsPage() {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isTelegramModalOpen, setIsTelegramModalOpen] = React.useState(false);
   const { data: kids_data, isPending } = useGetAllKids();
   const kids = kids_data?.data;
   const kidsLength = kids?.length || 0;
@@ -34,6 +38,7 @@ function KidsPage() {
         }, 0) / kidsLength
       : 0;
   const { canSeeTotalLoans } = usePermissions();
+
   const orderSummaryValues: SummaryValue[] = [
     {
       title: "Total Number of Kids",
@@ -62,7 +67,33 @@ function KidsPage() {
         title="Kids"
         onAddClick={() => setIsOpen(true)}
       />
+
+      {/* Telegram Send Attendance Button */}
+      <div className="mb-6 flex justify-end">
+        {/* <button
+          onClick={handleSendAttendanceToTelegram}
+          disabled={isSendingToTelegram}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded-lg font-medium transition-colors"
+        >
+          <PiTelegramLogo className="text-lg" />
+          {isSendingToTelegram ? "Sending..." : "Send Attendance to Bot"}
+        </button> */}
+        <Button
+          type="button"
+          className="w-fit px-4"
+          buttonType="button"
+          text="Send Report to Bot"
+          onClick={() => setIsTelegramModalOpen(true)}
+          icon={<PiTelegramLogo />}
+        />
+      </div>
+
       <KidsTable isOpen={isOpen} setIsOpen={setIsOpen} />
+
+      <TelegramReportModal
+        isOpen={isTelegramModalOpen}
+        setIsOpen={setIsTelegramModalOpen}
+      />
     </div>
   );
 }
