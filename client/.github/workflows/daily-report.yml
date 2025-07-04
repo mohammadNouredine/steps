@@ -1,0 +1,45 @@
+name: Daily Telegram Report
+
+on:
+  schedule:
+    # Runs every day at 6:00 PM UTC (adjust for your timezone)
+    - cron: '0 18 * * *'
+  workflow_dispatch:  # Allows manual triggering from GitHub Actions tab
+
+jobs:
+  send-daily-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Send Daily Report to Telegram
+        run: |
+          echo "Sending daily report at $(date)"
+          
+          # Make request to your Vercel app
+          response=$(curl -s -w "\n%{http_code}" \
+            -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            ${{ secrets.VERCEL_APP_URL }}/api/telegram/daily-report)
+          
+          # Extract response body and status code
+          http_code=$(echo "$response" | tail -n1)
+          response_body=$(echo "$response" | head -n -1)
+          
+          echo "HTTP Status: $http_code"
+          echo "Response: $response_body"
+          
+          # Check if request was successful
+          if [ "$http_code" -eq 200 ]; then
+            echo "✅ Daily report sent successfully!"
+          else
+            echo "❌ Failed to send daily report"
+            echo "Response: $response_body"
+            exit 1
+          fi
+
+      - name: Log Execution
+        if: always()
+        run: |
+          echo "Daily report job completed at $(date)"
+          echo "Job status: ${{ job.status }}" 
