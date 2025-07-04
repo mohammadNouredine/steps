@@ -46,7 +46,17 @@ function TelegramReportModal({ isOpen, setIsOpen }: TelegramReportModalProps) {
       return;
     }
 
-    sendReportToTelegram(values);
+    sendReportToTelegram(values, {
+      onSuccess: (data) => {
+        toast.success(`Report sent successfully for ${data.reportDate}!`);
+        setIsOpen(false);
+      },
+      onError: (error: any) => {
+        const errorMessage =
+          error?.response?.data?.error || "Failed to send report";
+        toast.error(errorMessage);
+      },
+    });
   };
 
   return (
