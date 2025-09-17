@@ -6,6 +6,7 @@ import { Form, Formik } from "formik";
 import { MapPin, Phone, Clock, Star } from "lucide-react";
 import * as yup from "yup";
 import { useSendContactMessage } from "@/api/api-hooks/contact/useSendContactMessage";
+import { IS_WINTER } from "@/constants/season.data";
 const schema = yup.object().shape({
   name: yup.string().required("الاسم الكامل مطلوب"),
   email: yup.string().email("البريد الإلكتروني غير صالح").optional(),
@@ -142,15 +143,19 @@ const ContactSection = () => {
                   <Clock className="w-6 h-6 text-brand-green mt-1" />
                   <div>
                     <h4 className="font-semibold text-gray-900">
-                      ساعات النادي
+                      ساعات الصّفّ
                     </h4>
                     <p className="text-gray-600">
-                      الاثنين - الجمعة: 9:00 صباحاً - 1:00 ظهرا
+                      3 أيام في الأسبوع: 9:00 صباحاً - 1:00 ظهرا
                     </p>
-                    <p className="text-sm text-gray-500">الأربعا يوم عطلة</p>
-                    <p className="text-sm text-gray-500">
-                      نستقبل الاستفسارات يوم السبت فقط, الاحد غير متاح
-                    </p>
+                    {!IS_WINTER ? (
+                      <p className="text-sm text-gray-500">الأربعا يوم عطلة</p>
+                    ) : null}
+                    {IS_WINTER ? (
+                      <p className="text-sm text-gray-500">
+                        نستقبل الاستفسارات يوم السبت فقط, الاحد غير متاح
+                      </p>
+                    ) : null}
                   </div>
                 </div>
               </div>

@@ -1,7 +1,7 @@
 import { Star, Users, Calendar } from "lucide-react";
 import { Button } from "./Button";
 
-const HeroSection = () => {
+const HeroSectionWinter = () => {
   const scrollToContact = () => {
     const element = document.getElementById("contact");
     if (element) {
@@ -20,21 +20,23 @@ const HeroSection = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-x-2 text-brand-green">
                 <Star className="w-5 h-5 fill-current" />
-                <span className="text-sm font-medium">تجربة صيفية متميزة</span>
+                <span className="text-sm font-medium">
+                  تجربة تعليميّة متميزة
+                </span>
               </div>
               <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
                 خذ <span className="text-brand-green">خطواتك الرائدة</span> هذا
-                الصيف
+                العام
               </h1>
               <p className="text-lg text-gray-600 leading-relaxed">
-                انضم إلى نادينا الصيفي النابض بالحياة في عربصاليم، لبنان, حيث
+                انضم إلى صفنا التعليمي النابض بالحياة في عربصاليم، لبنان, حيث
                 يكتسب الطفل المهارات الحياتيّة تحت شعار
                 <span className="text-brand-green">
                   {" "}
                   فَلنحيينّهُ حياةً طيّبة{" "}
                 </span>
-                ويقيم صداقات اجتماعيه سليمه وفي هذا النادي تتعزز علاقه المتدرب
-                بالله سبحانه وتعالى ويخرج متزودا بالمفاهيم العاشورائيه وكل ذلك
+                ويقيم صداقات اجتماعيه سليمه وفي هذا الصف تتعزز علاقه المتدرب
+                بالله سبحانه وتعالى ويخرج متزودا بالمفاهيم الاسلاميّة وكل ذلك
                 بجو مليء بالبهجه والفرح والسرور.
               </p>
             </div>
@@ -78,7 +80,9 @@ const HeroSection = () => {
                 <div className="w-24 h-24 bg-gradient-to-br from-brand-yellow to-brand-yellow-neutral rounded-full mx-auto flex items-center justify-center">
                   <span className="text-2xl">🏕️</span>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">صيف 2024</h3>
+                <h3 className="text-2xl font-bold text-gray-900">
+                  عام 2025-2026
+                </h3>
                 <p className="text-gray-600">
                   رحلة رائعة من النمو والتعلم والمرح تنتظر طفلك!
                 </p>
@@ -95,7 +99,7 @@ const HeroSection = () => {
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-brand-red">14+</div>
-                    <div className="text-sm text-gray-600">سباح</div>
+                    <div className="text-sm text-gray-600">تعلم</div>
                   </div>
                 </div>
               </div>
@@ -114,4 +118,4 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection;
+export default HeroSectionWinter;

@@ -1,4 +1,5 @@
 import { Button } from "./Button";
+import { IS_WINTER } from "@/constants/season.data";
 
 const Header = () => {
   const scrollToSection = (sectionId: string) => {
@@ -19,7 +20,9 @@ const Header = () => {
             <img src="/brand/images/logo.png" alt="شعار" className="h-8 mb-3" />
             <div className="hidden lg:block">
               <h1 className="text-xl font-bold text-gray-900">خطوات رائدة</h1>
-              <p className="text-sm text-brand-green">معسكر صيفي</p>
+              <p className="text-sm text-brand-green">
+                {IS_WINTER ? "الصف التعليمي" : "معسكر صيفي"}
+              </p>
             </div>
           </div>
 

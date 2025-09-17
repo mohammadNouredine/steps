@@ -1,5 +1,4 @@
 import Header from "./Header";
-import HeroSection from "./HeroSection";
 import StatisticsSection from "./StatisticsSection";
 import GoalsSection from "./GoalsSection";
 import ActivitiesSection from "./ActivitiesSection";
@@ -9,11 +8,12 @@ import Footer from "./Footer";
 import SpecificActivities from "./SpecificActivities";
 import ActivitiesCarousel from "./ActivitiesCarousel";
 import Gallery from "./Gallery/Gallery";
+import HeroSectionWinter from "./HeroSectionWinter";
 const Index = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      <HeroSection />
+      <HeroSectionWinter />
       <StatisticsSection />
       <ActivitiesCarousel />
       <SpecificActivities />
